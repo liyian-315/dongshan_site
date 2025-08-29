@@ -10,8 +10,11 @@ apiClient.interceptors.response.use(
   error => Promise.reject(error)
 )
 
-export function get(url, config) {
-  return apiClient.get(url, config)
+export function get(url, params, config ={}) {
+  return apiClient.get(url, {
+      ...config,
+      params:params
+  })
 }
 
 export function post(url, data, config) {
