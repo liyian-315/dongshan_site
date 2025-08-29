@@ -3,11 +3,17 @@
     <!-- 页眉 -->
     <header class="top-bar-outer">
       <div class="container top-bar-inner">
-        <div class="brand" @click="homeSelect">东山社区</div>
+        <div class="brand" @click="homeSelect">
+          <img
+              src="@/assets/img/dongshan.png" alt="东山图标"
+              style="height: 2em; vertical-align: middle; margin-right: 0.3em;"
+          />
+
+        </div>
         <el-menu
             mode="horizontal"
             :ellipsis="false"
-            background-color="#283272"
+            background-color="#2c3e50"
             text-color="#fff"
             active-text-color="#ffd04b"
             class="right-menu"
@@ -16,7 +22,14 @@
             style="flex: 1; justify-content: flex-end;"
         >
           <el-menu-item index="/lab">实验室介绍</el-menu-item>
-          <el-menu-item index="/news">开源新闻</el-menu-item>
+          <el-menu-item >  <a
+              href="https://sddx.huimaibuy.net/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="el-menu-item external-link"
+            >
+            开源新闻
+            </a></el-menu-item>
           <el-menu-item index="/docs">文档</el-menu-item>
           <el-menu-item index="/mirror">镜像下载</el-menu-item>
           <el-menu-item index="/about">关于</el-menu-item>
@@ -92,7 +105,7 @@ html, body {
 }
 
 .top-bar-outer {
-  background-color: #283272;
+  background-color: #2c3e50;
   width: 100%;
 }
 
@@ -101,7 +114,7 @@ html, body {
   justify-content: space-between;
   align-items: center;
   padding: 0 5%;
-  background-color: #283272;
+  background-color: #2c3e50;
   height: 60px;
   width: 100%;
 }
@@ -110,7 +123,7 @@ html, body {
   font-size: 1.2rem;
   font-weight: bold;
   cursor: pointer;
-  color: #ffd04b;
+  color: #9b0d14;
   transition: color 0.3s ease;
 }
 
@@ -128,7 +141,7 @@ html, body {
 }
 
 .footer {
-  background-color: #283272;
+  background-color: #2c3e50;
   color: #ecf0f1;
   padding: 3rem 0 1.5rem;
   position: relative;

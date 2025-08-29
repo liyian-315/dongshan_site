@@ -3,18 +3,18 @@
     <div class="middle-content">
       <section class="hero-section">
         <div class="container hero-container">
-          <div class="hero-left">
-            <h1 class="community-title">东山社区</h1>
-            <div class="logo-container">
-              <img
-                  src="@/assets/img/community-logo.png"
-                  alt="东山社区Logo"
-                  class="community-logo"
-                  @error="handleLogoError"
-              >
-            </div>
-            <p class="community-slogan">
-              连接开发者，共建开源新生态
+          <img
+              src="@/assets/img/dongshan.png"
+              alt="东山社区Logo"
+              class="community-logo"
+              @error="handleLogoError"
+          >
+          <div class="hero-text">
+            <h1 class="hero-title animate-fade-in">
+              探索开源技术的<br><span class="highlight">无限可能</span>
+            </h1>
+            <p class="hero-subtitle animate-fade-in-delay">
+              东山社区致力于推动开源技术发展，分享前沿科技资讯与实践经验
             </p>
           </div>
 
@@ -24,13 +24,16 @@
               <video
                   class="community-video"
                   controls
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                  preload="auto"
                   poster="@/assets/img/video-cover.png"
-                  preload="metadata"
               >
-                <source src="#" type="video/mp4">
+                <source src="@/assets/img/23e771d0c2d3ef70e2be721b1446b3b5.mp4" type="video/mp4">
                 您的浏览器不支持视频播放，请升级浏览器
               </video>
-              <p class="video-desc">东山社区技术生态介绍（示例视频）</p>
             </div>
           </div>
         </div>
@@ -105,7 +108,6 @@
         </div>
       </section>
     </div>
-
   </div>
 </template>
 
@@ -136,7 +138,7 @@ export default {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 10px;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap');
@@ -145,13 +147,6 @@ export default {
   src: url('https://cdn.jsdelivr.net/npm/@alibaba/ailab-font@1.0.2/Alibaba-PuHuiTi-Bold.woff2') format('woff2');
   font-weight: 700;
   font-display: swap;
-}
-
-.community-title {
-  font-family: 'Alibaba Sans', sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-shadow: 0 1px 2px rgba(0,0,0,.08);
 }
 
 .community-home {
@@ -175,36 +170,18 @@ export default {
 }
 
 .hero-section {
-  padding: 4rem 0;
-  background-color: transparent;
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  color: #ffffff;
+  padding: 80px 0 60px;
   position: relative;
+  overflow: hidden;
 }
 
 .hero-container {
   display: flex;
   align-items: center;
   gap: 4rem;
-}
-
-.hero-left {
-  flex: 1;
-  text-align: center;
-}
-
-.community-title {
-  font-size: 3rem;
-  font-weight: 800;
-  color: #283272;
-  margin-bottom: 1.5rem;
-}
-
-.logo-container {
-  margin-bottom: 1.5rem;
-  display: inline-block;
-  padding: 1rem;
-  background-color: rgba(248, 249, 250, 0.9);
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0 10px
 }
 
 .community-logo {
@@ -212,37 +189,49 @@ export default {
   height: 180px;
   object-fit: contain;
   border-radius: 4px;
-}
-
-.community-slogan {
-  font-size: 1.2rem;
-  color: #283272;
-  max-width: 300px;
   margin: 0 auto;
 }
 
 .hero-right {
-  flex: 1.5;
+  flex: 1.8;
+}
+
+.hero-text {
+  flex: 1;
+  text-align: center;
+  padding: 0 10px;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 100%;
+  margin: 0 auto 30px;
+  line-height: 1.6;
 }
 
 .video-container {
   background-color: rgba(248, 249, 250, 0.95);
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: 0;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
 .community-video {
   width: 100%;
   height: auto;
   border-radius: 4px;
-  margin-bottom: 1rem;
-}
-
-.video-desc {
-  color: #34495e;
-  font-size: 1rem;
-  text-align: center;
+  margin-bottom: 0;
+  min-height: 320px;
+  object-fit: cover;
 }
 
 
