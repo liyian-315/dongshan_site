@@ -1,5 +1,5 @@
 import { get } from './index'
 
-export async function fetchDocList() {
-  return get('/api/docs')
+export async function fetchDocList(params) {
+  return get('/api/docs', params)
 }
