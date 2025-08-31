@@ -1,6 +1,6 @@
 <template>
   <div class="community-home">
-    <div class="middle-content">
+<!--    <div class="middle-content">-->
       <section class="hero-section">
         <div class="container hero-container">
           <img
@@ -108,7 +108,7 @@
         </div>
       </section>
     </div>
-  </div>
+<!--  </div>-->
 </template>
 
 <script>
@@ -136,7 +136,7 @@ export default {
 
 .container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 10px;
 }
@@ -170,18 +170,22 @@ export default {
 }
 
 .hero-section {
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+
+  background:
+      repeating-radial-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 2px, transparent 10px),
+      linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
   color: #ffffff;
   padding: 80px 0 60px;
   position: relative;
   overflow: hidden;
+  background-size: 200px 20px;
 }
 
 .hero-container {
   display: flex;
   align-items: center;
   gap: 4rem;
-  padding: 0 10px
+  padding: 0 10px;
 }
 
 .community-logo {
