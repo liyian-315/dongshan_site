@@ -8,7 +8,7 @@
               src="@/assets/img/dongshan.png" alt="东山图标"
               style="height: 2em; vertical-align: middle; margin-right: 0.3em;"
           />
-
+        <el-text style="font-size: 26px;margin-bottom: 0;"> 社 区</el-text>
         </div>
         <el-menu
             mode="horizontal"
@@ -125,6 +125,7 @@ html, body {
   cursor: pointer;
   color: #9b0d14;
   transition: color 0.3s ease;
+  display: flex;
 }
 
 .brand:hover {
