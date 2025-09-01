@@ -3,6 +3,7 @@ import Home from '@/views/Home/index.vue'
 import NewsCarousel from '@/views/NewsCarousel/index.vue'
 import MirrorDownload from '@/views/MirrorDownload/index.vue'
 import DocumentDownload from '@/views/DocumentDownload/index.vue'
+import About from '@/views/About/index.vue'
 
 const routes = [
     { path: '/', component: Home },
@@ -10,7 +11,7 @@ const routes = [
     { path: '/news', component: NewsCarousel },
     { path: '/docs', component: DocumentDownload },
     { path: '/mirror', component: MirrorDownload },
-    // { path: '/about', component: () => import('@/pages/About.vue') },
+    { path: '/about', component: About },
 ]
 
 export default createRouter({
