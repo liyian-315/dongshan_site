@@ -14,7 +14,7 @@
               探索开源技术的<br><span class="highlight">无限可能</span>
             </h1>
             <p class="hero-subtitle animate-fade-in-delay">
-              东山社区致力于推动开源技术发展，分享前沿科技资讯与实践经验
+              东山社区是面向未来的RISC-V开源生态协作平台，致力于构建开放、共享、创新的技术社群
             </p>
           </div>
 
