@@ -1,8 +1,18 @@
-<script setup lang="ts">
-import { onMounted } from 'vue';
+<script setup>
+import {onMounted, ref} from 'vue';
+import {fetchAboutText} from '@/api/about'
 
-onMounted(() => {
-  console.log('东山社区About页面加载完成');
+const aboutText = ref('');
+const loading = ref(true);
+
+onMounted(async () => {
+  try {
+    aboutText.value = await fetchAboutText({area: 'about-text'});
+    loading.value = false;
+  } catch (err) {
+    console.error('获取关于我们文本失败:', err);
+    loading.value = false;
+  }
 });
 </script>
 
@@ -14,12 +24,13 @@ onMounted(() => {
         <div class="title-watermark">About us</div>
       </div>
       <div class="watermark-main">东山社区</div>
-      <div class="about-text">
-        <p>东山社区是面向未来的RISC-V开源生态协作平台，由山东大学发起，致力于构建开放、共享、创新的技术社群。</p>
-        <p>以RISC-V开源指令集架构为技术基础，聚焦高校学生群体，链接企业与科研机构，打造面向开源创新的人才培养生态系统。</p>
-        <p>在这里，每一位学生都是技术创新的主角，通过参与开源项目、获取前沿资源、对接产业需求，迅速构建属于自己的技术能力与职业通道。</p>
-        <p>东山社区不仅是一个技术平台，更是连接学术理想与产业实践的桥梁，社区坚信，唯有开放、协作，方能共同推动技术的跨越式发展。</p>
+      <div class="about-text" v-if="!loading">
+        <p>
+          {{ aboutText }}
+        </p>
       </div>
+      <!-- 加载状态 -->
+      <div class="loading" v-else-if="loading">加载中...</div>
     </div>
   </div>
 </template>
