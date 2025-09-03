@@ -20,20 +20,13 @@
                 <template #title>
                   <span>{{ menuMap[level2Index] }}</span>
                 </template>
-                <template v-for="level3Index in getChildIndexes(level2Index)" :key="level3Index">
-                  <el-sub-menu :index="level3Index">
-                    <template #title>
-                      <span>{{ menuMap[level3Index] }}</span>
-                    </template>
-                    <el-menu-item
-                        v-for="level4Index in getChildIndexes(level3Index)"
-                        :key="level4Index"
-                        :index="level4Index"
-                    >
-                      {{ menuMap[level4Index] }}
-                    </el-menu-item>
-                  </el-sub-menu>
-                </template>
+                <el-menu-item
+                    v-for="level3Index in getChildIndexes(level2Index)"
+                    :key="level3Index"
+                    :index="level3Index"
+                >
+                  {{ menuMap[level3Index] }}
+                </el-menu-item>
               </el-sub-menu>
             </template>
           </el-sub-menu>
@@ -61,7 +54,7 @@
 <script setup>
 import {computed, onMounted, ref} from 'vue'
 import {ElCard, ElLink, ElMenu, ElMenuItem, ElMessage, ElSubMenu, ElTable, ElTableColumn} from 'element-plus'
-import {fetchMirrorList} from '@/api/mirror.js'
+import {fetchMirrorList, fetchMenuList} from '@/api/mirror.js'
 
 const mirrors = ref([])
 const error = ref('')
@@ -69,26 +62,10 @@ const loading = ref(true)
 const currentPath = ref([])
 
 // 菜单映射表
-const menuMap = {
-  '1': 'RISC-V',
-  '1-1': '厂商111',
-  '1-1-1': '系列111',
-  '1-1-1-1': '所有镜像',
-  '1-2': '厂商122',
-  '1-2-1': '系列111',
-  '1-2-1-1': '所有镜像',
-  '2': 'Arm',
-  '2-1': '厂商211',
-  '2-1-1': '系列211',
-  '2-1-1-1': '所有镜像',
-  '3': 'Intel',
-  '3-1': '厂商311',
-  '3-1-1': '系列311',
-  '3-1-1-1': '所有镜像',
-}
+const menuMap = ref({})
 
 const getChildIndexes = (parentIndex) => {
-  const allIndexes = Object.keys(menuMap)
+  const allIndexes = Object.keys(menuMap.value)
   return allIndexes.filter(index => {
     const parentLevel = parentIndex.split('-').length
     const currentLevel = index.split('-').length
@@ -97,13 +74,18 @@ const getChildIndexes = (parentIndex) => {
 }
 
 const getLevel1Indexes = computed(() => {
-  const allIndexes = Object.keys(menuMap)
+  const allIndexes = Object.keys(menuMap.value)
   return allIndexes.filter(index => index.split('-').length === 1)
 })
 
 onMounted(async () => {
   try {
-    await fetchMirrors('1')
+    const menuList = await fetchMenuList()
+    menuList.forEach(menuItem => {
+      if (menuItem.level && menuItem.title) {
+        menuMap.value[menuItem.level] = menuItem.title
+      }
+    })
   } catch (e) {
     error.value = '获取镜像列表失败，请检查网络或联系管理员'
   } finally {
@@ -113,7 +95,7 @@ onMounted(async () => {
 async function handleMenuSelect(index, indexPath) {
   try {
     loading.value = true
-    currentPath.value = indexPath.map(path => menuMap[path])
+    currentPath.value = indexPath.map(path => menuMap.value[path])
     await fetchMirrors(index)
   } catch (e) {
     ElMessage.error('获取镜像列表失败：' + e.message)
