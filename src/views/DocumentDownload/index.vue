@@ -6,38 +6,31 @@
           active-text-color="#000"
           background-color="#fff"
           default-active="1"
-      text-color="#000"
-      @select="handleMenuSelect"
+          text-color="#000"
+          @select="handleMenuSelect"
       >
-      <template v-for="level1Index in getLevel1Indexes" :key="level1Index">
-        <el-sub-menu :index="level1Index">
-          <template #title>
-            <span>{{ menuMap[level1Index] }}</span>
-          </template>
+        <template v-for="level1Index in getLevel1Indexes" :key="level1Index">
+          <el-sub-menu :index="level1Index">
+            <template #title>
+              <span>{{ menuMap[level1Index] }}</span>
+            </template>
 
-          <template v-for="level2Index in getChildIndexes(level1Index)" :key="level2Index">
-            <el-sub-menu :index="level2Index">
-              <template #title>
-                <span>{{ menuMap[level2Index] }}</span>
-              </template>
-              <template v-for="level3Index in getChildIndexes(level2Index)" :key="level3Index">
-                <el-sub-menu :index="level3Index">
-                  <template #title>
-                    <span>{{ menuMap[level3Index] }}</span>
-                  </template>
-                  <el-menu-item
-                      v-for="level4Index in getChildIndexes(level3Index)"
-                      :key="level4Index"
-                      :index="level4Index"
-                  >
-                    {{ menuMap[level4Index] }}
-                  </el-menu-item>
-                </el-sub-menu>
-              </template>
-            </el-sub-menu>
-          </template>
-        </el-sub-menu>
-      </template>
+            <template v-for="level2Index in getChildIndexes(level1Index)" :key="level2Index">
+              <el-sub-menu :index="level2Index">
+                <template #title>
+                  <span>{{ menuMap[level2Index] }}</span>
+                </template>
+                <el-menu-item
+                    v-for="level3Index in getChildIndexes(level2Index)"
+                    :key="level3Index"
+                    :index="level3Index"
+                >
+                  {{ menuMap[level3Index] }}
+                </el-menu-item>
+              </el-sub-menu>
+            </template>
+          </el-sub-menu>
+        </template>
       </el-menu>
     </div>
 <!--    中间表单区-->
@@ -94,29 +87,13 @@ import {
   ElTable, ElTableColumn, ElButton, ElDialog, ElCard, ElMessage,
   ElMenu, ElSubMenu, ElMenuItem, ElBreadcrumb, ElBreadcrumbItem
 } from 'element-plus'
-import { fetchDocList } from '@/api/doc.js'
+import { fetchDocList, fetchMenuList } from '@/api/doc.js'
 
 // 菜单映射表
-const menuMap = {
-  '1': 'RISC-V',
-  '1-1': '厂商111',
-  '1-1-1': '系列111',
-  '1-1-1-1': '所有文档',
-  '1-2': '厂商122',
-  '1-2-1': '系列111',
-  '1-2-1-1': '所有文档',
-  '2': 'Arm',
-  '2-1': '厂商211',
-  '2-1-1': '系列211',
-  '2-1-1-1': '所有文档',
-  '3': 'Intel',
-  '3-1': '厂商311',
-  '3-1-1': '系列311',
-  '3-1-1-1': '所有文档',
-}
+const menuMap = ref({})
 
 const getChildIndexes = (parentIndex) => {
-  const allIndexes = Object.keys(menuMap)
+  const allIndexes = Object.keys(menuMap.value)
   return allIndexes.filter(index => {
     const parentLevel = parentIndex.split('-').length
     const currentLevel = index.split('-').length
@@ -125,7 +102,7 @@ const getChildIndexes = (parentIndex) => {
 }
 
 const getLevel1Indexes = computed(() => {
-  const allIndexes = Object.keys(menuMap)
+  const allIndexes = Object.keys(menuMap.value)
   return allIndexes.filter(index => index.split('-').length === 1)
 })
 
@@ -137,7 +114,12 @@ const blobUrl = ref('')
 
 onMounted(async () => {
   try {
-    await fetchDocuments('1')
+    const menuList = await fetchMenuList()
+    menuList.forEach(menuItem => {
+      if (menuItem.level && menuItem.title) {
+        menuMap.value[menuItem.level] = menuItem.title
+      }
+    })
   } catch (e) {
     ElMessage.error('获取文档列表失败：' + e.message)
   } finally {
@@ -148,7 +130,7 @@ onMounted(async () => {
 async function handleMenuSelect(index, indexPath) {
   try {
     loading.value = true
-    currentPath.value = indexPath.map(path => menuMap[path])
+    currentPath.value = indexPath.map(path => menuMap.value[path])
     await fetchDocuments(index)
   } catch (e) {
     ElMessage.error('获取文档失败：' + e.message)
@@ -160,7 +142,7 @@ async function handleMenuSelect(index, indexPath) {
 async function fetchDocuments(menuIndex) {
   const [arch, manufacturer, series] = menuIndex.split('-').map((_, i) => {
     const path = menuIndex.split('-').slice(0, i + 1).join('-')
-    return menuMap[path] || ''
+    return menuMap.value[path] || ''
   })
   const params = { arch: arch || '', manufacturer: manufacturer || '', series: series || '' }
   docs.value = await fetchDocList(params)
