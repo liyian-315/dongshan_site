@@ -7,10 +7,11 @@ const loading = ref(true);
 
 onMounted(async () => {
   try {
+    loading.value = true;
     aboutText.value = await fetchAboutText({area: 'about-text'});
-    loading.value = false;
   } catch (err) {
     console.error('获取关于我们文本失败:', err);
+  } finally {
     loading.value = false;
   }
 });
