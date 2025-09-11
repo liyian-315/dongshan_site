@@ -145,14 +145,12 @@ const newsList = ref([
 onMounted(async () => {
   try {
     const res = await fetchHomeCarousel();
-    console.log(res)
     if (res && res.length > 0) {
       newsList.value = res;
     }
   } catch (err) {
     console.error('获取轮播文本失败:', err);
   }
-  console.log('东山社区首页加载完成');
 });
 </script>
 

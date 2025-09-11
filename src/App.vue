@@ -33,6 +33,8 @@
           <el-menu-item index="/docs">文档</el-menu-item>
           <el-menu-item index="/mirror">镜像下载</el-menu-item>
           <el-menu-item index="/about">关于</el-menu-item>
+          <el-menu-item index="/task">任务</el-menu-item>
+          <el-menu-item index="/personInfo">个人信息</el-menu-item>
         </el-menu>
       </div>
     </header>
