@@ -1,7 +1,7 @@
 import {post, put, get} from './index'
 
 export function getPdfCopyWriting(params) {
-    return get('/api/getPdfCW',params)
+    return get('/api/public/getPdfCW',params)
 }
 
 
