@@ -1,5 +1,5 @@
 import { get } from './index'
 
 export async function fetchHomeCarousel() {
-    return get('/api/home_carousel')
+    return get('/api/public/home_carousel')
 }

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {ElMessage} from "element-plus";
 import router from "@/router/index.js";
+import {warn} from "vue";
 
 const apiClient = axios.create({
     baseURL: '/',
@@ -29,6 +30,9 @@ apiClient.interceptors.response.use(
         // -------------------------- 1. 处理成功场景（HTTP 2xx 系列）--------------------------
         if (httpStatus >= 200 && httpStatus < 300) {
             if (typeof res === 'object' && res !== null && 'data' in res) {
+                if(res.code >= 400){
+                    ElMessage.warning(res.message)
+                }
                 return res.data;
             }
             return res;
