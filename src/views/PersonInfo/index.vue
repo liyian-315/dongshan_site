@@ -5,7 +5,7 @@
         <h2>个人信息</h2>
       </div>
 
-      <el-skeleton :loading="loading" row-count="6" :title="false" v-if="loading"></el-skeleton>
+      <el-skeleton :loading="loading" row-count="8" :title="false" v-if="loading"></el-skeleton>
 
       <el-form
           ref="formRef"
@@ -42,6 +42,42 @@
         <el-form-item label="银行卡号" prop="bankCardNumber">
           <el-input v-model="userInfo.bankCardNumber" placeholder="请输入银行卡号（选填）"></el-input>
         </el-form-item>
+        <!-- PDF协议签署状态 -->
+        <el-form-item label="协议签署">
+          <div class="agreement-status">
+            <!-- 已签署状态 -->
+            <template v-if="userInfo.hasSignedPdf">
+              <el-tag type="success">已签署{{ pdfCW.title || 'PDF协议' }}</el-tag>
+            </template>
+            <!-- 未签署状态（区分链接加载中/加载完成） -->
+            <template v-else>
+              <span class="warning-text">请签署{{ pdfCW.title || 'PDF协议' }}：</span>
+              <!-- 链接加载完成 -->
+              <el-link
+                  v-if="pdfCW.link"
+                  type="primary"
+                  :href="pdfCW.link"
+                  target="_blank"
+                  :title="pdfCW.copyWritingText"
+              class="pdf-download-link"
+              >
+              {{ pdfCW.copyWritingText || '下载协议' }}
+              </el-link>
+              <!-- 链接加载中 -->
+              <span v-else class="loading-text">正在获取协议链接...</span>
+            </template>
+            <!-- 协议备注信息（若有） -->
+            <el-tooltip
+                v-if="pdfCW.note"
+                placement="top"
+                effect="dark"
+                :content="pdfCW.note"
+                class="agreement-note"
+            >
+              <i class="el-icon-info"></i>
+            </el-tooltip>
+          </div>
+        </el-form-item>
 
         <!-- 提交修改按钮 -->
         <el-form-item class="submit-btn-group">
@@ -68,8 +104,11 @@
 <script setup>
 import {ref, onMounted, reactive} from 'vue'
 import {useRouter} from 'vue-router'
-import {ElCard, ElForm, ElFormItem, ElInput, ElSkeleton, ElMessage, ElButton} from 'element-plus'
-import {personInfo, updatePersonInfo} from '@/api/user.js'
+import {
+  ElCard, ElForm, ElFormItem, ElInput, ElSkeleton, ElMessage, ElButton,
+  ElTag, ElLink, ElTooltip, ElIcon
+} from 'element-plus'
+import {personInfo, updatePersonInfo, getPdfCopyWriting} from '@/api/user.js'
 
 const router = useRouter()
 const loading = ref(true)
@@ -85,7 +124,16 @@ const userInfo = ref({
   phone: '',
   company: '',
   address: '',
-  bankCardNumber: ''
+  bankCardNumber: '',
+  hasSignedPdf: false,      // 是否已签署PDF协议
+})
+
+const pdfCW = ref({
+  area:'person-info-pdf-download',
+  title:'',
+  copyWritingText:'',
+  link:'',
+  note:''
 })
 const formRules = reactive({
   // 备用邮箱：可选，但填了必须符合邮箱格式
@@ -152,38 +200,56 @@ onMounted(async () => {
   }
   const params = {username: username}
   try {
-    const response = await personInfo(params)
-    if (response) {
-      const userData = response.data || response
+    const userInfoPromise = personInfo(params)
+    const pdfCWPromise = getPdfCopyWriting({area: pdfCW.value.area})
+    const [userResponse, pdfCWResponse] = await Promise.all([
+      userInfoPromise,
+      pdfCWPromise
+    ])
+    console.info(pdfCWResponse)
+    // 处理个人信息数据
+    if (userResponse) {
+      const userData = userResponse.data || userResponse
       userInfo.value = {...userInfo.value, ...userData}
-      originalUserInfo.value = { ...userInfo.value }
+      originalUserInfo.value = {...userInfo.value} // 保存原始数据用于重置
     } else {
       ElMessage.error('获取个人信息失败：接口返回空数据')
     }
+    // 处理PDF文案数据
+    if (pdfCWResponse) {
+      pdfCW.value = {...pdfCW.value, ...pdfCWResponse}
+    } else {
+      ElMessage.warning('获取协议配置失败，将使用默认文案')
+      pdfCW.value.title = 'PDF协议'
+      pdfCW.value.copyWritingText = '下载协议'
+    }
   } catch (error) {
-    let errorMsg = '获取个人信息失败: '
+    let errorMsg = ''
+    if (error.config.url.includes('getPdfCopyWriting')) {
+      errorMsg = '获取协议配置失败：'
+    } else {
+      errorMsg = '获取个人信息失败：'
+    }
     if (error.response) {
       errorMsg += error.response.data?.message || `状态码: ${error.response.status}`
-
+      // 401登录过期处理
       if (error.response.status === 401) {
         localStorage.removeItem('token')
         localStorage.removeItem('username')
         ElMessage.warning('登录已过期，请重新登录')
         await router.push('/login')
-      } else if (error.response.status === 404) {
+      } else if (error.response.status === 404 && error.config.url.includes('personInfo')) {
         localStorage.removeItem('username')
       }
     } else {
-      errorMsg += error.message || '未知错误'
+      errorMsg += error.message || '未知网络错误'
     }
-
     ElMessage.error(errorMsg)
-    console.error('获取个人信息错误详情:', error)
+    console.error(errorMsg, error)
   } finally {
     loading.value = false
   }
 })
-
 // 提交修改
 const handleSubmit = async () => {
   const isValid = await formRef.value.validate().catch(() => false)
