@@ -9,40 +9,40 @@
             class="custom-carousel"
         >
           <el-carousel-item>
-              <div class="hero-container">
-                <img
-                    src="@/assets/img/dongshan.png"
-                    alt="东山社区Logo"
-                    class="community-logo"
-                >
-                <div class="hero-text">
-                  <h1 class="hero-title animate-fade-in">
-                    探索开源技术的<br><span class="highlight">无限可能</span>
-                  </h1>
-                  <p class="hero-subtitle animate-fade-in-delay">
-                    东山社区是面向未来的RISC-V开源生态协作平台，致力于构建开放、共享、创新的技术社群
-                  </p>
-                </div>
+            <div class="hero-container">
+              <img
+                  src="@/assets/img/dongshan.png"
+                  alt="东山社区Logo"
+                  class="community-logo"
+              >
+              <div class="hero-text">
+                <h1 class="hero-title animate-fade-in">
+                  探索开源技术的<br><span class="highlight">无限可能</span>
+                </h1>
+                <p class="hero-subtitle animate-fade-in-delay">
+                  东山社区是面向未来的RISC-V开源生态协作平台，致力于构建开放、共享、创新的技术社群
+                </p>
+              </div>
 
-                <!-- 右侧：视频播放区域 -->
-                <div class="hero-right">
-                  <div class="video-container">
-                    <video
-                        class="community-video"
-                        controls
-                        autoplay
-                        loop
-                        muted
-                        playsinline
-                        preload="auto"
-                        poster="@/assets/img/video-cover.png"
-                    >
-                      <source src="@/assets/img/23e771d0c2d3ef70e2be721b1446b3b5.mp4" type="video/mp4">
-                      您的浏览器不支持视频播放，请升级浏览器
-                    </video>
-                  </div>
+              <!-- 右侧：视频播放区域 -->
+              <div class="hero-right">
+                <div class="video-container">
+                  <video
+                      class="community-video"
+                      controls
+                      autoplay
+                      loop
+                      muted
+                      playsinline
+                      preload="auto"
+                      poster="@/assets/img/video-cover.png"
+                  >
+                    <source src="@/assets/img/dongshan-video.mp4" type="video/mp4">
+                  您的浏览器不支持视频播放，请升级浏览器
+                  </video>
                 </div>
               </div>
+            </div>
           </el-carousel-item>
           <el-carousel-item v-for="(item, idx) in newsList" :key="idx + 1">
             <div class="carousel-item-container vertical">
@@ -136,17 +136,34 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted} from 'vue';
 import {ElCarousel, ElCarouselItem} from "element-plus";
 import {fetchHomeCarousel} from "@/api/home.js";
-const newsList = ref([
+import {getPdfCopyWriting} from "@/api/user.js";
 
-]);
+const newsList = ref([]);
+const pdfCW = ref({
+  area: 'home-video-mp4',
+  title: '',
+  copyWritingText: '',
+  link: '',
+  note: ''
+})
 onMounted(async () => {
   try {
     const res = await fetchHomeCarousel();
     if (res && res.length > 0) {
       newsList.value = res;
+    }
+    const pdfCWPromise = await getPdfCopyWriting({area: 'home-video-mp4'})
+    if(pdfCWPromise){
+      pdfCW.value = pdfCWPromise.data ? pdfCWPromise.data : pdfCWPromise;
+    }
+    if (pdfCW.value && pdfCW.value.link) {
+      console.info('视频链接:', pdfCW.value.link);
+    } else {
+      // 兜底：保留初始 link，避免视频无法播放
+      pdfCW.value.link = 'https://mpvideo.qpic.cn/0b2epudbsaagjqagypfk6bufm7oddf6qmgia.f10002.mp4?dis_k=d3366686da843bda625c511b9e7bbc18&dis_t=1757651990&play_scene=10120&auth_info=C/2XvawvG1dlo+OslwBTc0d7dTAEZkIQOghgOGscUjAyGHAxNAQAGhIjRQktb15TU3E=&auth_key=aec1185c26c4754b30960e937cfa5fab&vid=wxv_4136261317352931331&format_id=10002&support_redirect=0&mmversion=false';
     }
   } catch (err) {
     console.error('获取轮播文本失败:', err);
@@ -390,16 +407,20 @@ onMounted(async () => {
   .carousel-img-wrapper.vertical {
     height: 150px;
   }
+
   .carousel-title {
     font-size: 16px;
   }
+
   .community-title {
     font-size: 2.5rem;
   }
+
   .hero-container {
     flex-direction: column;
     text-align: center;
   }
+
   .community-logo {
     width: 140px;
     height: 140px;
@@ -408,6 +429,7 @@ onMounted(async () => {
   .module-card {
     padding: 1.5rem;
   }
+
   .modules-container {
     grid-template-columns: 1fr;
   }
