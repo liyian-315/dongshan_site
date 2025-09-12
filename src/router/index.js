@@ -11,6 +11,7 @@ import Task from '@/views/Task/index.vue'
 
 const routes = [
     { path: '/', component: Home },
+    { path: '/home', component: Home },
     { path: '/news', component: NewsCarousel },
     { path: '/docs', component: DocumentDownload },
     { path: '/mirror', component: MirrorDownload },

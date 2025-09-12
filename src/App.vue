@@ -8,7 +8,7 @@
               src="@/assets/img/dongshan.png" alt="东山图标"
               style="height: 2em; vertical-align: middle; margin-right: 0.3em;"
           />
-        <el-text style="font-size: 26px;margin-bottom: 0;"> 社 区</el-text>
+          <el-text style="font-size: 26px;margin-bottom: 0;"> 社 区</el-text>
         </div>
         <el-menu
             mode="horizontal"
@@ -22,19 +22,29 @@
             style="flex: 1; justify-content: flex-end;"
         >
           <el-menu-item index="/lab">实验室介绍</el-menu-item>
-          <el-menu-item >  <a
-              href="https://sddx.huimaibuy.net/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="el-menu-item external-link"
+          <el-menu-item >
+            <a
+                href="https://sddx.huimaibuy.net/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="el-menu-item external-link"
             >
-            开源新闻
-            </a></el-menu-item>
+              开源新闻
+            </a>
+          </el-menu-item>
           <el-menu-item index="/docs">文档</el-menu-item>
           <el-menu-item index="/mirror">镜像下载</el-menu-item>
           <el-menu-item index="/about">关于</el-menu-item>
           <el-menu-item index="/task">任务</el-menu-item>
           <el-menu-item index="/personInfo">个人信息</el-menu-item>
+          <!-- 新增：退出登录按钮 -->
+          <el-menu-item
+              index="logout"
+              @click="handleLogout"
+              style="cursor: pointer;"
+          >
+            退出登录
+          </el-menu-item>
         </el-menu>
       </div>
     </header>
@@ -57,7 +67,7 @@
 
 <script setup>
 import 'element-plus/dist/index.css'
-import {ElAffix, ElMenu, ElMenuItem} from 'element-plus'
+import {ElAffix, ElMenu, ElMenuItem, ElMessage} from 'element-plus'
 import {useRouter, useRoute} from 'vue-router'
 import {ref, watch} from "vue";
 
@@ -73,12 +83,21 @@ watch(
 )
 
 function handleMenuSelect(index) {
-  router.push(index)
+  // 忽略退出登录的index，避免路由跳转
+  if (index !== 'logout') {
+    router.push(index)
+  }
 }
 
 function homeSelect() {
   router.push("/")
   activeMenu.value = ''
+}
+
+function handleLogout() {
+  localStorage.removeItem('token')
+  localStorage.removeItem('username')
+  ElMessage.success('已成功退出登录')
 }
 </script>
 
@@ -141,6 +160,14 @@ html, body {
 
 .right-menu .el-menu-item {
   margin: 0 10px;
+}
+
+.right-menu .el-menu-item[index="logout"] {
+  color: #ff4d4f;
+}
+
+.right-menu .el-menu-item[index="logout"]:hover {
+  background-color: rgba(255, 77, 79, 0.1);
 }
 
 .footer {

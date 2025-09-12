@@ -1,16 +1,20 @@
-import {post, put} from './index'
+import {post, put, get} from './index'
 
-export function updatePersonInfo(params) {
-    return put('/api/auth/updatePersonInfo',params)
+export function getPdfCopyWriting(params) {
+    return get('/api/getPdfCW',params)
 }
 
+
+export function updatePersonInfo(params) {
+    return put('/api/updatePersonInfo',params)
+}
 
 export async function registerUser(params) {
     return post('/api/auth/register',params)
 }
 
 export async function personInfo(params) {
-    return post('/api/auth/personInfo',params)
+    return post('/api/personInfo',params)
 }
 
 export async function login(params) {

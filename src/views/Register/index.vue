@@ -1,8 +1,9 @@
 <script setup>
 import {reactive, ref} from 'vue'
 import {useRouter} from 'vue-router'
-import {ElButton, ElCard, ElCol, ElForm, ElFormItem, ElInput, ElMessage, ElRow} from 'element-plus'
-import {registerUser} from '@/api/user.js'
+import {ElButton, ElCard, ElCol, ElForm, ElFormItem, ElInput, ElMessage, ElRow, ElTooltip} from 'element-plus'
+import {login, registerUser} from '@/api/user.js'
+import {InfoFilled} from '@element-plus/icons-vue'
 
 // 路由实例
 const router = useRouter()
@@ -15,7 +16,9 @@ const form = reactive({
   email2: '',
   phone: '',
   address: '',
-  company: ''
+  company: '',
+  password: '',
+  confirmPassword: ''
 })
 
 // 表单验证规则
@@ -43,6 +46,30 @@ const rules = {
   ],
   company: [
     { required: true, message: '请输入单位', trigger: 'blur' }
+  ],
+  // 新增：密码验证规则
+  password: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    { min: 8, max: 20, message: '密码长度必须在8-20个字符之间', trigger: 'blur' },
+    {
+      pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      message: '密码必须包含大小写字母、数字和特殊字符',
+      trigger: 'blur'
+    }
+  ],
+  // 新增：确认密码验证规则
+  confirmPassword: [
+    { required: true, message: '请确认密码', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value !== form.password) {
+          callback(new Error('两次输入的密码不一致'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur'
+    }
   ]
 }
 
@@ -54,32 +81,28 @@ const submitForm = async () => {
   if (!formRef.value) return
 
   try {
-    // 表单验证
     await formRef.value.validate()
 
-    // 提交注册数据
     const response = await registerUser(form)
 
-    // 注册成功，显示消息并跳转
-    ElMessage.success('注册成功，正在登录...')
+    ElMessage.success('注册成功，请登录...')
 
-    // 假设后端返回token等信息，这里可以处理登录状态
-    // 例如存储token到localStorage
-    if (response.token) {
-      localStorage.setItem('token', response.token)
-    }
+    // const loginResponse = await login({username:form.username, password: form.password})
+
+    // if (loginResponse.token) {
+    //   localStorage.setItem('token', response.token)
+    //   localStorage.setItem('username', form.username)
+    // }
 
     // 跳转到首页
     setTimeout(() => {
-      router.push('/home')
+      router.push('/login')
     }, 1000)
 
   } catch (error) {
-    // 处理验证失败或请求错误
     if (error.name === 'Error') {
       ElMessage.error('注册失败：' + error.message)
     } else {
-      // 表单验证失败不需要额外处理，Element会自动提示
     }
   }
 }
@@ -95,7 +118,7 @@ const resetForm = () => {
 <template>
   <div class="register-container">
     <div class="register-card">
-      <el-card>
+      <el-card class="card-inner">
         <div class="header">
           <h2>用户注册</h2>
         </div>
@@ -150,6 +173,37 @@ const resetForm = () => {
               </el-form-item>
             </el-col>
 
+            <el-col :span="24">
+              <el-form-item label="密码" prop="password">
+                <el-input
+                    v-model="form.password"
+                    type="password"
+                    placeholder="请输入密码"
+                    show-password
+                ></el-input>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="24">
+              <el-form-item label="确认密码" prop="confirmPassword">
+                <el-input
+                    v-model="form.confirmPassword"
+                    type="password"
+                    placeholder="请再次输入密码"
+                    show-password
+                ></el-input>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="24" class="password-hint">
+              <el-tooltip content="密码必须包含大小写字母、数字和特殊字符，长度8-20位" placement="top">
+                <div class="hint-content">
+                  <InfoFilled class="info-icon" />
+                  <span class="hint-text">密码强度要求：包含大小写字母、数字和特殊字符，长度8-20位</span>
+                </div>
+              </el-tooltip>
+            </el-col>
+
             <el-col :span="24" class="form-actions">
               <el-button type="primary" @click="submitForm">注册</el-button>
               <el-button @click="resetForm">重置</el-button>
@@ -168,13 +222,19 @@ const resetForm = () => {
   align-items: center;
   min-height: 100vh;
   background-color: #f5f7fa;
-  padding: 20px;
+  padding: 20px; /* 保留页面边距，避免移动端溢出 */
 }
+
 
 .register-card {
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* 给card内部增加内边距，避免内容贴边 */
+.card-inner {
+  padding: 20px;
 }
 
 .header {
@@ -188,7 +248,7 @@ h2 {
 }
 
 .register-form {
-  padding: 0 20px 20px;
+  padding: 0;
 }
 
 .form-actions {
@@ -200,5 +260,32 @@ h2 {
 
 :deep(.el-form-item) {
   margin-bottom: 15px;
+}
+
+.password-hint {
+  padding-left: 0;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #606266;
+  text-align: left;
+}
+
+.hint-content {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: default;
+}
+
+
+.info-icon {
+  color: #409eff;
+  font-size: 12px !important;
+  width: 12px;
+  height: 12px;
+}
+
+.hint-text {
+  white-space: nowrap;
 }
 </style>
