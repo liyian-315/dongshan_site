@@ -365,8 +365,10 @@ const handleClaimTask = async (taskId) => {
   if (claimLoading.value[taskId]) return
   try {
     claimLoading.value[taskId] = true
-    await claimTask({ taskId, username })
-    ElMessage.success('任务领取成功！')
+    const res = await claimTask({ taskId, username })
+    if(res != null){
+      ElMessage.success('任务领取成功！')
+    }
     await getReceivedTaskCount()
     if (activeCategoryId.value) {
       await getTasksByCategory(activeCategoryId.value)
