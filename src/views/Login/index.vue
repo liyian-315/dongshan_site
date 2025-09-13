@@ -67,10 +67,13 @@ async function submitForm() {
       const { token, username, role } = response;
       // 存储 Token 和用户信息
       localStorage.setItem('token', token.trim());
-      localStorage.setItem('username', username || '');
-      localStorage.setItem('role', role || '');
+      localStorage.setItem('username', (username || '').trim());
+      localStorage.setItem('role', (role || '').trim());
 
       ElMessage.success('登录成功');
+      if (window.updateLoginStatus) {
+        window.updateLoginStatus()
+      }
       const redirect = route.query.redirect || '/';
       await router.push(redirect);
     } else {
