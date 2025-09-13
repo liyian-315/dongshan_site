@@ -36,14 +36,13 @@
           <el-menu-item index="/mirror">镜像下载</el-menu-item>
           <el-menu-item index="/about">关于</el-menu-item>
           <el-menu-item index="/task">任务</el-menu-item>
-          <el-menu-item index="/personInfo">个人信息</el-menu-item>
-          <!-- 新增：退出登录按钮 -->
+          <el-menu-item index="/personInfo" v-if="isLoggedIn">个人信息</el-menu-item>
           <el-menu-item
-              index="logout"
-              @click="handleLogout"
+              :index="isLoggedIn ? 'logout' : 'login'"
+              @click="handleLoginLogout"
               style="cursor: pointer;"
           >
-            退出登录
+            {{ isLoggedIn ? '退出登录' : '登录' }}
           </el-menu-item>
         </el-menu>
       </div>
@@ -67,13 +66,37 @@
 
 <script setup>
 import 'element-plus/dist/index.css'
-import {ElAffix, ElMenu, ElMenuItem, ElMessage} from 'element-plus'
+import {ElMenu, ElMenuItem, ElMessage} from 'element-plus'
 import {useRouter, useRoute} from 'vue-router'
-import {ref, watch} from "vue";
+import {ref, watch, onMounted, onUnmounted} from "vue";
 
 const router = useRouter()
 const route = useRoute()
 const activeMenu = ref(route.path === '/' ? '' : route.path)
+const isLoggedIn = ref(false)
+
+function checkLoginStatus() {
+  isLoggedIn.value = !!localStorage.getItem('token')
+}
+
+onMounted(() => {
+  checkLoginStatus()
+
+  window.addEventListener('storage', checkLoginStatus)
+})
+
+const routeUnwatch = watch(
+    () => route.path,
+    (newPath) => {
+      activeMenu.value = newPath === '/' ? '' : newPath
+      // 路由变化时主动更新登录状态
+      checkLoginStatus()
+    }
+)
+
+onUnmounted(() => {
+  window.removeEventListener('storage', checkLoginStatus)
+})
 
 watch(
     () => route.path,
@@ -83,10 +106,7 @@ watch(
 )
 
 function handleMenuSelect(index) {
-  // 忽略退出登录的index，避免路由跳转
-  if (index !== 'logout') {
-    router.push(index)
-  }
+  router.push(index)
 }
 
 function homeSelect() {
@@ -94,11 +114,19 @@ function homeSelect() {
   activeMenu.value = ''
 }
 
-function handleLogout() {
-  localStorage.removeItem('token')
-  localStorage.removeItem('username')
-  ElMessage.success('已成功退出登录')
+function handleLoginLogout() {
+  if (isLoggedIn.value) {
+    localStorage.removeItem('token')
+    localStorage.removeItem('username')
+    localStorage.removeItem('role')
+    ElMessage.success('已成功退出登录')
+    isLoggedIn.value = false
+    router.push('/')
+  } else {
+    router.push('/login')
+  }
 }
+window.updateLoginStatus = checkLoginStatus
 </script>
 
 <style scoped>
