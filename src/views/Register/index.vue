@@ -1,9 +1,9 @@
 <script setup>
 import {reactive, ref} from 'vue'
 import {useRouter} from 'vue-router'
-import {ElButton, ElCard, ElCol, ElForm, ElFormItem, ElInput, ElMessage, ElRow, ElTooltip} from 'element-plus'
+import {ElButton, ElCard, ElCol, ElForm, ElFormItem, ElInput, ElMessage, ElRow, ElTooltip, ElDialog, ElCheckbox} from 'element-plus'
 import {login, registerUser} from '@/api/user.js'
-import {InfoFilled} from '@element-plus/icons-vue'
+import {InfoFilled, Document} from '@element-plus/icons-vue'
 
 // 路由实例
 const router = useRouter()
@@ -20,6 +20,10 @@ const form = reactive({
   password: '',
   confirmPassword: ''
 })
+
+// 新增：用户协议相关状态
+const agreeTerms = ref(false)
+const termsDialogVisible = ref(false)
 
 // 表单验证规则
 const rules = {
@@ -47,7 +51,6 @@ const rules = {
   company: [
     { required: true, message: '请输入单位', trigger: 'blur' }
   ],
-  // 新增：密码验证规则
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 8, max: 20, message: '密码长度必须在8-20个字符之间', trigger: 'blur' },
@@ -57,7 +60,6 @@ const rules = {
       trigger: 'blur'
     }
   ],
-  // 新增：确认密码验证规则
   confirmPassword: [
     { required: true, message: '请确认密码', trigger: 'blur' },
     {
@@ -80,6 +82,12 @@ const formRef = ref(null)
 const submitForm = async () => {
   if (!formRef.value) return
 
+  // 检查是否同意用户协议
+  if (!agreeTerms.value) {
+    ElMessage.warning('请阅读并同意用户协议')
+    return
+  }
+
   try {
     await formRef.value.validate()
 
@@ -87,14 +95,7 @@ const submitForm = async () => {
 
     ElMessage.success('注册成功，请登录...')
 
-    // const loginResponse = await login({username:form.username, password: form.password})
-
-    // if (loginResponse.token) {
-    //   localStorage.setItem('token', response.token)
-    //   localStorage.setItem('username', form.username)
-    // }
-
-    // 跳转到首页
+    // 跳转到登录页
     setTimeout(() => {
       router.push('/login')
     }, 1000)
@@ -103,6 +104,7 @@ const submitForm = async () => {
     if (error.name === 'Error') {
       ElMessage.error('注册失败：' + error.message)
     } else {
+      // 表单验证失败，不做额外处理
     }
   }
 }
@@ -112,6 +114,13 @@ const resetForm = () => {
   if (formRef.value) {
     formRef.value.resetFields()
   }
+  // 重置同意状态
+  agreeTerms.value = false
+}
+
+// 打开用户协议对话框
+const openTermsDialog = () => {
+  termsDialogVisible.value = true
 }
 </script>
 
@@ -204,8 +213,24 @@ const resetForm = () => {
               </el-tooltip>
             </el-col>
 
+            <!-- 新增：用户协议勾选 -->
+            <el-col :span="24" class="terms-section">
+              <el-checkbox v-model="agreeTerms" class="terms-checkbox">
+                我已阅读并同意
+                <span class="terms-link" @click.stop="openTermsDialog">《用户服务协议》</span>
+                和
+                <span class="terms-link" @click.stop="openTermsDialog">《隐私政策》</span>
+              </el-checkbox>
+            </el-col>
+
             <el-col :span="24" class="form-actions">
-              <el-button type="primary" @click="submitForm">注册</el-button>
+              <el-button
+                  type="primary"
+                  @click="submitForm"
+                  :disabled="!agreeTerms"
+              >
+                注册
+              </el-button>
               <el-button @click="resetForm">重置</el-button>
             </el-col>
           </el-row>
@@ -213,6 +238,35 @@ const resetForm = () => {
       </el-card>
     </div>
   </div>
+
+  <!-- 新增：用户协议对话框 -->
+  <el-dialog
+      title="用户服务协议"
+      v-model="termsDialogVisible"
+      width="70%"
+      :modal="true"
+  >
+    <div class="terms-content">
+      <h3 style="text-align: center; margin-bottom: 20px;">用户服务协议</h3>
+      <div class="terms-text">
+        <p>欢迎注册并使用本平台服务。在注册前，请您仔细阅读以下条款：</p>
+        <p>1. 服务条款的接受</p>
+        <p>通过点击"注册"按钮，您表示您同意并接受本协议的全部条款和条件。如果您不同意本协议的任何内容，请不要注册或使用本平台服务。</p>
+        <p>2. 用户注册</p>
+        <p>您声明并保证所提供的注册信息真实、准确、完整，并将及时更新您的个人信息以保持其真实性和准确性。</p>
+        <p>3. 用户账号</p>
+        <p>您应对您的账号和密码安全负责，任何通过您的账号进行的操作都将被视为您本人的操作，您将承担由此产生的全部责任。</p>
+        <p>4. 隐私保护</p>
+        <p>我们将按照隐私政策保护您的个人信息，详情请参阅《隐私政策》。</p>
+        <p>5. 服务变更与终止</p>
+        <p>我们保留随时修改或终止服务的权利，如有重大变更，我们将通过适当方式通知用户。</p>
+        <p>6. 法律适用</p>
+        <p>本协议的订立、执行和解释及争议的解决均应适用中华人民共和国法律。</p>
+        <p>7. 其他</p>
+        <p>本协议构成您与本平台之间的完整协议，取代先前所有关于本服务的理解和协议。如您对本协议有任何疑问，请联系我们的客服团队。</p>
+      </div>
+    </div>
+  </el-dialog>
 </template>
 
 <style scoped>
@@ -287,5 +341,35 @@ h2 {
 
 .hint-text {
   white-space: nowrap;
+}
+
+/* 新增：用户协议样式 */
+.terms-section {
+  margin: 15px 0;
+  padding-left: 0;
+  font-size: 14px;
+}
+
+.terms-link {
+  color: #409eff;
+  cursor: pointer;
+  text-decoration: underline;
+  margin: 0 3px;
+}
+
+.terms-link:hover {
+  color: #66b1ff;
+}
+
+.terms-content {
+  max-height: 500px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.terms-text p {
+  margin-bottom: 12px;
+  line-height: 1.6;
+  text-align: justify;
 }
 </style>
