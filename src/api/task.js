@@ -1,11 +1,24 @@
 import {put, post, get} from './index'
 
+export function getPublishTemplateUrl() {
+    return get('/api/task/getPublishTemplateUrl');
+}
+
+
+export function uploadTaskFiles(formData) {
+    return post('/api/task/uploadFile', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+}
+
 export function claimTask(params) {
-    return put('/api/task/claimTask',params)
+    return put('/api/task/claimTask', params)
 }
 
 export function fetchReceivedTaskCount(params) {
-    return get('/api/task/fetchReceivedTaskCount',params)
+    return get('/api/task/fetchReceivedTaskCount', params)
 }
 
 export function fetchMyTasks(params) {
