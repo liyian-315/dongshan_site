@@ -1,9 +1,9 @@
 import {get, post} from './index'
 
 export async function fetchDocList(params) {
-    return post('/api/public/docs', params)
+    return post('/api/docs', params)
 }
 
 export async function fetchMenuList() {
-    return get('/api/public/docs_menu')
+    return get('/api/docs_menu')
 }
