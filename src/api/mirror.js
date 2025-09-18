@@ -1,8 +1,8 @@
 import { get, post } from './index'
 
 export async function fetchMirrorList(params) {
-  return post('/api/public/mirrors',params)
+  return post('/api/mirrors',params)
 }
 export async function fetchMenuList() {
-    return get('/api/public/mirrors_menu')
+    return get('/api/mirrors_menu')
 }
