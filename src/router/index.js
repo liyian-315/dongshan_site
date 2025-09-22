@@ -20,9 +20,30 @@ const routes = [
     { path: '/login', component: Login },
     { path: '/personInfo', component: PersonInfo },
     { path: '/task', component: Task },
+    {
+        path: '/service',
+        name: 'Service',
+        component: () => import('@/views/Policies/Service.vue'),
+        meta: { title: '服务条款' }
+    },
+    {
+        path: '/privacy',
+        name: 'Privacy',
+        component: () => import('@/views/Policies/Privacy.vue'),
+        meta: { title: '隐私权政策' }
+    },
+    {
+        path: '/lawanno',
+        name: 'LawAnno',
+        component: () => import('@/views/Policies/LawAnno.vue'),
+        meta: { title: '法律声明' }
+    },
+
 ]
 
 export default createRouter({
     history: createWebHistory(),
     routes
 })
+
+
