@@ -6,22 +6,23 @@
         <div class="brand" @click="homeSelect">
           <img
               src="@/assets/img/dongshan.png" alt="东山图标"
-              style="height: 2em; vertical-align: middle; margin-right: 0.3em;"
+              class="brand-logo"
           />
-          <el-text style="font-size: 26px;margin-bottom: 0;"> 社 区</el-text>
+          <el-text class="brand-title"> 社 区</el-text>
         </div>
         <el-menu
             mode="horizontal"
             :ellipsis="false"
-            background-color="#2c3e50"
-            text-color="#fff"
-            active-text-color="#ffd04b"
+            background-color="transparent"
+            text-color="#1f2d3d"
+            active-text-color="#00d1ff"
             class="right-menu"
             :default-active="activeMenu"
             @select="handleMenuSelect"
             style="flex: 1; justify-content: flex-end;"
+            menu-trigger="hover"
         >
-          <el-menu-item index="/lab">实验室介绍</el-menu-item>
+          <el-menu-item index="/lab">开源项目介绍</el-menu-item>
           <el-menu-item >
             <a
                 href="https://sddx.huimaibuy.net/"
@@ -35,7 +36,13 @@
           <el-menu-item index="/docs">文档</el-menu-item>
           <el-menu-item index="/mirror">镜像下载</el-menu-item>
           <el-menu-item index="/about">关于</el-menu-item>
-          <el-menu-item index="/task">任务</el-menu-item>
+
+          <el-sub-menu index="/intern">
+            <template #title>实习生</template>
+            <el-menu-item index="/task">实习生任务领取</el-menu-item>
+            <el-menu-item index="/intern/plan">实习生教学计划概述</el-menu-item>
+          </el-sub-menu>
+
           <el-menu-item index="/personInfo" v-if="isLoggedIn">个人信息</el-menu-item>
           <el-menu-item
               :index="isLoggedIn ? 'logout' : 'login'"
@@ -57,7 +64,9 @@
         <div class="footer-links">
           <a href="/about">关于我们</a>
           <a href="/contact">联系我们</a>
-          <a href="/terms">使用条款</a>
+          <a href="/service">服务条款</a>
+          <a href="/privacy">隐私权政策</a>
+          <a href="/lawanno">法律声明</a>
         </div>
       </div>
     </footer>
@@ -66,7 +75,7 @@
 
 <script setup>
 import 'element-plus/dist/index.css'
-import {ElMenu, ElMenuItem, ElMessage} from 'element-plus'
+import { ElMenu, ElMenuItem, ElSubMenu, ElMessage } from 'element-plus'
 import {useRouter, useRoute} from 'vue-router'
 import {ref, watch, onMounted, onUnmounted} from "vue";
 
@@ -106,6 +115,8 @@ watch(
 )
 
 function handleMenuSelect(index) {
+  // 子菜单会把对应 index 传进来，比如 /intern/task 或 /intern/plan
+  if (index === 'logout') return
   router.push(index)
 }
 
@@ -153,29 +164,49 @@ html, body {
   overflow-x: hidden;
 }
 
-.top-bar-outer {
-  background-color: #2c3e50;
-  width: 100%;
+
+
+.top-bar-outer{
+  position: sticky;
+  top:0;
+  z-index:50;
+  width:100%;
+  background: linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.55));
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 16px rgba(15,23,42,.06);
+}
+.top-bar-inner{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 5%;
+  height:64px;
+}
+.brand{
+  display: flex;            /* 横向一行 */
+  align-items: center;      /* 图标与文字垂直居中 */
+  gap: .35rem;              /* 两者间距 */
+  white-space: nowrap;      /* 不换行 */
+  font-size:20px;           /* 你原来的 */
+  font-weight:600;
+  color:#0f172a;
+  cursor:pointer;
 }
 
-.top-bar-inner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 5%;
-  background-color: #2c3e50;
-  height: 60px;
-  width: 100%;
+.brand-logo{
+  height: 2em;
+  display: block;
+  flex: 0 0 auto;
 }
 
-.brand {
-  font-size: 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-  color: #9b0d14;
-  transition: color 0.3s ease;
-  display: flex;
+.brand-title{
+  font-size: 26px;
+  line-height: 1;
+  margin: 0;
+  display: inline-block;
 }
+
+
 
 .brand:hover {
   cursor: pointer;
@@ -186,54 +217,37 @@ html, body {
   margin-left: auto;
 }
 
-.right-menu .el-menu-item {
-  margin: 0 10px;
+
+.footer{
+  background: linear-gradient(180deg, rgba(255,255,255,.8), rgba(241,245,249,.9));
+  color:#334155;
+  padding:1.2rem 0 0.4rem; /* ↓ 降低高度 */
+  border-top:1px solid rgba(15,23,42,.06);
+}
+.footer-links{
+  display:flex;
+  justify-content:center;
+  gap:1.25rem;
+  flex-wrap:wrap;
+}
+.footer-links a{
+  color:#0ea5e9;
+}
+.footer-links a:hover{
+  color:#0284c7;
 }
 
-.right-menu .el-menu-item[index="logout"] {
-  color: #ff4d4f;
-}
-
-.right-menu .el-menu-item[index="logout"]:hover {
-  background-color: rgba(255, 77, 79, 0.1);
-}
-
-.footer {
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  padding: 3rem 0 1.5rem;
-  position: relative;
-}
 
 .footer .container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0.6rem;
 }
 
 .copyright {
   font-size: 0.9rem;
   opacity: 0.8;
   text-align: center;
-}
-
-.footer-links {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.footer-links a {
-  color: #ecf0f1;
-  text-decoration: none;
-  font-size: 0.9rem;
-  opacity: 0.8;
-  transition: opacity 0.3s ease;
-}
-
-.footer-links a:hover {
-  opacity: 1;
 }
 
 @media (max-width: 768px) {
@@ -249,4 +263,35 @@ html, body {
     padding: 20px 0;
   }
 }
+
+.right-menu {
+  border-bottom: none;
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+.right-menu :deep(.el-menu-item),
+.right-menu :deep(.el-sub-menu),
+.right-menu :deep(.el-sub-menu__title) {
+  flex: 0 0 104px;
+  padding: 0;
+  justify-content: center;
+  text-align: center;
+}
+
+.right-menu :deep(.el-menu-item .external-link) {
+  display: block;
+  width: 100%;
+}
+
+.right-menu .el-menu-item { margin: 0; }
+
+.right-menu .el-menu-item[index="logout"] {
+  color: #ff4d4f;
+}
+.right-menu .el-menu-item[index="logout"]:hover {
+  background-color: rgba(255, 77, 79, 0.1);
+}
+
 </style>
