@@ -15,7 +15,7 @@
             :ellipsis="false"
             background-color="transparent"
             text-color="#1f2d3d"
-            active-text-color="#00d1ff"
+            active-text-color="#1e40af"
             class="right-menu"
             :default-active="activeMenu"
             @select="handleMenuSelect"
