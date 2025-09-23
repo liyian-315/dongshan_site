@@ -4,5 +4,5 @@
 
 <script setup>
 import MarkdownPage from '@/components/MarkdownPage.vue'
-import raw from '@/Policies/lawanno.md?raw'
+import raw from '@/policies/lawanno.md?raw'
 </script>
