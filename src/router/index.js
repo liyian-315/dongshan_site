@@ -41,7 +41,29 @@ const routes = [
         component: () => import('@/views/Policies/LawAnno.vue'),
         meta: { title: '法律声明' }
     },
-
+    {
+        path: '/project',
+        name: 'Project',
+        component: () => import('@/views/OpenSourceProjects/index.vue'),
+        meta: { title: '开源项目介绍' },
+        children: [
+            // 项目列表（默认子路由）
+            {
+                path: '', // 空路径，作为默认子路由
+                name: 'ProjectList',
+                component: () => import('@/views/OpenSourceProjects/ProjectList.vue'),
+                meta: { title: '项目列表' }
+            },
+            // 项目详情
+            {
+                path: ':id',
+                name: 'ProjectDetail',
+                component: () => import('@/views/OpenSourceProjects/OneProject.vue'),
+                meta: { title: '项目详情' },
+                props: true
+            }
+        ]
+    },
 ]
 
 export default createRouter({
