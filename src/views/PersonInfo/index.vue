@@ -387,7 +387,7 @@
         </el-row>
 
         <!-- 协议签署区-->
-        <el-form-item label="协议状态">
+        <el-form-item label="身份状态">
           <template v-if="pdfCW.signed">
             <el-tag type="success">已签署{{ pdfCW.title || 'PDF 协议' }}</el-tag>
           </template>
