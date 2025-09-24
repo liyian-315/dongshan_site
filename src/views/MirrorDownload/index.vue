@@ -186,6 +186,7 @@ function openMirror(row) {
 <style scoped>
 /* ===== 布局，与“文档下载”保持一致 ===== */
 .container {
+  margin-inline: auto;
   display: flex;
   min-height: 100vh;
   background: #fff;
@@ -299,6 +300,9 @@ function openMirror(row) {
 
 .panel{
   max-width:1200px;
+  margin-right: auto;
+  margin-left: auto;
+  width: 100%;
   --btn-font-size: 15px;  /* 按钮&标题字号 */
   --btn-height: 38px;     /* 按钮高度 */
   --btn-radius: 12px;     /* 圆角 */

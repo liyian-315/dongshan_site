@@ -8,6 +8,8 @@ import Register from '@/views/Register/index.vue'
 import Login from '@/views/Login/index.vue'
 import PersonInfo from '@/views/PersonInfo/index.vue'
 import Task from '@/views/Task/index.vue'
+import DongshanJihua from '@/views/Activity/dongshanjihua.vue'
+
 
 const routes = [
     { path: '/', component: Home },
@@ -20,6 +22,7 @@ const routes = [
     { path: '/login', component: Login },
     { path: '/personInfo', component: PersonInfo },
     { path: '/task', component: Task },
+    { path: '/activity/dongshanjihua', component: DongshanJihua },
     {
         path: '/service',
         name: 'Service',

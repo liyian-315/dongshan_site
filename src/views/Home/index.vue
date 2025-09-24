@@ -78,16 +78,16 @@
               <div class="relative h-full flex items-center justify-center text-center text-white p-8">
                 <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 shadow-2xl max-w-3xl">
                   <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
-                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">构建下一代</span><br />开源技术生态
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">东山计划</span><br />推动RISC-V教学发展
                   </h1>
                   <p class="text-lg md:text-xl text-white/80 mt-6">
-                    东山社区是面向未来的 GPGPU 异构生态协作平台，致力于构建开放、共享、创新的技术社群。
+                    东山计划旨在构建从基础教育到高等教育的全阶段RISC-V人才培养体系。
                   </p>
                   <a
-                      href="/join"
+                      href="/activity/dongshanjihua"
                       class="mt-8 inline-block bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-8 rounded-full hover:scale-105 transform transition-all duration-300 shadow-lg shadow-primary/40"
                   >
-                    加入我们
+                    查看详情
                   </a>
                 </div>
               </div>
@@ -256,13 +256,13 @@
 
         <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
           <div>
-            <h3 class="text-xl font-bold">Web3黑客马拉松</h3>
-            <p class="text-subtext-light text-sm mt-2">2024年11月5日 - 7日</p>
-            <p class="mt-3 text-sm">三天两夜，挑战极限，构建创新的去中心化应用。</p>
+            <h3 class="text-xl font-bold">东山教学计划</h3>
+            <p class="text-subtext-light text-sm mt-2">2025年10月1日</p>
+            <p class="mt-3 text-sm">覆盖从基础到高级全年级的教学计划</p>
           </div>
           <div class="mt-4 flex justify-end">
-            <a href="#event-2" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
-              立即报名 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+            <a href="/activity/dongshanjihua" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+              查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
             </a>
           </div>
         </div>
