@@ -210,6 +210,7 @@ function closePreview() {
 <style scoped>
 /* 布局 */
 .container {
+  margin-inline: auto;
   display: flex;
   min-height: 100vh;
   background: #fff;
@@ -329,7 +330,10 @@ function closePreview() {
 
 
 .panel{
+  width: 100%;
   max-width:1200px;
+  margin-left: auto;
+  margin-right: auto;
   --btn-font-size: 15px;  /* 按钮&文档名字号 */
   --btn-height: 38px;     /* 按钮高度（原 44px） */
   --btn-radius: 12px;     /* 圆角（原 14px） */
