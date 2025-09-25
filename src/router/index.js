@@ -24,6 +24,19 @@ const routes = [
     { path: '/task', component: Task },
     { path: '/activity/dongshanjihua', component: DongshanJihua },
     {
+        path: '/events',
+        name: 'Events',
+        component: () => import('@/views/Events/index.vue'),
+        meta: {title: '活动'}
+    },
+    {
+        path: '/events/:slug',
+        name: "EventDetail",
+        component: () => import('@/views/Events/Detail.vue'),
+        props: true,
+        meta: {title: "活动详情"}
+    },
+    {
         path: '/service',
         name: 'Service',
         component: () => import('@/views/Policies/Service.vue'),

@@ -21,9 +21,19 @@ module.exports = {
         'background-light': 'rgb(var(--background-light) / <alpha-value>)',
         'text-light': 'rgb(var(--text-light) / <alpha-value>)',
         'subtext-light': 'rgb(var(--subtext-light) / <alpha-value>)',
+
+        'background-dark': 'rgb(var(--background-dark) / <alpha-value>)',
+        'card-light': 'rgb(var(--card-light) / <alpha-value>)',
+        'card-dark': 'rgb(var(--card-dark) / <alpha-value>)',
+        'text-dark': 'rgb(var(--text-dark) / <alpha-value>)',
+        'subtext-dark': 'rgb(var(--subtext-dark) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['Noto Sans SC', 'sans-serif'],
+        display: ['-apple-system', 'BlinkMacSystemFont', 'San Francisco', 'Helvetica Neue', 'sans-serif'],
+      },
+      borderRadius: {
+        DEFAULT: '0.75rem',
       },
       boxShadow: {
         'glow-sm': '0 0 8px rgba(99,102,241,.2),0 0 16px rgba(168,85,247,.1)',
