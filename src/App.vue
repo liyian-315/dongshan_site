@@ -19,7 +19,7 @@
             @select="handleMenuSelect"
             menu-trigger="hover"
         >
-          <el-menu-item index="/lab">开源项目介绍</el-menu-item>
+          <el-menu-item index="/project">开源项目介绍</el-menu-item>
 
           <el-menu-item class="!px-0">
             <a
