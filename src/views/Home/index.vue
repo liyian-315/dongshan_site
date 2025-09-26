@@ -1,62 +1,159 @@
 <template>
-  <div class="community-home">
-    <section class="hero-section">
-      <div class="container">
-        <el-carousel
-            height="400px"
-            indicator-position="outside"
-            :autoplay="true"
-            class="custom-carousel"
-        >
-          <el-carousel-item>
-            <div class="hero-container">
-              <img
-                  src="@/assets/img/dongshan.png"
-                  alt="东山社区Logo"
-                  class="community-logo"
-              >
-              <div class="hero-text">
-                <h1 class="hero-title animate-fade-in">
-                  探索开源技术的<br><span class="highlight">无限可能</span>
-                </h1>
-                <p class="hero-subtitle animate-fade-in-delay">
-                  东山社区是面向未来的RISC-V开源生态协作平台，致力于构建开放、共享、创新的技术社群
-                </p>
-              </div>
+  <div class="community-home bg-background-light text-text-light min-h-screen noise-bg">
+    <!-- Hero / 轮播 -->
+    <section class="relative overflow-hidden">
+      <!-- 轻微彩色光晕 -->
+      <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-500/20 via-purple-500/10 to-cyan-500/20 blur-3xl pointer-events-none"></div>
 
-              <!-- 右侧：视频播放区域 -->
-              <div class="hero-right">
-                <div class="video-container">
-                  <video
-                      class="community-video"
-                      controls
-                      autoplay
-                      loop
-                      muted
-                      playsinline
-                      preload="auto"
-                      poster="@/assets/img/video-cover.png"
-                  >
-                    <source src="@/assets/img/dongshan-video.mp4" type="video/mp4">
-                  您的浏览器不支持视频播放，请升级浏览器
-                  </video>
+      <div class="container mx-auto px-4 relative z-10">
+        <el-carousel
+            height="600px"
+            :autoplay="true"
+            :interval="5000"
+            arrow="hover"
+            trigger="click"
+            class="rounded-2xl overflow-hidden shadow-2xl"
+        >
+          <!-- 视频主屏（保持玻璃+渐变风格） -->
+          <el-carousel-item>
+            <div class="relative w-full h-[600px]">
+              <!-- 背景光晕 -->
+              <div class="absolute -inset-4 bg-gradient-to-br from-rose-700 via-red-600 to-rose-500 opacity-20 blur-2xl"></div>
+              <div class="absolute inset-0 bg-black/20"></div>
+
+              <div class="relative h-full flex items-center">
+                <div class="container mx-auto px-6 w-full">
+                  <div class="grid lg:grid-cols-2 gap-8 items-center">
+                    <!-- 左：文案 -->
+                    <div class="text-white">
+                      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
+              <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
+                探索开源技术的
+              </span><br/>无限可能
+                      </h1>
+                      <p class="text-lg md:text-xl text-white/80 mt-6">
+                        东山社区是面向未来的 RISC-V / GPGPU 开源生态协作平台，致力于构建开放、共享、创新的技术社群。
+                      </p>
+                      <a
+                          href="/join"
+                          class="mt-8 inline-block bg-gradient-to-r from-rose-600 via-red-500 to-rose-400 text-white font-bold py-3 px-8 rounded-full hover:scale-105 transform transition-all duration-300 shadow-lg shadow-red-500/40"
+                      >
+                        加入我们
+                      </a>
+                    </div>
+
+                    <!-- 右：视频 -->
+                    <div class="w-full">
+                      <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-3 border border-white/20 shadow-2xl">
+                        <video
+                            class="w-full aspect-video rounded-xl"
+                            :src="videoSrc"
+                            controls
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            preload="auto"
+                            :poster="videoPoster"
+                        >
+                          您的浏览器不支持视频播放
+                        </video>
+                      </div>
+                      <p v-if="pdfCW.note" class="text-white/70 text-xs mt-2 line-clamp-1">
+                        {{ pdfCW.note }}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </el-carousel-item>
-          <el-carousel-item v-for="(item, idx) in newsList" :key="idx + 1">
-            <div class="carousel-item-container vertical">
-              <div class="carousel-img-wrapper vertical">
-                <img
-                    :src="item.image || 'https://via.placeholder.com/800x200?text=News+Banner'"
-                    alt="新闻图片"
-                    class="carousel-img"
-                    loading="lazy"
-                >
+
+
+          <!-- 设计稿主屏 1 -->
+          <el-carousel-item>
+            <div class="relative w-full h-[600px] bg-[url('https://images.unsplash.com/photo-1593642532400-2682810df593?q=80&w=2069&auto=format&fit=crop')] bg-cover bg-center">
+              <div class="absolute inset-0 bg-black/30"></div>
+              <div class="absolute -inset-4 bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-500 opacity-20 blur-xl"></div>
+              <div class="relative h-full flex items-center justify-center text-center text-white p-8">
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 shadow-2xl max-w-3xl">
+                  <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">东山计划</span><br />推动RISC-V教学发展
+                  </h1>
+                  <p class="text-lg md:text-xl text-white/80 mt-6">
+                    东山计划旨在构建从基础教育到高等教育的全阶段RISC-V人才培养体系。
+                  </p>
+                  <a
+                      href="/activity/dongshanjihua"
+                      class="mt-8 inline-block bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-8 rounded-full hover:scale-105 transform transition-all duration-300 shadow-lg shadow-primary/40"
+                  >
+                    查看详情
+                  </a>
+                </div>
               </div>
-              <div class="carousel-text-wrapper vertical">
-                <h3 class="carousel-title">{{ item.title }}</h3>
-                <p class="carousel-desc">{{ item.context }}</p>
+            </div>
+          </el-carousel-item>
+
+          <!-- 设计稿主屏 2 -->
+          <el-carousel-item>
+            <div class="relative w-full h-[600px] bg-[url('https://images.unsplash.com/photo-1550745165-9bc0b252726a?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center">
+              <div class="absolute inset-0 bg-black/40"></div>
+              <div class="absolute -inset-4 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 opacity-20 blur-xl"></div>
+              <div class="relative h-full flex items-center justify-center text-center text-white p-8">
+                <div class="bg-black/20 backdrop-blur-lg rounded-2xl p-8 md:p-12 border border-white/20 shadow-2xl max-w-3xl">
+                  <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">探索前沿</span><br />开源项目
+                  </h1>
+                  <p class="text-lg md:text-xl text-white/80 mt-6">
+                    发现和贡献最新的开源项目，从人工智能到区块链，应有尽有。
+                  </p>
+                  <a
+                      href="/lab"
+                      class="mt-8 inline-block bg-gradient-to-r from-accent to-primary text-white font-bold py-3 px-8 rounded-full hover:scale-105 transform transition-all duration-300 shadow-lg shadow-accent/40"
+                  >
+                    浏览项目
+                  </a>
+                </div>
+              </div>
+            </div>
+          </el-carousel-item>
+
+          <!-- 设计稿主屏 3 -->
+          <el-carousel-item>
+            <div class="relative w-full h-[600px] bg-[url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center">
+              <div class="absolute inset-0 bg-black/30"></div>
+              <div class="absolute -inset-4 bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 opacity-20 blur-xl"></div>
+              <div class="relative h-full flex items-center justify-center text-center text-white p-8">
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 shadow-2xl max-w-3xl">
+                  <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">共享知识</span><br />共创未来
+                  </h1>
+                  <p class="text-lg md:text-xl text-white/80 mt-6">
+                    加入技术分享会、研讨会和黑客马拉松，与全球开发者共同成长。
+                  </p>
+                  <a
+                      href="/events"
+                      class="mt-8 inline-block bg-gradient-to-r from-secondary to-accent text-white font-bold py-3 px-8 rounded-full hover:scale-105 transform transition-all duration-300 shadow-lg shadow-secondary/40"
+                  >
+                    查看活动
+                  </a>
+                </div>
+              </div>
+            </div>
+          </el-carousel-item>
+
+          <!-- 动态新闻扩展屏 -->
+          <el-carousel-item v-for="(item, idx) in newsList" :key="`news-${idx}`">
+            <div
+                class="relative w-full h-[600px] bg-cover bg-center"
+                :style="{ backgroundImage: `url(${item.image || 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2000&auto=format&fit=crop'})` }"
+            >
+              <div class="absolute inset-0 bg-black/40"></div>
+              <div class="relative h-full flex items-center justify-center text-center text-white p-8">
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 shadow-2xl max-w-3xl">
+                  <h3 class="text-3xl md:text-4xl font-extrabold leading-tight">{{ item.title }}</h3>
+                  <p class="text-white/80 mt-4 md:text-lg line-clamp-3">{{ item.context }}</p>
+                </div>
               </div>
             </div>
           </el-carousel-item>
@@ -64,84 +161,161 @@
       </div>
     </section>
 
-    <!-- 下半部分：功能模块区域 -->
-    <section class="modules-section">
-      <div class="container modules-container">
-        <!-- 介绍模块 -->
-        <div class="module-card" id="intro">
-          <div class="module-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                  d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM13 7H11V13H17V11H13V7Z"
-                  fill="#333"/>
-            </svg>
+    <!-- 模块区：介绍 / 新闻 / 文档 / 资源镜像（宽） -->
+    <section class="pt-12 md:pt-16 pb-10 md:pb-12">
+      <div class="container mx-auto px-4 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- 社区介绍（大卡） -->
+        <div class="lg:col-span-2 lg:row-span-2 relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-8 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+          <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-br from-cyan-400 to-indigo-500 rounded-full opacity-20 blur-2xl"></div>
+          <div class="flex flex-col h-full">
+            <div class="bg-gradient-to-r from-primary to-accent inline-block p-4 rounded-xl self-start">
+              <span class="material-symbols-outlined text-white text-4xl">hub</span>
+            </div>
+            <h3 class="text-3xl font-bold mt-6">社区介绍</h3>
+            <p class="text-subtext-light mt-4 flex-grow">
+              东山社区是面向开发者的开放社区，致力于帮助开发者交流内容、构建完善的开源生态体系，为开发者提供一个充满活力、资源丰富的学习、交流与合作平台。
+            </p>
+            <a href="/about" class="inline-flex items-center mt-6 text-primary font-bold hover:underline">
+              了解更多 <span class="material-symbols-outlined ml-1">arrow_forward</span>
+            </a>
           </div>
-          <h2 class="module-title">社区介绍</h2>
-          <p class="module-desc">
-            东山社区是面向开发者的开源技术社区，致力于推动技术交流与创新，构建完善的开源生态体系，为开发者提供学习、交流与合作的平台。
-          </p>
-          <router-link to="/introduction" class="module-btn">查看详情</router-link>
         </div>
 
-        <!-- 新闻模块 -->
-        <div class="module-card" id="news">
-          <div class="module-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                  d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM20 16H6L4 18V4H20V16Z"
-                  fill="#333"/>
-            </svg>
+        <!-- 最新新闻 -->
+        <div class="relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-8 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+          <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full opacity-20 blur-xl"></div>
+          <div class="flex flex-col items-start space-y-4">
+            <div class="bg-gradient-to-r from-secondary to-accent inline-block p-3 rounded-lg">
+              <span class="material-symbols-outlined text-white text-3xl">campaign</span>
+            </div>
+            <h3 class="text-2xl font-bold">最新新闻</h3>
+            <p class="text-subtext-light text-sm">及时发布社区活动、技术动态与行业资讯。</p>
+            <a href="https://sddx.huimaibuy.net/" class="text-primary font-bold hover:underline">前往查看</a>
           </div>
-          <h2 class="module-title">最新新闻</h2>
-          <p class="module-desc">
-            及时发布社区活动、技术动态、行业资讯等内容，让开发者第一时间了解社区发展与开源领域最新趋势。
-          </p>
-          <router-link to="/news" class="module-btn">查看详情</router-link>
         </div>
 
-        <!-- 文档模块 -->
-        <div class="module-card" id="docs">
-          <div class="module-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                  d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM18 20H6V4H13V9H18V20ZM15 12H13V14H15V12ZM15 8H13V10H15V8Z"
-                  fill="#333"/>
-            </svg>
+        <!-- 技术文档 -->
+        <div class="relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-8 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+          <div class="flex flex-col items-start space-y-4">
+            <div class="bg-gradient-to-r from-accent to-green-400 inline-block p-3 rounded-lg">
+              <span class="material-symbols-outlined text-white text-3xl">description</span>
+            </div>
+            <h3 class="text-2xl font-bold">技术文档</h3>
+            <p class="text-subtext-light text-sm">提供完善的开发指南、API 参考与教程。</p>
+            <a href="/docs" class="text-primary font-bold hover:underline">查看文档</a>
           </div>
-          <h2 class="module-title">技术文档</h2>
-          <p class="module-desc">
-            提供完善的技术文档库，包括开发指南、API参考、教程手册等内容，助力开发者快速掌握相关技术与工具使用方法。
-          </p>
-          <router-link to="/docs" class="module-btn">查看详情</router-link>
         </div>
 
-        <!-- 镜像模块 -->
-        <div class="module-card" id="mirror">
-          <div class="module-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                  d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z"
-                  fill="#333"/>
-            </svg>
+        <!-- 资源镜像（整行） -->
+        <div class="lg:col-span-3 relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-8 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+          <div class="absolute bottom-0 right-0 -mb-6 -mr-6 w-28 h-28 bg-gradient-to-br from-indigo-500 to-cyan-300 rounded-full opacity-10 blur-2xl"></div>
+          <div class="flex flex-col md:flex-row items-start md:items-center md:space-x-6 space-y-4 md:space-y-0">
+            <div class="bg-gradient-to-r from-primary to-cyan-400 inline-block p-4 rounded-xl">
+              <span class="material-symbols-outlined text-white text-4xl">cloud_download</span>
+            </div>
+            <div class="flex-grow">
+              <h3 class="text-2xl font-bold">资源镜像</h3>
+              <p class="text-subtext-light mt-1">
+                提供开源软件、开发工具、系统镜像等资源的国内高速下载，优化开发者资源获取体验，加速开发进程。
+              </p>
+            </div>
+            <a
+                href="/mirror"
+                class="inline-block bg-primary/20 text-primary font-bold py-3 px-6 rounded-lg hover:bg-primary/30 transition"
+            >
+              前往下载
+            </a>
           </div>
-          <h2 class="module-title">资源镜像</h2>
-          <p class="module-desc">
-            提供开源软件、开发工具、系统镜像等资源的高速下载服务，优化开发者资源获取体验，加速开发流程。
-          </p>
-          <router-link to="/mirror" class="module-btn">查看详情</router-link>
         </div>
       </div>
     </section>
+
+    <!-- 活动板块 -->
+    <section class="pt-6 md:pt-8 pb-10">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-extrabold mb-4">
+          <span class="gradient-text">活动板块</span>
+        </h2>
+        <p class="text-lg text-subtext-light max-w-2xl mx-auto">参与我们丰富多彩的线上线下活动，与技术大牛面对面交流。</p>
+      </div>
+
+      <div class="container mx-auto px-4 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-bold">年度开发者大会</h3>
+            <p class="text-subtext-light text-sm mt-2">2024年12月15日 | 线上直播</p>
+            <p class="mt-3 text-sm">汇聚全球顶尖开发者，分享最新技术趋势，共同探讨开源未来。</p>
+          </div>
+          <div class="mt-4 flex justify-between items-center">
+            <span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-full">技术分享</span>
+            <a href="#event-1" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+              查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-bold">东山教学计划</h3>
+            <p class="text-subtext-light text-sm mt-2">2025年10月1日</p>
+            <p class="mt-3 text-sm">覆盖从基础到高级全年级的教学计划</p>
+          </div>
+          <div class="mt-4 flex justify-end">
+            <a href="/activity/dongshanjihua" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+              查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-bold">AI大模型应用实践</h3>
+            <p class="text-subtext-light text-sm mt-2">每周三晚 8:00</p>
+            <p class="mt-3 text-sm">系列线上分享会，深入浅出地讲解大模型应用开发。</p>
+          </div>
+          <div class="mt-4 flex justify-end">
+            <a href="#event-3" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+              加入学习 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-bold">开源操作系统内核研讨会</h3>
+            <p class="text-subtext-light text-sm mt-2">2024年10月20日 | 线下·北京</p>
+            <p class="mt-3 text-sm">与内核专家深入交流，探讨操作系统核心技术的最新进展。</p>
+          </div>
+          <div class="mt-4 flex justify-end">
+            <a href="#event-4" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+              查看议程 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 悬浮咨询按钮 -->
+    <button
+        class="fixed bottom-8 right-8 bg-gradient-to-tr from-purple-500 to-cyan-400 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform duration-300"
+        aria-label="咨询"
+    >
+      <span class="material-symbols-outlined text-3xl">forum</span>
+    </button>
   </div>
 </template>
 
 <script setup>
-import {ref, onMounted} from 'vue';
-import {ElCarousel, ElCarouselItem} from "element-plus";
-import {fetchHomeCarousel} from "@/api/home.js";
-import {getPdfCopyWriting} from "@/api/user.js";
+import { ref, onMounted } from 'vue'
+import { ElCarousel, ElCarouselItem } from 'element-plus'
+import videoFile from '@/assets/img/dongshan-video.mp4'
+// import posterFile from '@/assets/img/video-cover.png' // 可选本地封面
+// 视频配置
+import { getPdfCopyWriting } from '@/api/user.js'
 
-const newsList = ref([]);
+const newsList = ref([])
+
+// 视频文案/链接
 const pdfCW = ref({
   area: 'home-video-mp4',
   title: '',
@@ -149,6 +323,16 @@ const pdfCW = ref({
   link: '',
   note: ''
 })
+
+// 视频地址 & 海报
+const videoSrc = ref(videoFile)
+
+const videoPoster = ref('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop')
+
+// 兜底：来自你提供的示例链接
+const FALLBACK_VIDEO =
+    'https://mpvideo.qpic.cn/0b2epudbsaagjqagypfk6bufm7oddf6qmgia.f10002.mp4?dis_k=d3366686da843bda625c511b9e7bbc18&dis_t=1757651990&play_scene=10120&auth_info=C/2XvawvG1dlo+OslwBTc0d7dTAEZkIQOghgOGscUjAyGHAxNAQAGhIjRQktb15TU3E=&auth_key=aec1185c26c4754b30960e937cfa5fab&vid=wxv_4136261317352931331&format_id=10002&support_redirect=0&mmversion=false'
+
 onMounted(async () => {
   try {
     const res = await fetchHomeCarousel();
@@ -171,267 +355,10 @@ onMounted(async () => {
 });
 </script>
 
+
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+/* 调整 Element Plus 轮播圆角 */
+:deep(.el-carousel){ border-radius: 1rem; }
+:deep(.el-carousel__container){ border-radius: 1rem; }
 
-.container {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 10px;
-}
-
-.community-home {
-  position: relative;
-  min-height: 100vh;
-  width: 100%;
-}
-
-.carousel-item-container.vertical {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 16px 20px;
-  height: 100%;
-}
-
-.carousel-img-wrapper.vertical {
-  width: 100%;
-  min-height: 200px;
-  max-height: 300px;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #f5f5f5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-}
-
-.carousel-img {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  object-position: center;
-}
-
-.carousel-text-wrapper.vertical {
-  text-align: center;
-  padding: 0 20px;
-}
-
-.carousel-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #1f2329;
-  margin: 0 0 8px 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.carousel-desc {
-  font-size: 14px;
-  color: #666;
-  margin: 0;
-  line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.hero-section {
-  background: #f6f7f9;
-
-  color: #2c3e50;
-  padding: 80px 0 60px;
-  position: relative;
-  overflow: hidden;
-  background-size: 200px 20px;
-}
-
-.hero-container {
-  display: flex;
-  align-items: center;
-  gap: 4rem;
-  padding: 0 10px;
-}
-
-.community-logo {
-  width: 180px;
-  height: 180px;
-  object-fit: contain;
-  border-radius: 4px;
-  margin: 0 auto;
-}
-
-.hero-right {
-  flex: 1.8;
-}
-
-.hero-text {
-  flex: 1;
-  text-align: center;
-  padding: 0 10px;
-}
-
-.hero-title {
-  font-size: 2.5rem;
-  line-height: 1.2;
-  margin-bottom: 20px;
-  font-weight: 700;
-}
-
-.hero-subtitle {
-  font-size: 1.1rem;
-  color: #2c3e50;
-  max-width: 100%;
-  margin: 0 auto 30px;
-  line-height: 1.6;
-}
-
-.video-container {
-  background-color: rgba(248, 249, 250, 0.95);
-  border-radius: 8px;
-  padding: 0;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  width: 100%;
-}
-
-.community-video {
-  width: 100%;
-  height: auto;
-  border-radius: 4px;
-  margin-bottom: 0;
-  min-height: 320px;
-  object-fit: cover;
-}
-
-
-.modules-section {
-  padding: 4rem 0;
-  background-color: rgba(248, 249, 250, 0.55);
-  position: relative;
-}
-
-.modules-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2.5rem;
-}
-
-.module-card {
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 8px;
-  padding: 2.5rem;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.module-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-.module-icon {
-  margin-bottom: 1.5rem;
-  color: #3498db;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.module-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #2c3e50;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.module-desc {
-  color: #7f8c8d;
-  line-height: 1.6;
-  margin-bottom: 2rem;
-  flex: 1;
-}
-
-.module-btn {
-  display: inline-block;
-  background-color: #3498db;
-  color: #fff;
-  padding: 0.8rem 1.5rem;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
-  margin: 0 auto;
-  align-self: center;
-}
-
-.module-btn:hover {
-  background-color: #2980b9;
-}
-
-.footer .container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.footer-links a {
-  color: #ecf0f1;
-  text-decoration: none;
-  font-size: 0.9rem;
-  opacity: 0.8;
-  transition: opacity 0.3s ease;
-}
-
-.footer-links a:hover {
-  opacity: 1;
-}
-
-@media (max-width: 576px) {
-  .carousel-img-wrapper.vertical {
-    height: 150px;
-  }
-
-  .carousel-title {
-    font-size: 16px;
-  }
-
-  .community-title {
-    font-size: 2.5rem;
-  }
-
-  .hero-container {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .community-logo {
-    width: 140px;
-    height: 140px;
-  }
-
-  .module-card {
-    padding: 1.5rem;
-  }
-
-  .modules-container {
-    grid-template-columns: 1fr;
-  }
-}
 </style>

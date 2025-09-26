@@ -8,8 +8,12 @@ import Register from '@/views/Register/index.vue'
 import Login from '@/views/Login/index.vue'
 import PersonInfo from '@/views/PersonInfo/index.vue'
 import Task from '@/views/Task/index.vue'
+import DongshanJihua from '@/views/Activity/dongshanjihua.vue'
+import InternPlan from '@/views/Intern/Plan.vue'
+
 
 const routes = [
+    { path: '/intern/plan', component: InternPlan },
     { path: '/', component: Home },
     { path: '/home', component: Home },
     { path: '/news', component: NewsCarousel },
@@ -20,6 +24,21 @@ const routes = [
     { path: '/login', component: Login },
     { path: '/personInfo', component: PersonInfo },
     { path: '/task', component: Task },
+    { path: '/activity/dongshanjihua', component: DongshanJihua },
+    
+    {
+        path: '/events',
+        name: 'Events',
+        component: () => import('@/views/Events/index.vue'),
+        meta: {title: '活动'}
+    },
+    {
+        path: '/events/:slug',
+        name: "EventDetail",
+        component: () => import('@/views/Events/Detail.vue'),
+        props: true,
+        meta: {title: "活动详情"}
+    },
     {
         path: '/service',
         name: 'Service',
