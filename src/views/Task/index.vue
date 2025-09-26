@@ -90,7 +90,9 @@
                   <span v-else class="no-protocol">无协议</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="statusText" label="任务状态" width="120" align="center">
+<!--              <el-table-column prop="statusText" label="任务状态" width="120" align="center">-->
+              <el-table-column v-if="currentMenu === 'my-tasks'"
+                               prop="statusText" label="任务状态" width="120" align="center">
                 <template #default="scope">
                   <span class="task-status" :class="`status-${scope.row.status}`">
                     {{ scope.row.statusText }}
@@ -115,7 +117,6 @@
                         type="text"
                         size="small"
                         @click="handleViewTaskDetail(scope.row.id)"
-                        v-if="scope.row.status !== 'completed'"
                     >
                       查看详情
                     </el-button>
@@ -124,7 +125,9 @@
               </el-table-column>
             </el-table>
           </div>
-          <div class="pagination-container" v-if="isShowTaskList && totalTasks > 0">
+<!--          <div class="pagination-container" v-if="isShowTaskList && totalTasks > 0">-->
+          <div class="pagination-container" v-if="currentMenu === 'my-tasks' && myTasksTotal > 0">
+
             <el-pagination
                 @size-change="handlePageSizeChange"
                 @current-change="handleCurrentPageChange"
@@ -682,7 +685,8 @@ const handleViewTaskDetail = (taskId) => {
       status: statusInfo.status,
       statusText: statusInfo.text,
       claimTime: task.collectionTime,
-      isClaimed: !!task.collectionUser
+      isClaimed: !!task.collectionUser,
+      deadlineTime: task.deadlineTime || '无截止时间',
     }
     isDetailDrawerOpen.value = true
   } else {
@@ -855,7 +859,8 @@ const getTasksByCategory = async (categoryId) => {
     const res = await fetchTasksByCategory({
       categoryId,
       pageNum: currentPage.value,
-      pageSize: pageSize.value
+      pageSize: pageSize.value,
+      username
     })
     const {taskList, total, pageNum, pageSize: size} = res || {}
     currentTasks.value = (taskList || []).map(task => {
@@ -865,7 +870,8 @@ const getTasksByCategory = async (categoryId) => {
         status: statusInfo.status,
         statusText: statusInfo.text,
         isClaimed: !!task.collectionUser,
-        claimTime: task.collectionTime
+        claimTime: task.collectionTime,
+        deadlineTime: task.deadlineTime || '无截止时间'
       }
     })
     totalTasks.value = total || 0
@@ -897,10 +903,11 @@ const getMyTasks = async () => {
         status: statusInfo.status,
         statusText: statusInfo.text,
         isClaimed: !!task.collectionUser,
-        claimTime: task.collectionTime
+        claimTime: task.collectionTime,
+        deadlineTime: task.deadlineTime || '无截止时间',
       }
     })
-    myTasksTotal.value = total || 0  // 修正：将总数赋值给myTasksTotal
+    myTasksTotal.value = total || 0  // 将总数赋值给myTasksTotal
     myTaskCurrentPage.value = pageNum || 1
     myTaskPageSize.value = size || 10
   } catch (err) {
@@ -926,6 +933,7 @@ const getReceivedTaskCount = async () => {
 <style scoped>
 /* 样式保持不变 */
 .container {
+  margin-inline: auto;
   display: flex;
   min-height: 100vh;
   background-color: #F5F7FA;
@@ -945,7 +953,16 @@ const getReceivedTaskCount = async () => {
   flex: 1;
   padding: 24px;
   overflow-y: auto;
+  flex-direction: column;
+  display: flex;
 }
+
+:deep(.el-card) {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
 
 .header {
   margin-bottom: 20px;
@@ -1051,13 +1068,13 @@ const getReceivedTaskCount = async () => {
 }
 
 .pagination-container {
-  margin-top: 16px;
-  display: flex;
-  justify-content: flex-end;
   align-items: center;
   width: 100%;
   box-sizing: border-box;
   padding-right: 8px;
+  margin-top: 12px;       /* 与卡片留点间距 */
+  display: flex;
+  justify-content: flex-end;
 }
 
 :deep(.el-pagination) {

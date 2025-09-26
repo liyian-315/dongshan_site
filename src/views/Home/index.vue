@@ -26,13 +26,18 @@
                   <div class="grid lg:grid-cols-2 gap-8 items-center">
                     <!-- 左：文案 -->
                     <div class="text-white">
-                      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
-              <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
-                探索开源技术的
-              </span><br/>无限可能
+<!--                      <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">-->
+<!--              <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">-->
+<!--                面向东山的RISC-V开源生态基地-->
+<!--              </span><br/>——东山社区-->
+<!--                      </h1>-->
+                      <h1 class="text-3xl md:text-5xl font-extrabold leading-tight text-white text-right">
+                        <span class="block mb-3 md:mb-4">面向东山的RISC-V开源生态基地</span>
+                        <span class="block">——东山社区</span>
                       </h1>
-                      <p class="text-lg md:text-xl text-white/80 mt-6">
-                        东山社区是面向未来的 RISC-V / GPGPU 开源生态协作平台，致力于构建开放、共享、创新的技术社群。
+
+                      <p class="text-lg md:text-xl text-white/80 mt-6" style="text-indent: 2em;">
+                        社区集中呈现了山东大学在“东山集群”和“东山派”上已经适配和优化的开源软件、正在研发的开源项目等RISC-V资源，作为教学与科研资料供所有社区成员参考和使用。
                       </p>
                       <a
                           href="/join"

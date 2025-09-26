@@ -169,7 +169,7 @@ const rules = {
   ],
   phone: [
     { required: true, message: '请输入电话号码', trigger: 'blur' },
-    { pattern: /^\\+?\\d{6,20}$/, message: '请输入有效的电话号码', trigger: ['blur','change'] }
+    { pattern: /^\+?[1-9]\d{5,14}$/, message: '请输入有效的国际电话号码（6-15位数字）', trigger: ['blur','change'] }
   ],
   address: [
     { required: true, message: '请输入地址', trigger: 'blur' }
