@@ -1,34 +1,575 @@
 <template>
-  <div class="project-detail">
-    <h1>{{ project?.name }}</h1>
+  <div class="project-detail-container">
+    <!-- 加载状态 -->
+    <div v-if="loading" class="loading">
+      <div class="spinner"></div>
+      <p>加载项目详情中...</p>
+    </div>
+
+    <!-- 错误状态 -->
+    <div v-else-if="error" class="error">
+      <i class="el-icon-error"></i>
+      <p>{{ error }}</p>
+      <button @click="fetchProject">重试</button>
+    </div>
+
+    <!-- 项目内容 -->
+    <div v-else class="project-content">
+      <!-- 项目头部信息 -->
+      <div class="project-header">
+        <h1>{{ project.name }}</h1>
+        <p class="description">{{ project.description }}</p>
+        <p class="publish-date">发布日期: {{ formatDate(project.createTime) }}</p>
+      </div>
+
+      <!-- 标签展示 -->
+      <div class="tags-container" v-if="moduleDisplay.tags && tags.length">
+        <span v-for="(tag, index) in tags" :key="index" class="tag">{{ tag.name }}</span>
+      </div>
+
+      <div class="git-repo" v-if="moduleDisplay.gitRepo && project.gitRepo">
+        <a :href="project.gitRepo" target="_blank" rel="noopener noreferrer" class="git-link">
+          <i class="el-icon-share"></i> 访问GitHub仓库
+        </a>
+      </div>
+
+      <!-- 项目介绍（Markdown解析） -->
+      <div class="project-intro" v-if="moduleDisplay.projectIntro && project.projectIntro">
+        <h2>项目介绍</h2>
+        <div class="intro-content" v-html="parseMarkdown(project.projectIntro)"></div>
+      </div>
+
+      <div class="project-display" v-if="moduleDisplay.projectDisplay && projectDisplays.length">
+        <h2>项目展示</h2>
+        <p>以下是系统架构图和一些关键模块的性能测试结果截图。</p>
+        <div
+            v-for="(item, index) in projectDisplays"
+            :key="item.id"
+            class="display-item-row"
+        >
+          <div class="image-container">
+            <el-image
+                :src="item.link"
+                :alt="item.copyWritingText"
+                class="display-image"
+                fit="contain"
+                :preview-src-list="[item.link]"
+                :lazy="true"
+                :placeholder="loadingPlaceholder"
+                @load="handleImageLoad(item)"
+                @error="handleImageError(item)"
+            >
+              <!-- 加载中状态 -->
+              <template #placeholder>
+                <div class="image-loading">
+                  <div class="spinner-small"></div>
+                  <span>加载中...</span>
+                </div>
+              </template>
+
+              <!-- 加载失败状态 -->
+              <template #error>
+                <div class="image-error">
+                  <i class="el-icon-picture-outline"></i>
+                  <span>图片加载失败</span>
+                </div>
+              </template>
+            </el-image>
+          </div>
+          <div class="description-container">
+            <h3 class="image-title">{{ item.title }}</h3>
+            <p class="image-description">{{ item.copyWritingText }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 学习资料 -->
+      <div class="learning-materials" v-if="moduleDisplay.learningMaterials && learningMaterials.length">
+        <h2>学习资料</h2>
+        <div class="materials-list">
+          <div
+              v-for="(material, index) in learningMaterials"
+              :key="index"
+              class="material-item"
+          >
+            <h3>{{ material.title }}</h3>
+            <p>{{ material.copyWritingText }}</p>
+            <a
+                :href="material.link"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="material-link"
+            >
+              {{ material.buttonText || '查看资料' }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'OneProject',
-  props: {
-    id: {
-      type: String,
-      required: true
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { fetchProjectById, fetchProjectTags } from '@/api/project'
+import { marked } from 'marked'
+
+// 路由参数获取项目ID
+const route = useRoute()
+const projectId = route.params.id
+
+// 状态管理
+const project = ref({
+  name: '',
+  description: '',
+  createTime: '',
+  gitRepo: '',
+  projectIntro: '',
+  stars: 0,        // GitHub星标数
+  watching: 0,     // 关注人数
+  forks: 0         // 分支数
+})
+const projectDisplays = ref([])
+const learningMaterials = ref([])
+const tags = ref([])
+const moduleDisplay = ref({
+  name: true,
+  tags: true,
+  gitRepo: true,
+  projectIntro: true,
+  projectDisplay: true,
+  learningMaterials: true
+})
+const loading = ref(true)
+const error = ref('')
+
+/**
+ * 格式化日期显示
+ */
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}
+
+/**
+ * 解析Markdown为HTML
+ */
+const parseMarkdown = (markdown) => {
+  if (!markdown) return ''
+  // 配置marked解析器，增强安全性
+  return marked.parse(markdown, {
+    breaks: true,    // 支持换行
+    gfm: true        // 支持GitHub Flavored Markdown
+  })
+}
+
+/**
+ * 获取项目详情数据
+ */
+const fetchProject = async () => {
+  loading.value = true
+  error.value = ''
+
+  try {
+    // 获取项目基本信息
+    const projectData = await fetchProjectById(projectId)
+    project.value = projectData
+    projectDisplays.value = projectData.projectDisplays || []
+    learningMaterials.value = projectData.learningMaterials || []
+
+    // 处理模块显示配置
+    if (projectData.moduleDisplay) {
+      // 将JsonNode转换为普通对象
+      moduleDisplay.value = { ...moduleDisplay.value, ...JSON.parse(JSON.stringify(projectData.moduleDisplay)) }
     }
-  },
-  data() {
-    return {
-      project: null
-    }
-  },
-  created() {
-    this.fetchProjectDetail();
-  },
-  methods: {
-    fetchProjectDetail() {
-      this.project = {
-        id: this.id,
-        name: '示例项目',
-        description: '这是一个示例项目的详情'
-      };
-    }
+
+    // 获取项目标签
+    const tagsData = await fetchProjectTags(projectId)
+    tags.value = tagsData || []
+
+  } catch (err) {
+    error.value = err.message || '获取项目详情失败，请稍后重试'
+    console.error('项目详情加载失败:', err)
+  } finally {
+    loading.value = false
   }
 }
+
+// 组件挂载时加载数据
+onMounted(() => {
+  fetchProject()
+})
 </script>
+
+<style scoped>
+.project-display {
+  margin-bottom: 3rem;
+}
+.project-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 加载状态样式 */
+.loading {
+  text-align: center;
+  padding: 5rem 0;
+  color: #4a5568;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 1rem;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #3182ce;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 错误状态样式 */
+.error {
+  text-align: center;
+  padding: 3rem 0;
+  color: #e53e3e;
+  background-color: #fff5f5;
+  border-radius: 0.5rem;
+  margin: 2rem 0;
+}
+
+.error i {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.error button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.error button:hover {
+  background-color: #2b6cb0;
+}
+
+/* 项目内容样式 */
+.project-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+}
+
+.project-header h1 {
+  font-size: 2.25rem;
+  color: #1a202c;
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  font-size: 1.1rem;
+  color: #4a5568;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.publish-date {
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+/* 标签样式 */
+.tags-container {
+  margin-bottom: 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background-color: #f0f4ff;
+  color: #4096ff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+/* Git仓库样式 */
+.git-repo {
+  margin-bottom: 2rem;
+}
+
+.git-link {
+  display: inline-flex;
+  align-items: center;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+  margin-bottom: 1rem;
+}
+
+.git-link:hover {
+  background-color: #0056b3;
+}
+
+.git-link i {
+  margin-right: 0.5rem;
+}
+
+.stars-watching-forks {
+  display: flex;
+  gap: 1rem;
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+/* 项目介绍样式（Markdown解析后样式） */
+.project-intro {
+  margin-bottom: 3rem;
+}
+
+.project-intro h2 {
+  font-size: 1.75rem;
+  color: #1a202c;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.intro-content {
+  color: #2d3748;
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+/* Markdown内容样式补充 */
+.intro-content h1,
+.intro-content h2,
+.intro-content h3,
+.intro-content h4 {
+  margin: 1.5rem 0 1rem;
+  color: #1a202c;
+}
+
+.intro-content p {
+  margin-bottom: 1rem;
+}
+
+.intro-content ul,
+.intro-content ol {
+  margin: 1rem 0 1rem 2rem;
+  padding-left: 1rem;
+}
+
+.intro-content li {
+  margin-bottom: 0.5rem;
+}
+
+.intro-content a {
+  color: #3182ce;
+  text-decoration: none;
+}
+
+.intro-content a:hover {
+  text-decoration: underline;
+}
+
+.intro-content code {
+  background-color: #f7fafc;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+}
+
+.intro-content pre {
+  background-color: #f7fafc;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+/* 项目展示样式（图片固定左，文案固定右） */
+.project-display {
+  margin-bottom: 3rem;
+}
+
+.project-display h2 {
+  font-size: 1.75rem;
+  color: #1a202c;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+/* 项目展示项：弹性布局 */
+.display-item-row {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+/* 图片*/
+
+.image-loading, .image-error {
+  width: 100%;
+  height: 300px; /* 与图片默认高度一致 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f7fa;
+  color: #888;
+}
+
+/* 小加载动画 */
+.spinner-small {
+  width: 20px;
+  height: 20px;
+  margin-bottom: 8px;
+  border: 2px solid #ddd;
+  border-top: 2px solid #3182ce;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.image-container {
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.display-image {
+  max-height: 400px;
+  transition: opacity 0.3s ease;
+}
+
+/* 文案容器：固定右侧，占比50% */
+.description-container {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding-left: 2.5rem;
+}
+
+.image-title {
+  color: #2d3748;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+}
+
+.image-description {
+  color: #4a5568;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.display-image {
+  width: 100%;
+  max-height: 400px;
+  border-radius: 0.25rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+/* 学习资料样式 */
+.learning-materials {
+  margin-bottom: 3rem;
+}
+
+.learning-materials h2 {
+  font-size: 1.75rem;
+  color: #1a202c;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.materials-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.material-item {
+  background-color: #f7fafc;
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.material-item h3 {
+  color: #2d3748;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+}
+
+.material-item p {
+  color: #4a5568;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.material-link {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #3182ce;
+  color: white;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.material-link:hover {
+  background-color: #2b6cb0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .project-detail-container {
+    padding: 1rem;
+  }
+
+  .project-header h1 {
+    font-size: 1.75rem;
+  }
+
+  /* 小屏幕下图片和文案纵向堆叠 */
+  .display-item-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .image-container,
+  .description-container {
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding-left: 0;
+  }
+
+  .image-container {
+    margin-bottom: 1rem;
+  }
+}
+</style>
