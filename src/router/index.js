@@ -9,9 +9,11 @@ import Login from '@/views/Login/index.vue'
 import PersonInfo from '@/views/PersonInfo/index.vue'
 import Task from '@/views/Task/index.vue'
 import DongshanJihua from '@/views/Activity/dongshanjihua.vue'
+import InternPlan from '@/views/Intern/Plan.vue'
 
 
 const routes = [
+    { path: '/intern/plan', component: InternPlan },
     { path: '/', component: Home },
     { path: '/home', component: Home },
     { path: '/news', component: NewsCarousel },
@@ -23,6 +25,7 @@ const routes = [
     { path: '/personInfo', component: PersonInfo },
     { path: '/task', component: Task },
     { path: '/activity/dongshanjihua', component: DongshanJihua },
+    
     {
         path: '/events',
         name: 'Events',
