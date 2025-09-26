@@ -108,7 +108,7 @@
                     发现和贡献最新的开源项目，从人工智能到区块链，应有尽有。
                   </p>
                   <a
-                      href="/lab"
+                      href="/project"
                       class="mt-8 inline-block bg-gradient-to-r from-accent to-primary text-white font-bold py-3 px-8 rounded-full hover:scale-105 transform transition-all duration-300 shadow-lg shadow-accent/40"
                   >
                     浏览项目
