@@ -313,7 +313,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { ElCarousel, ElCarouselItem } from 'element-plus'
-import videoFile from '@/assets/img/dongshan-video.mp4'
+import videoFile from '@/assets/img/dongshan-2min.mp4'
 // import posterFile from '@/assets/img/video-cover.png' // 可选本地封面
 // 视频配置
 import { getPdfCopyWriting } from '@/api/user.js'
