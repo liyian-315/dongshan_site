@@ -386,29 +386,33 @@
           </el-col>
         </el-row>
 
-        <!-- 协议签署区-->
+        <!-- 身份状态-->
         <el-form-item label="身份状态">
-          <template v-if="pdfCW.signed">
-            <el-tag type="success">已签署{{ pdfCW.title || 'PDF 协议' }}</el-tag>
+          <template v-if="userInfo.hasSignedPdf">
+            <el-tag type="success">实习生</el-tag>
           </template>
           <template v-else>
-            <span class="warning-text">请签署{{ pdfCW.title || 'PDF 协议' }}：</span>
+            <el-tag type="info">非实习生</el-tag>
+            <!-- 已拿到PDF地址时展示链接；未拿到时给出友好提示 -->
+            <p class="tip-text">想成为实习生?</p>
             <el-link
                 v-if="pdfCW.link"
-                type="primary"
                 :href="pdfCW.link"
                 target="_blank"
-                :title="pdfCW.copyWritingText"
-                class="pdf-download-link"
-            >{{ pdfCW.copyWritingText || '点击查看并签署' }}</el-link>
-            <el-text v-else type="info">链接生成中...</el-text>
+                type="primary"
+                class="status-extra"
+                :title="pdfCW.copyWritingText || '实习协议下载'"
+            >
+              <u>实习协议下载</u>
+            </el-link>
+            <span v-else class="status-extra loading-text">正在获取协议链接...</span>
           </template>
         </el-form-item>
 
         <!-- 底部操作按钮 -->
         <div class="submit-btn-group">
-          <el-button @click="onReset">重置</el-button>
-          <el-button type="primary" class="btn-grad" :loading="submitLoading" @click="onSubmit">保存修改</el-button>
+          <el-button @click="handleReset">重置</el-button>
+          <el-button type="primary" class="btn-grad" :loading="submitLoading" @click="handleSubmit">保存修改</el-button>
         </div>
       </el-form>
     </div>
@@ -528,7 +532,9 @@ onMounted(async () => {
     // 处理个人信息数据
     if (userResponse) {
       const userData = userResponse.data || userResponse
-      userInfo.value = {...userInfo.value, ...userData}
+      const toBool = (v) => v === true || v === 1 || v === '1'
+      userInfo.value = {...userInfo.value, ...userData,
+        hasSignedPdf: toBool(userData.has_signed_pdf ?? userData.hasSignedPdf ?? 0),}
       originalUserInfo.value = {...userInfo.value} // 保存原始数据用于重置
     } else {
       ElMessage.error('获取个人信息失败：接口返回空数据')
@@ -660,7 +666,10 @@ const handleReset = () => {
   transform: translateY(-1px);
   box-shadow: 0 10px 22px rgba(0,140,255,.28), 0 0 18px rgba(0,209,255,.25);
 }
-
+.status-extra { margin-left: 8px; }
+.tip-text {
+  margin-left: 8px;
+  color: #67C23A; }
 .warning-text{ color:#f59e0b; margin-right:8px; }
 
 /* 底部按钮组 */

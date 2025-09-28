@@ -169,7 +169,7 @@ const rules = {
   ],
   phone: [
     { required: true, message: '请输入电话号码', trigger: 'blur' },
-    { pattern: /^\\+?\\d{6,20}$/, message: '请输入有效的电话号码', trigger: ['blur','change'] }
+    { pattern: /^\+?[1-9]\d{5,14}$/, message: '请输入有效的国际电话号码（6-15位数字）', trigger: ['blur','change'] }
   ],
   address: [
     { required: true, message: '请输入地址', trigger: 'blur' }
@@ -180,7 +180,7 @@ const rules = {
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 8, max: 20, message: '密码长度必须在8-20个字符之间', trigger: 'blur' },
-    { pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$/, message: '需含大小写字母、数字和特殊字符', trigger: 'blur' }
+    { pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!-/:-@\[\]\\\]^_`{-~])[A-Za-z\d!-/:-@\[\]\\\]^_`{-~]{8,}$/, message: '需含大小写字母、数字和特殊字符', trigger: 'blur' }
   ],
   confirmPassword: [
     { required: true, message: '请确认密码', trigger: 'blur' },
