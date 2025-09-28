@@ -16,6 +16,7 @@ coverage
 
 /cypress/videos/
 /cypress/screenshots/
+/src/assets/img/dongshan-2min.mp4
 
 # Editor directories and files
 .vscode/*
