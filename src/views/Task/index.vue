@@ -430,7 +430,7 @@ import {
 const STATUS_MAP = {
   1: {status: 'pending', text: '待处理'},
   2: {status: 'processing', text: '处理中'},
-  3: {status: 'completed', text: '已完成'},
+  3: {status: 'completed', text: '已领取'},
   unknown: {status: 'unknown', text: '未知状态'}
 }
 
