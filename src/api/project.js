@@ -1,8 +1,8 @@
 import { get } from './index'
 
-// 获取所有项目
-export async function fetchAllProjects() {
-    return get('/api/projects')
+// 分页获取所有项目
+export async function fetchAllProjects(params) {
+    return get('/api/projects', params)
 }
 
 // 获取单个项目
