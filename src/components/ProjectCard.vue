@@ -77,10 +77,10 @@ const borderColor = computed(() => {
 // 标签背景颜色(20% transparent)
 const getDefaultTagColor = (id) => {
   const colors = [
-    '#e53e3e33', '#dd6b2033', '#3182ce33', '#38a16933', '#805ad533',
-    '#ed64a633', '#00ced133', '#ff634733', '#ba55d333', '#4682b433',
-    '#8b451333', '#20b2aa33', '#d2691e33', '#ff149333', '#9400d333',
-    '#0000cd33', '#00800033', '#ffd70033', '#ff69b433', '#1e90ff33'
+    '#ff4d4f33', '#fa8c1633', '#1890ff33', '#52c41a33', '#722ed133',
+    '#eb2f9633', '#0fc6c233', '#faad1433', '#7cb30533', '#f5222d33',
+    '#1890ff33', '#722ed133', '#fa8c1633', '#52c41a33', '#ff4d4f33',
+    '#0fc6c233', '#faad1433', '#7cb30533', '#eb2f9633', '#f5222d33'
   ]
   return colors[id % colors.length]
 }
@@ -88,10 +88,10 @@ const getDefaultTagColor = (id) => {
 // 标签文字颜色
 const getDefaultTagTextColor = (id) => {
   const textColors = [
-    '#c53030', '#c05621', '#2b6cb0', '#2f855a', '#6b46c1',
-    '#d53f8c', '#008b8b', '#c8553d', '#9f7aea', '#3d5a80',
-    '#5d2f0f', '#147c74', '#9c4200', '#c1128f', '#6e0dad',
-    '#00008b', '#006400', '#b8860b', '#ff1493', '#1864ab'
+    '#d93025', '#d46b08', '#096dd9', '#389e0d', '#531dab',
+    '#c41d7f', '#08979c', '#d48806', '#689f38', '#cf1322',
+    '#096dd9', '#531dab', '#d46b08', '#389e0d', '#d93025',
+    '#08979c', '#d48806', '#689f38', '#c41d7f', '#cf1322'
   ]
   return textColors[id % textColors.length]
 }

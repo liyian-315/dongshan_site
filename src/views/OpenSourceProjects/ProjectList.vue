@@ -28,6 +28,19 @@
     </div>
     <div v-if="loading" class="loading">加载中...</div>
     <div v-if="error" class="error">加载失败：{{ error }}</div>
+
+    <div class="pagination-container" v-if="totalProjects > 0">
+      <el-pagination
+          @size-change="handlePageSizeChange"
+          @current-change="handleCurrentPageChange"
+          :current-page="currentPage"
+          :page-sizes="[5, 10, 20, 50]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="totalProjects"
+      >
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -35,8 +48,8 @@
 import { ref, onMounted, computed } from 'vue'
 import { fetchAllProjects, fetchAllTags, fetchProjectTags } from '@/api/project'
 import ProjectCard from '@/components/ProjectCard.vue'
+import { ElPagination, ElMessage } from 'element-plus'
 
-// 状态管理
 const projects = ref([])
 const allTags = ref([])
 const projectTagsMap = ref({})
@@ -46,14 +59,12 @@ const searchKeyword = ref('')
 const category = ref('all')
 const sortType = ref('newest')
 
-/**
- * 计算属性：筛选+排序后的项目列表
- * 依赖 projects、projectTagsMap、searchKeyword 等状态，自动响应变化
- */
-const filteredProjects = computed(() => {
-  let filtered = [...projects.value] // 拷贝原数组，避免修改源数据
+const currentPage = ref(1)
+const pageSize = ref(10)
+const totalProjects = ref(0)
 
-  // 1. 关键词搜索（名称/描述）
+const filteredProjects = computed(() => {
+  let filtered = [...projects.value]
   if (searchKeyword.value.trim()) {
     const keyword = searchKeyword.value.trim().toLowerCase()
     filtered = filtered.filter(project =>
@@ -61,8 +72,6 @@ const filteredProjects = computed(() => {
         (project.description && project.description.toLowerCase().includes(keyword))
     )
   }
-
-  // 2. 分类筛选（基于项目标签）
   if (category.value !== 'all') {
     const targetTagId = parseInt(category.value)
     filtered = filtered.filter(project => {
@@ -70,8 +79,6 @@ const filteredProjects = computed(() => {
       return projectTags.some(tag => tag.id === targetTagId)
     })
   }
-
-  // 3. 排序（最新/名称）
   if (sortType.value === 'newest') {
     filtered.sort((a, b) => {
       const timeA = a.createTime ? new Date(a.createTime).getTime() : 0
@@ -85,66 +92,80 @@ const filteredProjects = computed(() => {
       return nameA.localeCompare(nameB)
     })
   }
-
   return filtered
 })
 
-/**
- * 核心方法：获取所有项目 + 对应的标签（优化点：用Promise.all等待所有标签请求完成）
- * 解决原代码“异步循环导致标签加载不完整”的问题
- */
 const fetchProjects = async () => {
   loading.value = true
-  error.value = '' // 重置错误提示
-  projectTagsMap.value = {} // 重置标签映射（避免旧数据干扰）
+  error.value = ''
+  projectTagsMap.value = {}
 
   try {
-    const projectsRes = await fetchAllProjects()
-    if (!projectsRes.length) {
-      projects.value = []
-      return
+    const params = {
+      pageNum: currentPage.value,
+      pageSize: pageSize.value,
+      keyword: searchKeyword.value.trim() || undefined,
+      categoryId: category.value !== 'all' ? category.value : undefined,
+      sortType: sortType.value
     }
 
-    const tagPromises = projectsRes.map(project =>
-        fetchProjectTags(project.id)
-            .then(tags => ({ projectId: project.id, tags })) // 关联项目ID和标签
-            .catch(err => {
-              console.warn(`获取项目[${project.id}]标签失败：`, err)
-              return ({ projectId: project.id, tags: [] })
-            })
-    )
+    const response = await fetchAllProjects(params)
 
-    const tagResults = await Promise.all(tagPromises)
-    tagResults.forEach(({ projectId, tags }) => {
-      projectTagsMap.value[projectId] = tags // 构建项目-标签映射
-    })
+    const { projectList, total, pageNum, pageSize: resPageSize } = response || {}
+    projects.value = projectList || []
+    totalProjects.value = total || 0
+    currentPage.value = pageNum || currentPage.value
+    pageSize.value = resPageSize || pageSize.value
 
-    projects.value = projectsRes
+
+    if (projects.value.length > 0) {
+      const tagPromises = projects.value.map(project =>
+          fetchProjectTags(project.id)
+              .then(tags => ({ projectId: project.id, tags }))
+              .catch(err => {
+                console.warn(`获取项目[${project.id}]标签失败：`, err)
+                return ({ projectId: project.id, tags: [] })
+              })
+      )
+      const tagResults = await Promise.all(tagPromises)
+      tagResults.forEach(({ projectId, tags }) => {
+        projectTagsMap.value[projectId] = tags
+      })
+    }
 
   } catch (err) {
     error.value = err.message || '获取项目列表失败，请重试'
     console.error('项目加载异常：', err)
+    ElMessage.error(error.value)
   } finally {
     loading.value = false
   }
 }
 
-/**
- * 获取所有分类标签（用于筛选下拉框）
- */
+const handlePageSizeChange = (size) => {
+  pageSize.value = size
+  currentPage.value = 1
+  fetchProjects()
+}
+
+
+const handleCurrentPageChange = (page) => {
+  currentPage.value = page
+  fetchProjects()
+  document.querySelector('.pagination-container')?.scrollIntoView({ behavior: 'smooth' })
+}
+
 const fetchAllTagsData = async () => {
   try {
     const tagsRes = await fetchAllTags()
     allTags.value = tagsRes || []
   } catch (err) {
     console.error('获取分类标签失败：', err)
-    allTags.value = [] // 失败时显示空下拉框
+    allTags.value = []
+    ElMessage.error('获取分类标签失败')
   }
 }
 
-/**
- * 生命周期：组件挂载时初始化数据
- */
 onMounted(async () => {
   try {
     await Promise.all([
@@ -159,9 +180,10 @@ onMounted(async () => {
 
 <style scoped>
 .project-list-container {
-  padding: 30px;
   max-width: 1200px;
   margin: 0 auto;
+  position: relative;
+  padding: 30px 30px 80px;
 }
 
 .project-list-container h1 {
@@ -241,7 +263,7 @@ onMounted(async () => {
 
 @media (max-width: 767px) {
   .project-list-container {
-    padding: 15px;
+    padding: 15px 15px 70px;
   }
 
   .search-filter {
@@ -254,5 +276,35 @@ onMounted(async () => {
     width: 100%;
     min-width: auto;
   }
+}
+
+.pagination-container {
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 8px;
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+}
+
+@media (max-width: 767px) {
+  .pagination-container {
+    padding-right: 0;
+    bottom: 15px;
+    right: 15px;
+    width: calc(100% - 30px);
+  }
+}
+
+:deep(.el-pagination) {
+  font-size: 14px;
+  background-color: #fff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 </style>
