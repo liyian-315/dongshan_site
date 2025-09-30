@@ -58,6 +58,13 @@ const routes = [
         meta: { title: '法律声明' }
     },
     {
+        path: '/adminEventEditors',
+        name: "adminEventEditors",
+        component: () => import('@/views/Admin/AdminEventEditors.vue'),
+        props: true,
+        meta: {title: "管理员活动管理"}
+    },
+    {
         path: '/project',
         name: 'Project',
         component: () => import('@/views/OpenSourceProjects/index.vue'),
