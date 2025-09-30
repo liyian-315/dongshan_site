@@ -23,7 +23,7 @@
 
           <el-menu-item class="!px-0">
             <a
-                href="https://sddx.huimaibuy.net/"
+                href="https://qloc-cn.org/"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="external-link px-4 h-16"
