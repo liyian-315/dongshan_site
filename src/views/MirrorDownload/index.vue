@@ -77,9 +77,13 @@
                     <span class="btn-txt">复制地址</span>
                   </el-button>
 
-                  <el-button class="btn btn-solid btn-lg" @click="openMirror(row)">
+                  <el-button class="btn btn-solid btn-lg" @click="openMirrorInter(row)">
                     <el-icon class="btn-ic"><Link /></el-icon>
-                    <span class="btn-txt">下载镜像</span>
+                    <span class="btn-txt">校内下载</span>
+                  </el-button>
+                  <el-button class="btn btn-solid btn-lg" @click="openMirrorOut(row)">
+                    <el-icon class="btn-ic"><Link /></el-icon>
+                    <span class="btn-txt">校外下载</span>
                   </el-button>
                 </div>
               </div>
@@ -178,8 +182,12 @@ async function copyUrl(row) {
   }
 }
 
-function openMirror(row) {
-  window.open(row.url, '_blank')
+function openMirrorOut(row) {
+  console.info(row)
+  window.open(row.urlOut, '_blank')
+}
+function openMirrorInter(row) {
+  window.open(row.urlInter, '_blank')
 }
 </script>
 
