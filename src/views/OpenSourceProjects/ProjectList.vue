@@ -1,6 +1,6 @@
 <template>
   <div class="project-list-container">
-    <h1>探索我们的开源项目</h1>
+    <h1>社区开源项目</h1>
     <p>深入了解我们社区贡献的各种项目，从操作系统到开发工具应有尽有。</p>
     <div class="search-filter">
       <input

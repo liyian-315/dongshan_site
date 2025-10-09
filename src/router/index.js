@@ -10,6 +10,9 @@ import PersonInfo from '@/views/PersonInfo/index.vue'
 import Task from '@/views/Task/index.vue'
 import DongshanJihua from '@/views/Activity/dongshanjihua.vue'
 import InternPlan from '@/views/Intern/Plan.vue'
+import JoinProcess from "@/views/Intern/JoinProcess.vue";
+import DocViewer from "@/views/DocView/DocViewer.vue";
+import DocDsViewer from "@/views/DocView/DocDsViewer.vue";
 
 
 const routes = [
@@ -25,7 +28,9 @@ const routes = [
     { path: '/personInfo', component: PersonInfo },
     { path: '/task', component: Task },
     { path: '/activity/dongshanjihua', component: DongshanJihua },
-    
+    { path: '/join-process', name: 'JoinInternship', component: JoinProcess },
+    { path: '/openDocs', name: 'DocsViewer', component: DocViewer },
+    { path: '/dspDocs', name: 'DocsDsViewer', component: DocDsViewer },
     {
         path: '/events',
         name: 'Events',
