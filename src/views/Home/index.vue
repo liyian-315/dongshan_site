@@ -166,11 +166,11 @@
       </div>
     </section>
 
-    <!-- 模块区：介绍 / 新闻 / 文档 / 资源镜像（宽） -->
+    <!-- 模块区：介绍 / 新闻 / 文档 / 资源镜像（右侧同列） -->
     <section class="pt-12 md:pt-16 pb-10 md:pb-12">
       <div class="container mx-auto px-4 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- 社区介绍（大卡） -->
-        <div class="lg:col-span-2 lg:row-span-2 relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-8 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+        <!-- 社区介绍（大卡，左侧两列，纵跨三行） -->
+        <div class="lg:col-span-2 lg:row-span-3 relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-8 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
           <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-br from-cyan-400 to-indigo-500 rounded-full opacity-20 blur-2xl"></div>
           <div class="flex flex-col h-full">
             <div class="bg-gradient-to-r from-primary to-accent inline-block p-4 rounded-xl self-start">
@@ -186,49 +186,120 @@
           </div>
         </div>
 
-        <!-- 最新新闻 -->
-        <div class="relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-8 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-          <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full opacity-20 blur-xl"></div>
-          <div class="flex flex-col items-start space-y-4">
-            <div class="bg-gradient-to-r from-secondary to-accent inline-block p-3 rounded-lg">
-              <span class="material-symbols-outlined text-white text-3xl">campaign</span>
+        <!-- 最新新闻（右列·行1） -->
+        <div class="relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-5 md:p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300">
+          <div class="absolute bottom-0 left-0 -mb-3 -ml-3 w-14 h-14 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full opacity-20 blur-xl"></div>
+          <div class="flex flex-col items-start space-y-3">
+            <!-- 头部：图标 + 标题（同行） -->
+            <div class="flex items-center gap-3">
+              <div class="bg-gradient-to-r from-secondary to-accent inline-block p-2.5 rounded-lg">
+                <span class="material-symbols-outlined text-white text-2xl">campaign</span>
+              </div>
+              <h3 class="text-xl md:text-2xl font-bold">最新新闻</h3>
             </div>
-            <h3 class="text-2xl font-bold">最新新闻</h3>
+
+            <!-- 描述仍为列布局 -->
             <p class="text-subtext-light text-sm">及时发布社区活动、技术动态与行业资讯。</p>
             <a href="https://sddx.huimaibuy.net/" class="text-primary font-bold hover:underline">前往查看</a>
           </div>
         </div>
 
-        <!-- 技术文档 -->
-        <div class="relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-8 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-          <div class="flex flex-col items-start space-y-4">
-            <div class="bg-gradient-to-r from-accent to-green-400 inline-block p-3 rounded-lg">
-              <span class="material-symbols-outlined text-white text-3xl">description</span>
+        <!-- 技术文档（右列·行2，紧凑） -->
+        <div class="relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-5 md:p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300">
+          <div class="flex flex-col items-start space-y-3">
+            <!-- 头部：图标 + 标题（同行） -->
+            <div class="flex items-center gap-3">
+              <div class="bg-gradient-to-r from-accent to-green-400 inline-block p-2.5 rounded-lg">
+                <span class="material-symbols-outlined text-white text-2xl">description</span>
+              </div>
+              <h3 class="text-xl md:text-2xl font-bold">技术文档</h3>
             </div>
-            <h3 class="text-2xl font-bold">技术文档</h3>
+
+            <!-- 描述仍为列布局 -->
             <p class="text-subtext-light text-sm">提供完善的开发指南、API 参考与教程。</p>
             <a href="/docs" class="text-primary font-bold hover:underline">查看文档</a>
           </div>
         </div>
 
-        <!-- 资源镜像（整行） -->
-        <div class="lg:col-span-3 relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-8 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-          <div class="absolute bottom-0 right-0 -mb-6 -mr-6 w-28 h-28 bg-gradient-to-br from-indigo-500 to-cyan-300 rounded-full opacity-10 blur-2xl"></div>
-          <div class="flex flex-col md:flex-row items-start md:items-center md:space-x-6 space-y-4 md:space-y-0">
-            <div class="bg-gradient-to-r from-primary to-cyan-400 inline-block p-4 rounded-xl">
-              <span class="material-symbols-outlined text-white text-4xl">cloud_download</span>
+        <!-- 资源镜像（右列·行3，紧凑） -->
+        <div class="relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-5 md:p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300">
+          <div class="flex flex-col items-start space-y-3">
+            <!-- 头部：图标 + 标题（同行） -->
+            <div class="flex items-center gap-3">
+              <div class="bg-gradient-to-r from-primary to-cyan-400 inline-block p-3 rounded-xl">
+                <!-- 如需更贴切可把 description 改成 cloud_download -->
+                <span class="material-symbols-outlined text-white text-2xl">description</span>
+              </div>
+              <h3 class="text-xl md:text-2xl font-bold">资源镜像</h3>
             </div>
-            <div class="flex-grow">
-              <h3 class="text-2xl font-bold">资源镜像</h3>
-              <p class="text-subtext-light mt-1">
-                提供开源软件、开发工具、系统镜像等资源的国内高速下载，优化开发者资源获取体验，加速开发进程。
-              </p>
-            </div>
-            <a
-                href="/mirror"
-                class="inline-block bg-primary/20 text-primary font-bold py-3 px-6 rounded-lg hover:bg-primary/30 transition"
-            >
-              前往下载
+
+            <!-- 描述仍为列布局 -->
+            <p class="text-subtext-light text-sm">提供开源软件、开发工具、系统镜像等资源的国内高速下载，优化开发者资源获取体验，加速开发进程。</p>
+            <a href="/mirror" class="text-primary font-bold hover:underline">查看镜像</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 项目板块 -->
+    <section class="pt-6 md:pt-8 pb-10">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-extrabold mb-4">
+          <span class="gradient-text">热门开源项目板块</span>
+        </h2>
+        <p class="text-lg text-subtext-light max-w-2xl mx-auto">参与我们丰富多彩的线上线下活动，与技术大牛面对面交流。</p>
+      </div>
+
+      <div class="container mx-auto px-4 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-bold">示例项目1</h3>
+            <p class="text-subtext-light text-sm mt-2">2025年10月1日</p>
+            <p class="mt-3 text-sm">覆盖从基础到高级全年级的教学计划</p>
+          </div>
+          <div class="mt-4 flex justify-end">
+            <a href="/project/7" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+              查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-bold">示例项目2</h3>
+            <p class="text-subtext-light text-sm mt-2">2025年10月1日</p>
+            <p class="mt-3 text-sm">覆盖从基础到高级全年级的教学计划</p>
+          </div>
+          <div class="mt-4 flex justify-end">
+            <a href="/activity/dongshanjihua" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+              查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-bold">示例项目3</h3>
+            <p class="text-subtext-light text-sm mt-2">2025年10月</p>
+            <p class="mt-3 text-sm">分享东山派的产品介绍与使用</p>
+          </div>
+          <div class="mt-4 flex justify-end">
+            <a href="/dspDocs" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+              加入学习 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-bold">示例项目4</h3>
+            <p class="text-subtext-light text-sm mt-2">2024年10月20日 | 线下·北京</p>
+            <p class="mt-3 text-sm">与内核专家深入交流，探讨操作系统核心技术的最新进展。</p>
+          </div>
+          <div class="mt-4 flex justify-end">
+            <a href="#event-4" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+              查看议程 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
             </a>
           </div>
         </div>
@@ -247,13 +318,13 @@
       <div class="container mx-auto px-4 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
           <div>
-            <h3 class="text-xl font-bold">年度开发者大会</h3>
-            <p class="text-subtext-light text-sm mt-2">2024年12月15日 | 线上直播</p>
-            <p class="mt-3 text-sm">汇聚全球顶尖开发者，分享最新技术趋势，共同探讨开源未来。</p>
+            <h3 class="text-xl font-bold">开源入门教学</h3>
+            <p class="text-subtext-light text-sm mt-2">2025年10月1日 | 线上</p>
+            <p class="mt-3 text-sm">从零开始了解“开源”。</p>
           </div>
           <div class="mt-4 flex justify-between items-center">
             <span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-full">技术分享</span>
-            <a href="#event-1" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+            <a href="/openDocs" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
               查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
             </a>
           </div>
@@ -274,12 +345,12 @@
 
         <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
           <div>
-            <h3 class="text-xl font-bold">AI大模型应用实践</h3>
-            <p class="text-subtext-light text-sm mt-2">每周三晚 8:00</p>
-            <p class="mt-3 text-sm">系列线上分享会，深入浅出地讲解大模型应用开发。</p>
+            <h3 class="text-xl font-bold">东山派活动</h3>
+            <p class="text-subtext-light text-sm mt-2">2025年10月</p>
+            <p class="mt-3 text-sm">分享东山派的产品介绍与使用</p>
           </div>
           <div class="mt-4 flex justify-end">
-            <a href="#event-3" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+            <a href="/dspDocs" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
               加入学习 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
             </a>
           </div>
@@ -287,13 +358,13 @@
 
         <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
           <div>
-            <h3 class="text-xl font-bold">开源操作系统内核研讨会</h3>
+            <h3 class="text-xl font-bold">比赛活动</h3>
             <p class="text-subtext-light text-sm mt-2">2024年10月20日 | 线下·北京</p>
             <p class="mt-3 text-sm">与内核专家深入交流，探讨操作系统核心技术的最新进展。</p>
           </div>
           <div class="mt-4 flex justify-end">
             <a href="#event-4" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
-              查看议程 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+              查看活动 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
             </a>
           </div>
         </div>

@@ -19,7 +19,7 @@
             @select="handleMenuSelect"
             menu-trigger="hover"
         >
-          <el-menu-item index="/project">开源项目介绍</el-menu-item>
+          <el-menu-item index="/project">开源项目</el-menu-item>
 
           <el-menu-item class="!px-0">
             <a
@@ -41,6 +41,7 @@
             <template #title>实习生</template>
             <el-menu-item index="/task">实习生任务领取</el-menu-item>
             <el-menu-item index="/intern/plan">实习生教学计划概述</el-menu-item>
+            <el-menu-item index="/join-process">如何成为东山社区实习生</el-menu-item>
           </el-sub-menu>
 
           <el-menu-item v-if="isLoggedIn" index="/personInfo">个人信息</el-menu-item>
