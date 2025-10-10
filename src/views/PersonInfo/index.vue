@@ -30,8 +30,8 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12">
-            <el-form-item label="姓名" prop="nickname">
-              <el-input v-model.trim="userInfo.nickname" placeholder="请输入姓名" clearable />
+            <el-form-item label="姓名" prop="fullname">
+              <el-input v-model.trim="userInfo.fullname" placeholder="请输入姓名" clearable />
             </el-form-item>
           </el-col>
 
@@ -41,8 +41,8 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12">
-            <el-form-item label="备用邮箱" prop="backupEmail">
-              <el-input v-model.trim="userInfo.backupEmail" placeholder="请输入备用邮箱" clearable />
+            <el-form-item label="备用邮箱" prop="email2">
+              <el-input v-model.trim="userInfo.email2" placeholder="请输入备用邮箱" clearable />
             </el-form-item>
           </el-col>
 
