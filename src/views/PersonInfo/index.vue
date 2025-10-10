@@ -57,11 +57,18 @@
             </el-form-item>
           </el-col>
 
-          <el-col :xs="24">
+          <el-col :xs="24" :sm="12">
             <el-form-item label="地址" prop="address">
               <el-input v-model.trim="userInfo.address" placeholder="请输入详细地址" clearable />
             </el-form-item>
           </el-col>
+
+          <el-col :xs="24" :sm="12">
+            <el-form-item label="gitee名称" prop="giteeName">
+              <el-input v-model.trim="userInfo.giteeName" placeholder="请输入gitee名字" clearable />
+            </el-form-item>
+          </el-col>
+
         </el-row>
 
         <!-- 身份状态-->
@@ -125,6 +132,7 @@ const userInfo = ref({
   company: '',
   address: '',
   bankCardNumber: '',
+  giteeName:'',
   hasSignedPdf: false,      // 是否已签署PDF协议
 })
 
@@ -270,7 +278,8 @@ const handleSubmit = async () => {
       phone: userInfo.value.phone,
       company: userInfo.value.company,
       address: userInfo.value.address,
-      bankCardNumber: userInfo.value.bankCardNumber
+      bankCardNumber: userInfo.value.bankCardNumber,
+      giteeName: userInfo.value.giteeName
     }
     const response = await updatePersonInfo(updateParams)
     if (response) {
