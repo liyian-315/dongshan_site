@@ -1,5 +1,10 @@
 import {post, put, get} from './index'
 
+export async function sendEmailVerificationCode(email) {
+    return get(`/api/public/sendEmail/${email}`);
+}
+
+
 export function getPdfCopyWriting(params) {
     return get('/api/public/getPdfCW',params)
 }
