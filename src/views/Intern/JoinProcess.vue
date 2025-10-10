@@ -52,7 +52,7 @@
               </div>
               <p class="mt-4">
                 跳转并下载「实习协议.PDF」，请同学们完善相关个人信息，并签署个人姓名和时间，将「实习协议.PDF」发送至邮箱：
-                <a href="mailto:202485009017@sdu.edu.cn" class="link">202485009017@sdu.edu.cn</a>。
+                <a href="mailto:dssq_sdu@163.com" class="link">dssq_sdu@163.com</a>。
                 社区签署执行人姓名后，我们会将实习协议通过电子邮件寄回，用于双方保存。
               </p>
               <p class="mt-3">同时为了确保贡献者和津贴发放对象一致，请附上以下两个文件：</p>

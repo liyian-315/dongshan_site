@@ -40,7 +40,7 @@
                         社区集中呈现了山东大学在“东山集群”和“东山派”上已经适配和优化的开源软件、正在研发的开源项目等RISC-V资源，作为教学与科研资料供所有社区成员参考和使用。
                       </p>
                       <a
-                          href="/join"
+                          href="https://gitee.com/dongshan-community"
                           class="mt-8 inline-block bg-gradient-to-r from-rose-600 via-red-500 to-rose-400 text-white font-bold py-3 px-8 rounded-full hover:scale-105 transform transition-all duration-300 shadow-lg shadow-red-500/40"
                       >
                         加入我们
