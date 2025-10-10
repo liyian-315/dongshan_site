@@ -77,6 +77,8 @@
         </div>
       </div>
     </footer>
+    <!-- 全局 iOS 风格提示（只挂一次） -->
+    <IosToast />
   </div>
 </template>
 
@@ -85,6 +87,7 @@ import 'element-plus/dist/index.css'
 import { ElMenu, ElMenuItem, ElSubMenu, ElMessage } from 'element-plus'
 import { useRouter, useRoute, RouterLink } from 'vue-router'
 import { ref, watch, onMounted, onUnmounted } from 'vue'
+import IosToast from '@/components/IosToast.vue'
 
 const router = useRouter()
 const route = useRoute()

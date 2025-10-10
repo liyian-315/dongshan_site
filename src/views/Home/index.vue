@@ -43,7 +43,7 @@
                           href="https://gitee.com/dongshan-community"
                           class="mt-8 inline-block bg-gradient-to-r from-rose-600 via-red-500 to-rose-400 text-white font-bold py-3 px-8 rounded-full hover:scale-105 transform transition-all duration-300 shadow-lg shadow-red-500/40"
                       >
-                        加入我们
+                        Gitee社区
                       </a>
                     </div>
 
@@ -124,6 +124,30 @@
           </el-carousel-item>
 
           <!-- 设计稿主屏 3 -->
+          <el-carousel-item>
+            <div class="relative w-full h-[600px] bg-[url('https://images.unsplash.com/photo-1593642532400-2682810df593?q=80&w=2069&auto=format&fit=crop')] bg-cover bg-center">
+              <div class="absolute inset-0 bg-black/30"></div>
+              <div class="absolute -inset-4 bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-500 opacity-20 blur-xl"></div>
+              <div class="relative h-full flex items-center justify-center text-center text-white p-8">
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 shadow-2xl max-w-3xl">
+                  <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">加入实习生计划</span><br />
+                  </h1>
+                  <p class="text-lg md:text-xl text-white/80 mt-6">
+                    助力RISC-V生态任务落地，推动代码、文档、工具等成果的标准化与复用。
+                  </p>
+                  <a
+                      href="/join-process"
+                      class="mt-8 inline-block bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-8 rounded-full hover:scale-105 transform transition-all duration-300 shadow-lg shadow-primary/40"
+                  >
+                    成为实习生
+                  </a>
+                </div>
+              </div>
+            </div>
+          </el-carousel-item>
+
+          <!-- 设计稿主屏 4 -->
           <el-carousel-item>
             <div class="relative w-full h-[600px] bg-[url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center">
               <div class="absolute inset-0 bg-black/30"></div>
@@ -345,7 +369,7 @@
 
         <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
           <div>
-            <h3 class="text-xl font-bold">东山派活动</h3>
+            <h3 class="text-xl font-bold">东山派教程</h3>
             <p class="text-subtext-light text-sm mt-2">2025年10月</p>
             <p class="mt-3 text-sm">分享东山派的产品介绍与使用</p>
           </div>
@@ -363,7 +387,7 @@
             <p class="mt-3 text-sm">与内核专家深入交流，探讨操作系统核心技术的最新进展。</p>
           </div>
           <div class="mt-4 flex justify-end">
-            <a href="#event-4" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+            <a href="/events/conf-2025-v1" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
               查看活动 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
             </a>
           </div>

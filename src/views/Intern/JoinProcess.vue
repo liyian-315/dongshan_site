@@ -7,13 +7,10 @@
       <!-- Hero -->
       <header class="hero text-center">
         <h1
-            class="text-2xl sm:text-3xl lg:text-4xl $1 mx-auto max-w-3xl"
+            class="main-title"
         >
           如何加入东山 · 远程实习生计划
         </h1>
-        <p class="mt-3 text-base sm:text-lg text-slate-600">
-          按步骤完成注册、认证与任务提交，即可开启你的开源之旅。
-        </p>
       </header>
 
       <!-- Card -->
@@ -124,18 +121,44 @@
               </p>
             </div>
           </section>
+
+          <!-- STEP 6 -->
+          <section class="step step-card scroll-mt-24" id="step-5">
+            <h2 class="step-title">第六步</h2>
+            <div class="step-body">
+              <p>
+                完成实习任务后，你可以随时申请实习证明，发送至邮箱<a href="mailto:dssq_sdu@163.com" class="link">dssq_sdu@163.com</a>。，内容如下：
+              </p>
+              <p class="mt-3">
+                申请实习证明：姓名、东山社区用户名称、Gitte用户名称。
+              </p>
+
+              <div class="img-grid mt-4">
+                <img src="@/assets/img/shixizhengming-1.jpg" alt="实习证明模板正面" class="doc-img" @click="onImgClick($event)" @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0" role="button" aria-label="点击放大预览" />
+                <img src="@/assets/img/shixizhengming-2.jpg" alt="实习证明模板背面" class="doc-img" @click="onImgClick($event)" @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0" role="button" aria-label="点击放大预览" />
+              </div>
+
+              <p class="mt-3 text-red-600 font-semibold">
+                为保证实习证明信息准确，请务必提供准确的Gitte用户名称。
+              </p>
+            </div>
+          </section>
+
           <!-- Downloads (inside main card) -->
           <section class="step step-card scroll-mt-24" aria-labelledby="downloads">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <h2 id="downloads" class="step-title">资料下载</h2>
-                <p class="text-slate-600 mt-1">包含：实习协议（PDF）</p>
-              </div>
-              <div class="flex gap-3">
-                <a :href="AGREEMENT_URL" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium ring-1 ring-inset ring-slate-300 hover:bg-slate-50 transition">在线查看</a>
-                <a :href="AGREEMENT_URL" download class="inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900">实习协议下载</a>
-              </div>
-            </div>
+            <h2 id="downloads" class="step-title">资料下载</h2>
+            <ul class="dl-list">
+              <li v-for="att in attachments" :key="att.url" class="dl-item">
+                <div class="dl-meta">
+                  <span class="dl-label">{{ att.label }}：</span>
+                  <span class="dl-name">{{ att.name }}</span>
+                </div>
+                <div class="dl-actions">
+                  <a :href="att.url" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">在线查看</a>
+                  <a :href="att.url" :download="att.name" class="btn btn-solid">附件下载</a>
+                </div>
+              </li>
+            </ul>
           </section>
         </div>
       </div>
@@ -173,6 +196,12 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 // 实习协议 PDF 地址（放在 public/docs/ 目录或换成你的线上地址）
 const AGREEMENT_URL = '/docs/实习协议.pdf'
 
+// 下载清单（可自行增删）
+interface Attachment { label: string; name: string; url: string }
+const attachments: Attachment[] = [
+  { label: '附件一', name: '实习协议.PDF', url: AGREEMENT_URL },
+  // { label: '附件二', name: '开源入门.pdf', url: '/docs/开源入门.pdf' },
+]
 
 // 图片预览（灯箱）
 const lightboxOpen = ref(false)
@@ -211,6 +240,18 @@ onBeforeUnmount(() => {
 /* ---- 通用排版 ---- */
 .hero :where(h1) {
   letter-spacing: -0.02em;
+}
+
+.main-title{
+  margin: 24px 0 16px;
+  color: #1e293b;
+  font-size: 42px;
+  font-weight: bold;
+  text-align: center;
+  background: linear-gradient(to right, #0ea5e9, #6366f1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* 链接样式：沉稳又可见 */
@@ -319,4 +360,28 @@ onBeforeUnmount(() => {
 @media (min-width: 1280px) { /* xl */
   .img-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
+
+/* 资料下载列表 */
+.dl-list { margin-top: .5rem; display: grid; gap: 12px; }
+.dl-item { display:flex; align-items:center; justify-content:space-between; gap: 12px;
+  padding: 12px 14px; border-radius: 14px; border: 1px solid rgba(2,6,23,.06);
+  background: #fff; box-shadow: 0 6px 16px rgba(2,6,23,.06); }
+.dl-meta { display:flex; align-items:center; gap: 8px; color:#0f172a; font-weight: 600; }
+.dl-label { color:#334155; font-weight: 700; }
+.dl-name { color:#0f172a; font-weight: 600; }
+.dl-actions { display:flex; gap: 8px; flex-shrink: 0; }
+
+.btn { display:inline-flex; align-items:center; justify-content:center; border-radius: 10px;
+  padding: 8px 14px; font-size: 14px; line-height: 1; }
+.btn-ghost { border: 1px solid rgba(2,6,23,.12); background: #fff; color:#0f172a; }
+.btn-ghost:hover { background:#f8fafc; }
+.btn-solid { background:#0f172a; color:#fff; border: 1px solid rgba(15,23,42,.8); }
+.btn-solid:hover { background:#111827; }
+
+@media (max-width: 640px) {
+  .dl-item { flex-direction: column; align-items: flex-start; }
+  .dl-actions { width: 100%; }
+  .dl-actions .btn { width: 100%; }
+}
+
 </style>
