@@ -65,7 +65,19 @@
                 <img src="@/assets/img/doc_image_2.png" alt="文档图片" class="doc-img" @click="onImgClick($event)" @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0" role="button" aria-label="点击放大预览" />
                 <img src="@/assets/img/doc_image_14.png" alt="文档图片" class="doc-img" @click="onImgClick($event)" @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0" role="button" aria-label="点击放大预览" />
               </div>
-              <p class="mt-4">此时，个人身份状态将更改为「实习生」。</p>
+              <p class="mt-4 flex items-center flex-wrap">
+                此时，个人身份状态将更改为「实习生」，
+                <span
+                    class="link cursor-pointer ml-1"
+                    @click="goToPersonInfo"
+                    tabindex="0"
+                    @keydown.enter.prevent="goToPersonInfo"
+                    @keydown.space.prevent="goToPersonInfo"
+                    aria-label="点击完善个人Gitee名称"
+                >
+                  点击此处完善个人Gitee名称
+                </span>
+              </p>
               <div class="img-grid mt-4">
                 <img src="@/assets/img/doc_image_13.png" alt="文档图片" class="doc-img" @click="onImgClick($event)" @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0" role="button" aria-label="点击放大预览" />
               </div>
@@ -169,7 +181,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-
+import { useRouter } from 'vue-router'
 // 实习协议 PDF 地址（放在 public/docs/ 目录或换成你的线上地址）
 const AGREEMENT_URL = '/docs/实习协议.pdf'
 
@@ -177,6 +189,11 @@ const AGREEMENT_URL = '/docs/实习协议.pdf'
 // 图片预览（灯箱）
 const lightboxOpen = ref(false)
 const lightboxSrc = ref<string>('')
+// 初始化 Router 实例
+const router = useRouter()
+const goToPersonInfo = () => {
+  router.push('/personInfo')
+}
 
 function openLightbox(src: string) {
   if (!src) return

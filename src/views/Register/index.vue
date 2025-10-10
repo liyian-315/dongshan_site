@@ -47,9 +47,31 @@
                       <svg class="prefix-icon" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5L4 8V6l8 5 8-5v2Z"/></svg>
                     </template>
                   </el-input>
+                  <el-button
+                      v-if="!isSending && !countDown"
+                      type="text"
+                      @click="sendVerificationCode"
+                      :disabled="!form.email"
+                  >
+                    发送验证码
+                  </el-button>
+                  <span v-else-if="countDown" class="count-down-text">{{ countDown }}s 后可重新发送</span>
+                  <span v-else class="sending-text">发送中...</span>
                 </el-form-item>
               </el-col>
-
+              <el-col :span="24">
+                <el-form-item label="验证码" prop="verificationCode">
+                  <el-input
+                      v-model.trim="form.verificationCode"
+                      placeholder="请输入邮箱验证码"
+                      clearable
+                  >
+                    <template #prefix>
+                      <svg class="prefix-icon" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 2a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
               <el-col :span="24">
                 <el-form-item label="备用邮箱" prop="email2">
                   <el-input v-model.trim="form.email2" type="email" placeholder="请输入备用邮箱（选填）" clearable />
@@ -128,10 +150,10 @@
 
 <script setup>
 // 注册逻辑：调用 /api/auth/register
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
-import { registerUser } from '@/api/user.js'
+import {reactive, ref} from 'vue'
+import {useRouter} from 'vue-router'
+import {ElMessage} from 'element-plus'
+import {registerUser, sendEmailVerificationCode} from '@/api/user.js'
 
 const router = useRouter()
 const formRef = ref(null)
@@ -145,11 +167,14 @@ const form = reactive({
   address: '',
   company: '',
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
+  verificationCode: ''
 })
 
 const agreeTerms = ref(false)
 const termsDialogVisible = ref(false)
+const isSending = ref(false)
+const countDown = ref(0)
 
 // 验证规则）
 const rules = {
@@ -191,7 +216,54 @@ const rules = {
 function openTermsDialog(){ termsDialogVisible.value = true }
 function goHome(){ router.push('/home') }
 function goLogin(){ router.push('/login') }
+const sendVerificationCode = async () => {
+  if (!form.email) {
+    ElMessage.warning('请先输入邮箱');
+    return;
+  }
+  isSending.value = true;
+  const abortController = new AbortController();
 
+  try {
+    const requestTask = sendEmailVerificationCode(form.email, {
+      signal: abortController.signal // 绑定中断信号
+    });
+    const result = await Promise.race([
+      requestTask,
+      new Promise((_, reject) => {
+        setTimeout(() => {
+          abortController.abort();
+          reject(new Error('验证码已提交发送，请查收邮箱（若5分钟内未收到可重试）'));
+        }, 5000);
+      })
+    ]);
+
+    if (result) {
+      ElMessage.success('验证码已开始发送，请查收邮件');
+      startCountDown();
+    }
+
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      ElMessage.info(error.message);
+      startCountDown();
+    }
+  } finally {
+    setTimeout(() => {
+      isSending.value = false;
+    }, 500);
+  }
+};
+const startCountDown = () => {
+  countDown.value = 60;
+  const timer = setInterval(() => {
+    countDown.value--;
+    if (countDown.value <= 0) {
+      clearInterval(timer);
+      countDown.value = 0;
+    }
+  }, 1000);
+}
 async function onSubmit(){
   if (!agreeTerms.value){
     ElMessage.warning('请先阅读并同意用户协议')
@@ -346,7 +418,22 @@ async function onSubmit(){
   background: radial-gradient(120% 120% at 50% 50%, #48c774 0%, #48c774 60%, transparent 61%);
   transform: rotate(24deg);
 }
-
+/* 发送验证码按钮、倒计时文字样式 */
+:deep(.el-form-item__content) {
+  display: flex;
+  align-items: center;
+}
+:deep(.el-form-item__content > .el-button) {
+  margin-left: 8px;
+  padding: 0 12px;
+  height: 32px;
+  line-height: 32px;
+}
+.count-down-text, .sending-text {
+  margin-left: 8px;
+  color: #909399;
+  font-size: 14px;
+}
 @media (max-width: 1024px) {
   .auth-panel { grid-template-columns: 1fr; }
   .panel-right { padding: 24px; }
