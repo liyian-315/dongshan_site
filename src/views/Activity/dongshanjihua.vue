@@ -1,13 +1,10 @@
 <template>
-  <!-- 东山计划 · 教学计划（纯标题+内容样式） -->
+  <!-- 东山计划 · 教学计划（加图片网格 & 标题居中蓝色） -->
   <div class="act-bg">
-    <!-- 顶部横幅：标题 + 右侧插图 -->
+    <!-- 顶部横幅：标题 + 插图（移动优先：标题在上，插图在下） -->
     <header class="hero">
       <div class="hero-text">
-        <h1>东山计划——教学计划</h1>
-      </div>
-      <div class="hero-illu">
-        <el-image :src="heroImg" fit="contain" class="hero-img" />
+        <h1 class="title">东山计划——教学计划</h1>
       </div>
     </header>
 
@@ -22,6 +19,14 @@
       <p>
         复旦大学双聘顶尖人才、上海开放处理器产业创新中心秘书长、“松竹梅计划”发起人——谢涛教授担任计划牵头人，山东大学戴鸿君教授担任执行负责人。
       </p>
+
+      <div class="gallery">
+        <div class="img-row">
+          <img src="@/assets/img/dongshanjihua-1.jpg" alt="教学计划配图1" class="doc-img" />
+          <img src="@/assets/img/dongshanjihua-2.jpg" alt="教学计划配图2" class="doc-img" />
+        </div>
+      </div>
+
       <p>
         “<strong>松竹梅计划</strong>”取自“<strong>岁寒三友</strong>”一词，这三种植物都象征着高尚的品格，能够在严冬中保持旺盛的生命力。面对国外限制我国AI、GPU等领域的发展困境，
         “<strong>松竹梅计划</strong>”致力于全面突破多个AI建设的功能指标、性能指标和社区活跃指标。<strong>其中，“东山集群”和“甲辰计划”将作为重要支撑体系</strong>：一方面，
@@ -32,6 +37,14 @@
         在大规模量产的基于RISC-V AI指令集扩展的AI加速卡/加速模块/加速IP（包含训练和推理、云侧和端侧）上，适配PyTorch、TensorFlow、Triton、
         飞浆等主流AI框架。
       </p>
+
+      <div class="gallery">
+        <div class="img-row">
+          <img src="@/assets/img/dongshanjihua-3.jpg" alt="教学计划配图3" class="doc-img" />
+          <img src="@/assets/img/dongshanjihua-4.jpg" alt="教学计划配图4" class="doc-img" />
+        </div>
+      </div>
+
       <p>
         为实现上述愿景，“东山计划”将重点推动以下工作：
       </p>
@@ -47,6 +60,14 @@
         <strong>丰富学生RISC-V竞赛渠道</strong>，筹办2025年“算能杯ICAN创新创业大赛”RISC-V专项赛道等赛事，结合“东山派”等开发板，提高学生动手实践能力，
         为优秀参赛者提供丰厚的奖金，推荐学生参与到“甲辰计划·开源实习生联合招聘培养”的绿色实习通道，赋能学生全面发展。
       </p>
+
+      <div class="gallery">
+        <div class="img-row">
+          <img src="@/assets/img/dongshanjihua-5.jpg" alt="教学计划配图5" class="doc-img" />
+          <img src="@/assets/img/dongshanjihua-6.png" alt="教学计划配图6" class="doc-img" />
+        </div>
+      </div>
+
       <p>
         除此之外，山东大学将建设面向东山的RISC-V开源生态基地——东山社区，在其中集中呈现“东山集群”和“东山派”已适配和优化的开源软件、
         正在研发的开源项目等资源，作为教学资料供计划师生参考，加速RISC-V教学任务落地。
@@ -60,7 +81,7 @@
 </template>
 
 <script setup>
-import heroImg from '@/assets/img/dongshan.svg';
+import heroImg from '@/assets/img/dongshan.svg'
 </script>
 
 <style scoped>
@@ -76,26 +97,31 @@ import heroImg from '@/assets/img/dongshan.svg';
   overflow: hidden;
 }
 
-/* 顶部横幅（保留） */
-.hero{
+/* 顶部横幅 */
+.hero {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  grid-template-columns: 1fr; /* 统一居中布局 */
   align-items: center;
   gap: 12px;
   padding: 20px 22px;
   margin: 0 auto 8px;
   width: min(1120px, 96vw);
 }
-.hero-text h1{
-  margin: 0 0 8px;
-  color:#0f172a;
-  font-size: 50px;
+.hero-text { text-align: center; }
+.title {
+  margin: 24px 0 16px;
+  color: #1e293b;
+  font-size: 42px;
   font-weight: bold;
-  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", sans-serif;
+  text-align: center;
+  background: linear-gradient(to right, #0ea5e9, #6366f1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
-.lead{ margin: 0; color:#475569; line-height: 1.8; }
-.hero-illu{ display:flex; align-items:center; justify-content:center; }
-.hero-img{ width: 88%; max-width: 420px; }
+.lead { margin: 0; color:#475569; line-height: 1.8; }
+.hero-illu { display:flex; align-items:center; justify-content:center; }
+.hero-img { width: 72%; max-width: 460px; }
 
 /* 内容区块（直排） */
 .section{
@@ -103,44 +129,35 @@ import heroImg from '@/assets/img/dongshan.svg';
   margin: 16px auto 0;
   padding: 0 2px; /* 更像正文页，不再卡片化 */
 }
-.sub{
-  margin: 0 0 10px;
-  color:#0f172a;
-  font-size: 26px;
-}
+.sub{ margin: 0 0 10px; color:#0f172a; font-size: 26px; }
 .h3{ margin: 12px 0 6px; color:#0f172a; font-size: 18px; }
 
-.section p{
-  color:#475569;
-  line-height: 1.9;
-  margin: 0 0 10px;
-  text-indent: 2em;
-}
+.section p{ color:#475569; line-height: 1.9; margin: 0 0 10px; text-indent: 2em; }
 .section ul{ margin: 6px 0 12px 20px; color:#475569; line-height: 1.9; }
 
-.intern-title {
-  margin: 24px 0 16px;
-  color: #1e293b;
-  font-size: 32px;
-  font-weight: bold;
-  text-align: center;
-}
+.intern-title { margin: 24px 0 16px; color: #1e293b; font-size: 32px; font-weight: bold; text-align: center; }
 
-/* 行内统计 */
-.stats-inline{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18px;
-  padding: 0;
-  margin: 8px 0 0;
-  list-style: none;
+/* 图片画廊：按行组织，单行支持 1/2/3+ 张，自动等宽；只有 1 张时会自适应占满 */
+.gallery { margin: 16px 0; }
+.img-row {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin: 10px 0 14px;
 }
-.stats-inline li{ color:#334155; }
-.stats-inline strong{ font-weight: 800; }
+.doc-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(2, 6, 23, 0.08);
+  border: 1px solid rgba(2, 6, 23, 0.06);
+  background: #fff;
+}
+.doc-img:hover { transform: translateY(-1px); box-shadow: 0 14px 28px rgba(2, 6, 23, 0.10); }
 
 /* 响应式 */
 @media (max-width: 1024px){
-  .hero{ grid-template-columns: 1fr; }
   .hero-img{ width: 60%; max-width: 380px; }
 }
 </style>

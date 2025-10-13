@@ -1,7 +1,7 @@
 <template>
   <div class="page-bg">
     <main class="content-container">
-      <h1 class="main-title">东山派远程实习生计划</h1>
+      <h1 class="main-title">东山远程实习生计划</h1>
       <div class="prose max-w-none" v-html="renderedMarkdown"></div>
     </main>
   </div>
@@ -171,7 +171,7 @@ const renderedMarkdown = ref(md.render(markdownContent));
 .main-title {
   margin: 24px 0 16px;
   color: #1e293b;
-  font-size: 32px;
+  font-size: 42px;
   font-weight: bold;
   text-align: center;
   background: linear-gradient(to right, #0ea5e9, #6366f1);

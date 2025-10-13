@@ -29,7 +29,7 @@
 
       <div class="git-repo" v-if="moduleDisplay.gitRepo && project.gitRepo">
         <a :href="project.gitRepo" target="_blank" rel="noopener noreferrer" class="git-link">
-          <i class="el-icon-share"></i> 访问GitHub仓库
+          <i class="el-icon-share"></i> 访问开源项目仓库
         </a>
       </div>
 
