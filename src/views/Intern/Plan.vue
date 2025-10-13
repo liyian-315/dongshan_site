@@ -1,7 +1,7 @@
 <template>
   <div class="page-bg">
     <main class="content-container">
-      <h1 class="main-title">东山派远程实习生计划</h1>
+      <h1 class="main-title">东山远程实习生计划</h1>
       <div class="prose max-w-none" v-html="renderedMarkdown"></div>
     </main>
   </div>

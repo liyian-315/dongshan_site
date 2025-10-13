@@ -41,9 +41,9 @@
                     class="inline-flex items-center px-3 py-2 rounded-lg bg-background-light dark:bg-background-dark text-sm hover:opacity-80">
               <span class="material-symbols-outlined mr-1 text-base">ios_share</span> 分享
             </button>
-            <button class="inline-flex items-center px-3 py-2 rounded-lg bg-background-light dark:bg-background-dark text-sm hover:opacity-80">
-              <span class="material-symbols-outlined mr-1 text-base">bookmark_add</span> 收藏
-            </button>
+<!--            <button class="inline-flex items-center px-3 py-2 rounded-lg bg-background-light dark:bg-background-dark text-sm hover:opacity-80">-->
+<!--              <span class="material-symbols-outlined mr-1 text-base">bookmark_add</span> 收藏-->
+<!--            </button>-->
           </div>
         </div>
 

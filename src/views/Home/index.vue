@@ -125,7 +125,7 @@
 
           <!-- 设计稿主屏 3 -->
           <el-carousel-item>
-            <div class="relative w-full h-[600px] bg-[url('https://images.unsplash.com/photo-1593642532400-2682810df593?q=80&w=2069&auto=format&fit=crop')] bg-cover bg-center">
+            <div class="relative w-full h-[600px] bg-[url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center">
               <div class="absolute inset-0 bg-black/30"></div>
               <div class="absolute -inset-4 bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-500 opacity-20 blur-xl"></div>
               <div class="relative h-full flex items-center justify-center text-center text-white p-8">
@@ -272,7 +272,7 @@
         <h2 class="text-4xl font-extrabold mb-4">
           <span class="gradient-text">热门开源项目板块</span>
         </h2>
-        <p class="text-lg text-subtext-light max-w-2xl mx-auto">参与我们丰富多彩的线上线下活动，与技术大牛面对面交流。</p>
+        <p class="text-lg text-subtext-light max-w-2xl mx-auto">聚合高热度仓库，助你快速上手并提交PR。</p>
       </div>
 
       <div class="container mx-auto px-4 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -382,12 +382,12 @@
 
         <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
           <div>
-            <h3 class="text-xl font-bold">比赛活动</h3>
-            <p class="text-subtext-light text-sm mt-2">2024年10月20日 | 线下·北京</p>
-            <p class="mt-3 text-sm">与内核专家深入交流，探讨操作系统核心技术的最新进展。</p>
+            <h3 class="text-xl font-bold">赛事活动</h3>
+            <p class="text-subtext-light text-sm mt-2">2025年10月21日 | 线下·济南</p>
+            <p class="mt-3 text-sm">聚焦RISC-V与开源数据库的全新议题</p>
           </div>
           <div class="mt-4 flex justify-end">
-            <a href="/events/conf-2025-v1" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+            <a href="/events/riscv_sql_1" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
               查看活动 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
             </a>
           </div>

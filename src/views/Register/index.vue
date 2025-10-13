@@ -59,19 +59,17 @@
                   <span v-else class="sending-text">发送中...</span>
                 </el-form-item>
               </el-col>
+
               <el-col :span="24">
                 <el-form-item label="验证码" prop="verificationCode">
-                  <el-input
-                      v-model.trim="form.verificationCode"
-                      placeholder="请输入邮箱验证码"
-                      clearable
-                  >
+                  <el-input v-model.trim="form.verificationCode" placeholder="请输入邮箱验证码" clearable>
                     <template #prefix>
                       <svg class="prefix-icon" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 2a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>
                     </template>
                   </el-input>
                 </el-form-item>
               </el-col>
+
               <el-col :span="24">
                 <el-form-item label="备用邮箱" prop="email2">
                   <el-input v-model.trim="form.email2" type="email" placeholder="请输入备用邮箱（选填）" clearable />
@@ -132,13 +130,12 @@
     <div class="arc arc-blue"></div>
     <div class="arc arc-green"></div>
 
-    <!-- 用户协议对话框 -->
+    <!-- 用户协议对话框（Markdown 渲染） -->
     <el-dialog v-model="termsDialogVisible" title="东山社区用户协议" width="720px">
       <div class="terms-content">
-        <div class="terms-text">
-          <p>这里放置你的用户协议正文。为简洁起见省略，可替换为真实内容。</p>
-          <p>1）请遵守相关法律法规；2）不得用于非法用途；3）尊重社区成员与内容版权；……</p>
-        </div>
+        <el-scrollbar height="60vh">
+          <article class="markdown-body" v-html="termsHtml"></article>
+        </el-scrollbar>
       </div>
       <template #footer>
         <el-button @click="termsDialogVisible=false">关闭</el-button>
@@ -150,10 +147,30 @@
 
 <script setup>
 // 注册逻辑：调用 /api/auth/register
-import {reactive, ref} from 'vue'
-import {useRouter} from 'vue-router'
-import {ElMessage} from 'element-plus'
-import {registerUser, sendEmailVerificationCode} from '@/api/user.js'
+import { reactive, ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { registerUser, sendEmailVerificationCode } from '@/api/user.js'
+
+import MarkdownIt from 'markdown-it'
+import DOMPurify from 'dompurify'
+import termsMd from '@/policies/service.md?raw'
+
+const md = new MarkdownIt({
+  html: true,     // 允许 Markdown 中的 HTML（结合 DOMPurify 做安全清洗）
+  linkify: true,  // 自动把 URL 转为链接
+  breaks: true    // 换行转 <br>
+})
+
+const defaultLinkOpen = md.renderer.rules.link_open || ((tokens, idx, options, env, self) => self.renderToken(tokens, idx, options))
+md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+  const aIndex = tokens[idx].attrIndex('target')
+  if (aIndex < 0) tokens[idx].attrPush(['target', '_blank'])
+  else tokens[idx].attrs[aIndex][1] = '_blank'
+  tokens[idx].attrPush(['rel', 'noopener noreferrer'])
+  return defaultLinkOpen(tokens, idx, options, env, self)
+}
+const termsHtml = computed(() => DOMPurify.sanitize(md.render(termsMd || '# 用户协议\n\n（未找到 Markdown 文件内容）')))
 
 const router = useRouter()
 const formRef = ref(null)
@@ -176,7 +193,7 @@ const termsDialogVisible = ref(false)
 const isSending = ref(false)
 const countDown = ref(0)
 
-// 验证规则）
+// 验证规则
 const rules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -216,6 +233,7 @@ const rules = {
 function openTermsDialog(){ termsDialogVisible.value = true }
 function goHome(){ router.push('/home') }
 function goLogin(){ router.push('/login') }
+
 const sendVerificationCode = async () => {
   if (!form.email) {
     ElMessage.warning('请先输入邮箱');
@@ -254,6 +272,7 @@ const sendVerificationCode = async () => {
     }, 500);
   }
 };
+
 const startCountDown = () => {
   countDown.value = 60;
   const timer = setInterval(() => {
@@ -264,6 +283,7 @@ const startCountDown = () => {
     }
   }, 1000);
 }
+
 async function onSubmit(){
   if (!agreeTerms.value){
     ElMessage.warning('请先阅读并同意用户协议')
@@ -272,7 +292,7 @@ async function onSubmit(){
   if (!formRef.value) return
   try{
     await formRef.value.validate()
-    const res = await registerUser(form)
+    await registerUser(form)
     ElMessage.success('注册成功，请登录...')
     setTimeout(()=> router.push('/login'), 800)
   }catch(e){
@@ -284,7 +304,6 @@ async function onSubmit(){
 </script>
 
 <style scoped>
-
 .auth-bg {
   position: relative;
   min-height: calc(100vh - 64px - 76px);
@@ -297,7 +316,6 @@ async function onSubmit(){
   place-items: center;
   overflow: hidden;
 }
-
 .auth-panel {
   position: relative;
   z-index: 2;
@@ -309,49 +327,14 @@ async function onSubmit(){
   grid-template-columns: 1.2fr 1fr;
   overflow: hidden;
 }
-
-.panel-left {
-  padding: 40px 48px 48px 56px;
-}
-
-.back-link {
-  margin-bottom: 8px;
-  display: inline-block;
-  opacity: .7;
-}
-.headline {
-  margin: 10px 0 6px;
-  letter-spacing: .04em;
-  font-weight: 700;
-  font-size: 22px;
-  color: #1f2d3d;
-}
-.subline {
-  color: #6b778c;
-  max-width: 520px;
-  line-height: 1.7;
-  margin-bottom: 24px;
-}
-.illustration {
-  width: 75%;
-  max-width: 520px;
-  min-width: 320px;
-  filter: drop-shadow(0 8px 18px rgba(0,0,0,.06));
-}
-.dots {
-  margin-top: 12px;
-}
-.dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #c9d3e0;
-  margin-right: 6px;
-}
-.dot.active {
-  background: var(--el-color-primary);
-}
+.panel-left { padding: 40px 48px 48px 56px; }
+.back-link { margin-bottom: 8px; display: inline-block; opacity: .7; }
+.headline { margin: 10px 0 6px; letter-spacing: .04em; font-weight: 700; font-size: 22px; color: #1f2d3d; }
+.subline { color: #6b778c; max-width: 520px; line-height: 1.7; margin-bottom: 24px; }
+.illustration { width: 75%; max-width: 520px; min-width: 320px; filter: drop-shadow(0 8px 18px rgba(0,0,0,.06)); }
+.dots { margin-top: 12px; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #c9d3e0; margin-right: 6px; }
+.dot.active { background: var(--el-color-primary); }
 
 .panel-right {
   position: relative;
@@ -389,62 +372,72 @@ async function onSubmit(){
   box-shadow: 0 10px 24px rgba(0,140,255,.32), 0 0 18px rgba(0,209,255,.35);
 }
 
-.signup-tip {
-  text-align: center;
-  color: #7b8aa0;
-  margin-top: 6px;
-}
+.signup-tip { text-align: center; color: #7b8aa0; margin-top: 6px; }
 
-.arc {
-  position: absolute;
-  z-index: 1;
-  border-radius: 999px;
-  filter: blur(.2px);
-}
+.arc { position: absolute; z-index: 1; border-radius: 999px; filter: blur(.2px); }
 .arc-blue {
-  right: -120px;
-  top: -40px;
-  width: 360px;
-  height: 180px;
+  right: -120px; top: -40px; width: 360px; height: 180px;
   background: radial-gradient(120% 120% at 50% 50%, #1e90ff 0%, #1e90ff 60%, transparent 61%);
   transform: rotate(-12deg);
 }
-
 .arc-green {
-  left: -80px;
-  bottom: -60px;
-  width: 220px;
-  height: 220px;
+  left: -80px; bottom: -60px; width: 220px; height: 220px;
   background: radial-gradient(120% 120% at 50% 50%, #48c774 0%, #48c774 60%, transparent 61%);
   transform: rotate(24deg);
 }
+
 /* 发送验证码按钮、倒计时文字样式 */
-:deep(.el-form-item__content) {
-  display: flex;
-  align-items: center;
-}
-:deep(.el-form-item__content > .el-button) {
-  margin-left: 8px;
-  padding: 0 12px;
-  height: 32px;
-  line-height: 32px;
-}
-.count-down-text, .sending-text {
-  margin-left: 8px;
-  color: #909399;
-  font-size: 14px;
-}
+:deep(.el-form-item__content) { display: flex; align-items: center; }
+:deep(.el-form-item__content > .el-button) { margin-left: 8px; padding: 0 12px; height: 32px; line-height: 32px; }
+.count-down-text, .sending-text { margin-left: 8px; color: #909399; font-size: 14px; }
+
 @media (max-width: 1024px) {
   .auth-panel { grid-template-columns: 1fr; }
   .panel-right { padding: 24px; }
   .reg-box { width: min(560px, 92vw); }
   .illustration { width: 86%; }
 }
-
 @media (prefers-reduced-motion: reduce) {
   :deep(.el-input__wrapper.is-focus),
-  :deep(.el-input__wrapper.is-hovering) {
-    animation: none !important;
-  }
+  :deep(.el-input__wrapper.is-hovering) { animation: none !important; }
+}
+
+/* ---- Markdown 显示样式（作用于 v-html 内容，需要 :deep） ---- */
+:deep(.markdown-body) {
+  font-size: 14px;
+  line-height: 1.75;
+  color: #1f2d3d;
+  padding: 4px 2px 12px;
+}
+:deep(.markdown-body h1),
+:deep(.markdown-body h2),
+:deep(.markdown-body h3),
+:deep(.markdown-body h4),
+:deep(.markdown-body h5),
+:deep(.markdown-body h6) {
+  font-weight: 700;
+  margin: 18px 0 10px;
+  line-height: 1.35;
+}
+:deep(.markdown-body h1) { font-size: 20px; border-bottom: 1px solid #eef2f7; padding-bottom: 6px; }
+:deep(.markdown-body h2) { font-size: 18px; border-bottom: 1px solid #eef2f7; padding-bottom: 6px; }
+:deep(.markdown-body h3) { font-size: 16px; }
+:deep(.markdown-body p) { margin: 8px 0; color: #334155; }
+:deep(.markdown-body a) { color: #1e90ff; text-decoration: none; }
+:deep(.markdown-body a:hover) { text-decoration: underline; }
+:deep(.markdown-body ul),
+:deep(.markdown-body ol) { margin: 8px 0 8px 20px; }
+:deep(.markdown-body code) {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  background: #f6f8fa;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+:deep(.markdown-body pre) {
+  background: #0b1220;
+  color: #e6edf3;
+  padding: 12px 14px;
+  border-radius: 8px;
+  overflow: auto;
 }
 </style>

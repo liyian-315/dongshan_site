@@ -77,8 +77,6 @@
         </div>
       </div>
     </footer>
-    <!-- 全局 iOS 风格提示（只挂一次） -->
-    <IosToast />
   </div>
 </template>
 

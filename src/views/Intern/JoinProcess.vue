@@ -88,11 +88,11 @@
               <p>查看「实习生教学计划概述」，内容涵盖津贴、荣誉奖励等内容。</p>
               <div class="img-grid mt-4">
                 <img src="@/assets/img/doc_image_11.png" alt="文档图片" class="doc-img" @click="onImgClick($event)" @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0" role="button" aria-label="点击放大预览" />
-                <img src="@/assets/img/doc_image_12.png" alt="文档图片" class="doc-img" @click="onImgClick($event)" @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0" role="button" aria-label="点击放大预览" />
+                <img src="@/assets/img/doc_image_10.png" alt="文档图片" class="doc-img" @click="onImgClick($event)" @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0" role="button" aria-label="点击放大预览" />
               </div>
               <p class="mt-4">接下来，你就可以领取「实习生任务」了。</p>
               <div class="img-grid mt-4">
-                <img src="@/assets/img/doc_image_10.png" alt="文档图片" class="doc-img" @click="onImgClick($event)" @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0" role="button" aria-label="点击放大预览" />
+                <img src="@/assets/img/doc_image_12.png" alt="文档图片" class="doc-img" @click="onImgClick($event)" @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0" role="button" aria-label="点击放大预览" />
               </div>
             </div>
           </section>
@@ -106,8 +106,8 @@
               </p>
               <div class="img-grid mt-4">
                 <img src="@/assets/img/doc_image_7.png" alt="文档图片" class="doc-img" @click="onImgClick($event)" @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0" role="button" aria-label="点击放大预览" />
-                <img src="@/assets/img/doc_image_8.png" alt="文档图片" class="doc-img" @click="onImgClick($event)" @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0" role="button" aria-label="点击放大预览" />
                 <img src="@/assets/img/doc_image_9.png" alt="文档图片" class="doc-img" @click="onImgClick($event)" @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0" role="button" aria-label="点击放大预览" />
+                <img src="@/assets/img/doc_image_8.png" alt="文档图片" class="doc-img" @click="onImgClick($event)" @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0" role="button" aria-label="点击放大预览" />
               </div>
               <p class="mt-4">Gitee 的具体使用方法，见东山社区网站首页的活动板块——开源入门。（附件）</p>
             </div>
@@ -135,14 +135,14 @@
           </section>
 
           <!-- STEP 6 -->
-          <section class="step step-card scroll-mt-24" id="step-5">
+          <section class="step step-card scroll-mt-24" id="step-6">
             <h2 class="step-title">第六步</h2>
             <div class="step-body">
               <p>
-                完成实习任务后，你可以随时申请实习证明，发送至邮箱<a href="mailto:dssq_sdu@163.com" class="link">dssq_sdu@163.com</a>。，内容如下：
+                完成实习任务后，你可以随时申请实习证明，发送至邮箱<a href="mailto:dssq_sdu@163.com" class="link">dssq_sdu@163.com</a>。内容如下：
               </p>
               <p class="mt-3">
-                申请实习证明：姓名、东山社区用户名称、Gitte用户名称。
+                申请实习证明：姓名、东山社区用户名称、Gitee用户名称。
               </p>
 
               <div class="img-grid mt-4">
@@ -160,14 +160,14 @@
           <section class="step step-card scroll-mt-24" aria-labelledby="downloads">
             <h2 id="downloads" class="step-title">资料下载</h2>
             <ul class="dl-list">
-              <li v-for="att in attachments" :key="att.url" class="dl-item">
+              <li v-for="att in attachments" :key="att.download_url" class="dl-item">
                 <div class="dl-meta">
                   <span class="dl-label">{{ att.label }}：</span>
                   <span class="dl-name">{{ att.name }}</span>
                 </div>
                 <div class="dl-actions">
-                  <a :href="att.url" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">在线查看</a>
-                  <a :href="att.url" :download="att.name" class="btn btn-solid">附件下载</a>
+                  <a :href="att.read_url" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">在线查看</a>
+                  <a :href="att.download_url" :download="att.name" class="btn btn-solid">附件下载</a>
                 </div>
               </li>
             </ul>
@@ -206,12 +206,16 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 // 实习协议 PDF 地址（放在 public/docs/ 目录或换成你的线上地址）
-const AGREEMENT_URL = '/docs/实习协议.pdf'
+const AGREEMENT_URL = 'https://dongshan-file.oss-cn-beijing.aliyuncs.com/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf'
 
 // 下载清单（可自行增删）
-interface Attachment { label: string; name: string; url: string }
+interface Attachment { label: string; name: string; download_url: string; read_url: string }
 const attachments: Attachment[] = [
-  { label: '附件一', name: '实习协议.PDF', url: AGREEMENT_URL },
+  { label: '附件一',
+    name: '实习协议.PDF',
+    read_url: "https://dongshan-file.oss-cn-beijing.aliyuncs.com/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf",
+    download_url:"http://47.108.14.68/api/v4/file/content/JpaIR/0/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf?download=true&sign=Vh4GijNL4GVvh4Ok_ZGLphJ0Tqvku0KZ0ESJ7NsIws4%3D%3A1760084208"
+  },
   // { label: '附件二', name: '开源入门.pdf', url: '/docs/开源入门.pdf' },
 ]
 
