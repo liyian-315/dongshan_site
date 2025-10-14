@@ -26,7 +26,7 @@
         <el-row :gutter="16">
           <el-col :xs="24" :sm="12">
             <el-form-item label="用户名" prop="username">
-              <el-input v-model.trim="userInfo.username" placeholder="请输入用户名" clearable />
+              <el-input v-model.trim="userInfo.username" placeholder="请输入用户名" clearable disabled/>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12">

@@ -1,4 +1,4 @@
-import {post, put, get} from './index'
+import {post, put, get, del} from './index'
 
 export async function sendEmailVerificationCode(email) {
     return get(`/api/public/sendEmail/${email}`);
@@ -24,4 +24,18 @@ export async function personInfo(params) {
 
 export async function login(params) {
     return post('/api/auth/login',params)
+}
+
+export async function selectUser(params) {
+    return post('/api/admin/select_user', params)
+}
+
+export async function updateUser(data) {
+    return post('/api/admin/update_user', data)
+}
+
+export async function deleteUser(id) {
+    return del('/api/admin/delete_user', {
+        id: id
+    })
 }
