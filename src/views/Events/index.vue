@@ -309,5 +309,4 @@ onMounted(() => {
 <style>
 .activity-item { transition: background-color 0.2s ease-in-out; }
 .activity-item:active { background-color: #E5E5EA; }
-.dark .activity-item:active { background-color: #2C2C2E; }
 </style>
