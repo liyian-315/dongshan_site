@@ -1,5 +1,14 @@
 import {put, post, get} from './index'
 
+export function updateTaskStatus(data) {
+    return put('/api/admin/update_task_status', data)
+}
+
+export function selectTask(params) {
+    return post('/api/admin/select_task', params)
+}
+
+
 export function getPublishTemplateUrl() {
     return get('/api/task/getPublishTemplateUrl');
 }
