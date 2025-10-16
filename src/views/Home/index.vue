@@ -194,19 +194,51 @@
     <section class="pt-12 md:pt-16 pb-10 md:pb-12">
       <div class="container mx-auto px-4 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- 社区介绍（大卡，左侧两列，纵跨三行） -->
-        <div class="lg:col-span-2 lg:row-span-3 relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-8 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-          <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-br from-cyan-400 to-indigo-500 rounded-full opacity-20 blur-2xl"></div>
-          <div class="flex flex-col h-full">
-            <div class="bg-gradient-to-r from-primary to-accent inline-block p-4 rounded-xl self-start">
-              <span class="material-symbols-outlined text-white text-4xl">hub</span>
+        <!-- 左侧：社区介绍 + 开源贡献榜（上下分栏） -->
+        <div class="lg:col-span-2 lg:row-span-3 grid grid-rows-2 gap-6 h-full">
+          <!-- 上：社区介绍 -->
+          <div class="relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-8 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-br from-cyan-400 to-indigo-500 rounded-full opacity-20 blur-2xl"></div>
+            <div class="flex flex-col h-full">
+              <div class="bg-gradient-to-r from-primary to-accent inline-block p-4 rounded-xl self-start">
+                <span class="material-symbols-outlined text-white text-4xl">hub</span>
+              </div>
+              <h3 class="text-3xl font-bold mt-6">社区介绍</h3>
+              <p class="text-subtext-light mt-4 flex-grow">
+                东山社区是面向开发者的开放社区，致力于帮助开发者交流内容、构建完善的开源生态体系，为开发者提供一个充满活力、资源丰富的学习、交流与合作平台。
+              </p>
+              <a href="/about" class="inline-flex items-center mt-6 text-primary font-bold hover:underline">
+                了解更多 <span class="material-symbols-outlined ml-1">arrow_forward</span>
+              </a>
             </div>
-            <h3 class="text-3xl font-bold mt-6">社区介绍</h3>
-            <p class="text-subtext-light mt-4 flex-grow">
-              东山社区是面向开发者的开放社区，致力于帮助开发者交流内容、构建完善的开源生态体系，为开发者提供一个充满活力、资源丰富的学习、交流与合作平台。
-            </p>
-            <a href="/about" class="inline-flex items-center mt-6 text-primary font-bold hover:underline">
-              了解更多 <span class="material-symbols-outlined ml-1">arrow_forward</span>
-            </a>
+          </div>
+
+          <!-- 下：开源贡献榜介绍 -->
+          <div class="relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-8 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-br from-amber-400 to-pink-500 rounded-full opacity-20 blur-2xl"></div>
+            <div class="flex flex-col h-full">
+              <div class="bg-gradient-to-r from-secondary to-amber-400 inline-block p-4 rounded-xl self-start">
+                <span class="material-symbols-outlined text-white text-4xl">leaderboard</span>
+              </div>
+              <h3 class="text-3xl font-bold mt-6">开源贡献榜</h3>
+              <p class="text-subtext-light mt-4 flex-grow">
+                展示社区成员在各项目中的 PR、Issue、文档、翻译等多维度贡献热度与影响力，鼓励更多开发者参与共建。
+              </p>
+
+<!--              &lt;!&ndash; （可选）小预览：前三名占位 &ndash;&gt;-->
+<!--              <div class="mt-4 flex items-center gap-4">-->
+<!--                <div class="flex -space-x-2">-->
+<!--                  <img class="w-8 h-8 rounded-full border border-white/30" src="https://api.dicebear.com/7.x/identicon/svg?seed=alice" alt="avatar1">-->
+<!--                  <img class="w-8 h-8 rounded-full border border-white/30" src="https://api.dicebear.com/7.x/identicon/svg?seed=bob" alt="avatar2">-->
+<!--                  <img class="w-8 h-8 rounded-full border border-white/30" src="https://api.dicebear.com/7.x/identicon/svg?seed=carol" alt="avatar3">-->
+<!--                </div>-->
+<!--                <span class="text-xs text-subtext-light">实时统计 · 每日更新</span>-->
+<!--              </div>-->
+
+              <a href="https://gitee.com/dongshan-community/dongshan-contribution-list" class="inline-flex items-center mt-6 text-primary font-bold hover:underline">
+                查看榜单 <span class="material-symbols-outlined ml-1">arrow_forward</span>
+              </a>
+            </div>
           </div>
         </div>
 

@@ -91,8 +91,6 @@
                 </template>
               </el-table-column>
 
-              <!-- 任务领取页无需状态列，这里移除 -->
-
               <el-table-column prop="createTime" label="创建时间" width="180" align="center"/>
               <el-table-column prop="deadlineTime" label="截止时间" width="180" align="center"/>
               <el-table-column label="操作" width="280" align="center">
@@ -120,8 +118,7 @@
             </el-table>
           </div>
 
-          <!-- （保持你原有逻辑，不改动分页条件） -->
-          <div class="pagination-container" v-if="currentMenu === 'my-tasks' && myTasksTotal > 0">
+          <div class="pagination-container" v-if="isShowTaskList && totalTasks > 0">
             <el-pagination
                 @size-change="handlePageSizeChange"
                 @current-change="handleCurrentPageChange"
@@ -346,7 +343,7 @@
       </div>
     </el-drawer>
 
-    <!-- 提交成果对话框 -->
+    <!-- 提交成果对话框（已改成拖拽上传样式） -->
     <el-dialog
         title="提交任务成果"
         v-model="isSubmitDialogOpen"
@@ -354,46 +351,51 @@
         :before-close="handleCloseSubmitDialog"
     >
       <div class="submit-dialog-content">
-        <p class="dialog-tip">请上传任务相关的成果文件（支持所有类型文件，可上传多个）</p>
+        <p class="dialog-tip">请上传任务相关的成果文件</p>
 
-        <!-- 已上传文件列表 -->
-        <div class="uploaded-files" v-if="uploadedFiles.length > 0">
-          <h4 class="files-title">已上传文件（{{ uploadedFiles.length }}个）</h4>
-          <el-scrollbar class="files-scroll">
-            <div class="file-item" v-for="(file, index) in uploadedFiles" :key="index">
-              <i class="el-icon-document" :class="getFileIconClass(file.name)"></i>
-              <span class="file-name">{{ file.name }}</span>
-              <span class="file-size">({{ formatFileSize(file.size) }})</span>
-              <el-button
-                  type="text"
-                  size="small"
-                  class="delete-file-btn"
-                  @click="handleDeleteFile(index)"
-              >
-                <i class="el-icon-delete"></i> 删除
-              </el-button>
-            </div>
-          </el-scrollbar>
+        <!-- 上传区域（如图拖拽样式） -->
+        <div class="upload-box">
+          <el-upload
+              class="upload-dragger"
+              drag
+              :action="uploadUrl"
+              :auto-upload="false"
+              :show-file-list="false"
+              :file-list="uploadFileList"
+              :on-change="handleFileChange"
+              :on-remove="handleFileRemove"
+              multiple
+              accept="*"
+              ref="uploadRef"
+          >
+            <!-- 云朵上传图标（SVG） -->
+            <svg class="upload-cloud-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19 18a3 3 0 0 0 0-6h-.26A8 8 0 1 0 4 14a4 4 0 0 0 0 8h11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 12v7m0 0l-3-3m3 3l3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="upload-title">选择文件 <span class="divider">或</span> 拖拽到此处</div>
+            <div class="upload-sub">单个文件不超过50MB</div>
+          </el-upload>
+
+          <!-- 选择后的紧凑文件列表（可删除） -->
+          <div class="uploaded-files-compact" v-if="uploadedFiles.length > 0">
+            <el-scrollbar class="files-scroll">
+              <div class="file-item" v-for="(file, index) in uploadedFiles" :key="index">
+                <i class="el-icon-document" :class="getFileIconClass(file?.name || '')"></i>
+                <span class="file-name">{{ file.name }}</span>
+                <span class="file-size">({{ formatFileSize(file.size) }})</span>
+                <el-button
+                    type="text"
+                    size="small"
+                    class="delete-file-btn"
+                    @click="handleDeleteFile(index)"
+                >
+                  <i class="el-icon-delete"></i> 删除
+                </el-button>
+              </div>
+            </el-scrollbar>
+          </div>
         </div>
-
-        <!-- 文件上传组件 -->
-        <el-upload
-            class="file-uploader"
-            :action="uploadUrl"
-            :auto-upload="false"
-            :file-list="uploadFileList"
-            :on-change="handleFileChange"
-            :on-remove="handleFileRemove"
-            multiple
-            accept="*"
-            ref="uploadRef"
-            :http-request="handleCustomUpload"
-        >
-          <el-button type="primary" size="small">
-            <i class="el-icon-upload"></i> 选择文件
-          </el-button>
-          <p class="upload-hint">单个文件不超过50MB</p>
-        </el-upload>
       </div>
 
       <template #footer>
@@ -490,6 +492,9 @@ import {
   getPublishTemplateUrl
 } from '@/api/task.js'
 
+// ===== 新增：文件大小上限（50MB） =====
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
+
 // 状态映射
 const STATUS_MAP = {
   1: { code: 1, text: '审核中', tag: 'warning' },
@@ -520,6 +525,37 @@ const normalizeLink = (raw) => {
   if (s.startsWith('//')) return 'https:' + s;
   return 'https://' + s.replace(/^\/+/, '');
 };
+
+// 文件图标：根据后缀返回 class
+function getFileIconClass(fileName = '') {
+  const ext = String(fileName || '').split('.').pop().toLowerCase()
+  const extMap = {
+    doc: 'doc-icon',
+    docx: 'docx-icon',
+    pdf: 'pdf-icon',
+    xls: 'xls-icon',
+    xlsx: 'xlsx-icon',
+    ppt: 'ppt-icon',
+    pptx: 'pptx-icon',
+    zip: 'zip-icon',
+    rar: 'rar-icon',
+    jpg: 'img-icon',
+    jpeg: 'img-icon',
+    png: 'img-icon',
+    gif: 'img-icon'
+  }
+  return extMap[ext] || 'file-icon'
+}
+
+// 文件大小格式化
+function formatFileSize(bytes) {
+  const n = Number(bytes) || 0
+  if (n <= 0) return '0 Bytes'
+  const k = 1024
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+  const i = Math.floor(Math.log(n) / Math.log(k))
+  return (n / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i]
+}
 
 
 // 任务流程常量
@@ -562,7 +598,7 @@ const currentSubmitTask = ref(null)
 const uploadedFiles = ref([])
 const uploadFileList = ref([])
 const isUploading = ref(false)
-const uploadUrl = ref('/api/upload')
+const uploadUrl = ref('/api/task/uploadFile')
 const uploadRef = ref(null)
 
 // 成果发布请求相关状态
@@ -804,11 +840,24 @@ const handleCloseSubmitDialog = () => {
   uploadFileList.value = []
 }
 
+// ===== 修改：文件变更（含 50MB 校验与去重合并） =====
 const handleFileChange = (file, fileList) => {
-  uploadFileList.value = fileList
-  const newFiles = fileList.filter(f =>
-      !uploadedFiles.value.some(uf => uf.name === f.name && uf.size === f.size)
-  ).map(f => f.raw)
+  // 过滤超过 50MB 的文件
+  const validList = fileList.filter(f => {
+    const size = f.raw?.size ?? f.size ?? 0
+    return size <= MAX_FILE_SIZE
+  })
+  if (validList.length !== fileList.length) {
+    ElMessage.warning('超出大小的文件已忽略（单个文件不超过 50MB）')
+  }
+
+  uploadFileList.value = validList
+
+  // 合并到 uploadedFiles（以 name+size 作为去重键）
+  const newFiles = validList
+      .map(f => f.raw || f)
+      .filter(f => !uploadedFiles.value.some(uf => uf.name === f.name && uf.size === f.size))
+
   uploadedFiles.value = [...uploadedFiles.value, ...newFiles]
 }
 
@@ -847,6 +896,7 @@ const handleUploadAllFiles = async () => {
   try {
     const formData = new FormData()
     formData.append('taskId', currentSubmitTask.value.id)
+    formData.append('username', localStorage.getItem('username'))
     uploadedFiles.value.forEach(file => {
       formData.append('files', file)
     })
@@ -998,14 +1048,18 @@ const getMyTasks = async () => {
 
 const getReceivedTaskCount = async () => {
   try {
-    const params = {params: username}
+    const params = { params: username }
     const res = await fetchReceivedTaskCount(params)
-    receivedTaskCount.value = res.data?.count || 0
+    const count = typeof res === 'number'
+        ? res
+        : (res?.data?.count ?? res?.count ?? 0)
+    receivedTaskCount.value = Number(count) || 0
   } catch (err) {
     receivedTaskCount.value = 0
     throw new Error(`获取已领取任务数量失败：${err.message}`)
   }
 }
+
 </script>
 
 <style scoped>
@@ -1255,53 +1309,94 @@ const getReceivedTaskCount = async () => {
   font-size: 14px;
 }
 
-.uploaded-files {
-  margin-bottom: 20px;
-  border: 1px solid #E4E7ED;
-  border-radius: 4px;
-  padding: 12px;
+/* ===== 新增：拖拽上传 UI 样式（与截图一致） ===== */
+.upload-box {
+  margin-top: 4px;
 }
 
-.files-title {
-  font-size: 14px;
+/* 让拖拽区域铺满并是虚线大卡片 */
+.upload-dragger :deep(.el-upload) {
+  width: 100%;
+}
+.upload-dragger :deep(.el-upload-dragger) {
+  width: 100%;
+  height: 220px;
+  border: 2px dashed #D9D9D9;
+  border-radius: 8px;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: border-color .2s, background-color .2s;
+}
+.upload-dragger :deep(.el-upload-dragger:hover) {
+  border-color: #165DFF;
+  background: #F5F9FF;
+}
+
+/* 云朵上传图标与文案 */
+.upload-cloud-icon {
+  width: 54px;
+  height: 54px;
+  margin-bottom: 14px;
+  color: #9AA4B2;
+}
+.upload-title {
+  font-size: 16px;
+  color: #1F2329;
   font-weight: 500;
-  margin-bottom: 10px;
-  color: #333;
+}
+.upload-title .divider {
+  color: #99A1A8;
+  margin: 0 4px;
+}
+.upload-sub {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #99A1A8;
 }
 
-.files-scroll {
-  max-height: 180px;
+/* 选择后的小型文件列表（可选） */
+.uploaded-files-compact {
+  margin-top: 16px;
+  border: 1px solid #E4E7ED;
+  border-radius: 6px;
+  padding: 8px 12px;
+  background: #FAFAFA;
 }
-
-.file-item {
+.uploaded-files-compact .file-item {
   display: flex;
   align-items: center;
-  padding: 8px 0;
+  padding: 6px 0;
   border-bottom: 1px dashed #F0F0F0;
   font-size: 13px;
 }
-
-.file-item:last-child {
+.uploaded-files-compact .file-item:last-child {
   border-bottom: none;
 }
-
-.file-name {
+.uploaded-files-compact .file-name {
   flex: 1;
   margin: 0 10px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-.file-size {
+.uploaded-files-compact .file-size {
   color: #999;
   margin-right: 10px;
   font-size: 12px;
 }
-
 .delete-file-btn {
   color: #F56C6C !important;
   padding: 0 5px !important;
+}
+
+/* 底部按钮左右分布，贴合截图 */
+.dialog-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .file-uploader {
@@ -1314,7 +1409,7 @@ const getReceivedTaskCount = async () => {
   color: #999;
 }
 
-/* 成果发布请求对话框样式 */
+/* 成果发布请求对话框样式（原样保留） */
 .publish-dialog-content {
   padding: 10px 0;
 }
