@@ -249,6 +249,36 @@
           </div>
 
           <div class="task-detail-section">
+            <h4>任务gitee链接</h4>
+            <p>
+              <template v-if="currentTaskDetail?.giteeLink">
+                <a :href="currentTaskDetail.giteeLink" target="_blank" rel="noopener">
+                  {{ currentTaskDetail.giteeLink }}
+                </a>
+              </template>
+              <span v-else>无</span>
+            </p>
+          </div>
+
+
+          <!-- 任务流程 -->
+
+          <div class="task-detail-section">
+            <h4>任务流程</h4>
+            <el-timeline class="task-flow task-flow-section">
+              <el-timeline-item
+                  v-for="(step, idx) in TASK_FLOW"
+                  :key="idx"
+                  :timestamp="`步骤 ${idx + 1}`"
+                  placement="top"
+              >
+                <span class="flow-text">{{ step }}</span>
+              </el-timeline-item>
+            </el-timeline>
+          </div>
+
+
+          <div class="task-detail-section">
             <h4>任务信息</h4>
             <div class="task-info-grid">
               <div class="info-item">
@@ -414,7 +444,8 @@ import {ref, onMounted, computed, onUnmounted} from 'vue'
 import {
   ElMenu, ElMenuItem, ElCard, ElTable, ElTableColumn,
   ElButton, ElMessage, ElBreadcrumb, ElBreadcrumbItem,
-  ElTag, ElDrawer, ElDialog, ElUpload, ElScrollbar, ElPagination
+  ElTag, ElDrawer, ElDialog, ElUpload, ElScrollbar, ElPagination,
+  ElTimeline, ElTimelineItem
 } from 'element-plus'
 import {
   fetchTaskCategories,
@@ -433,6 +464,20 @@ const STATUS_MAP = {
   3: {status: 'completed', text: '已领取'},
   unknown: {status: 'unknown', text: '未知状态'}
 }
+
+// 任务流程常量
+const TASK_FLOW = [
+  '注册成为实习生',
+  '领取任务',
+  'gitee查看完整任务信息',
+  '任务领取审核',
+  '审核通过',
+  '完成任务并提交gitee',
+  '社区内提交任务报告书',
+  '成果认定',
+  '津贴发放',
+  '流程结束'
+]
 
 // 状态管理
 const currentMenu = ref('task-claim')
@@ -871,7 +916,8 @@ const getTasksByCategory = async (categoryId) => {
         statusText: statusInfo.text,
         isClaimed: !!task.collectionUser,
         claimTime: task.collectionTime,
-        deadlineTime: task.deadlineTime || '无截止时间'
+        deadlineTime: task.deadlineTime || '无截止时间',
+        giteeLink: task.giteeLink,
       }
     })
     totalTasks.value = total || 0
@@ -905,6 +951,7 @@ const getMyTasks = async () => {
         isClaimed: !!task.collectionUser,
         claimTime: task.collectionTime,
         deadlineTime: task.deadlineTime || '无截止时间',
+        giteeLink: task.giteeLink,
       }
     })
     myTasksTotal.value = total || 0  // 将总数赋值给myTasksTotal
@@ -1321,4 +1368,24 @@ const getReceivedTaskCount = async () => {
   line-height: 1.5;
   margin: 0;
 }
+.task-flow-section {
+  padding: 12px;
+  background-color: #F9FAFB;
+  border-radius: 6px;
+  border: 1px solid #EEF0F4;
+}
+
+.task-flow {
+  margin-top: 8px;
+}
+
+.flow-text {
+  font-size: 14px;
+  color: #333;
+}
+
+:deep(.el-timeline-item__timestamp) {
+  color: #999;
+}
+
 </style>
