@@ -32,16 +32,16 @@
             </a>
           </el-menu-item>
 
-          <el-menu-item index="/docs">文档</el-menu-item>
-          <el-menu-item index="/mirror">镜像下载</el-menu-item>
-          <el-menu-item index="/events">活动</el-menu-item>
-          <el-menu-item index="/about">关于</el-menu-item>
+          <el-menu-item index="/docs">技术文档</el-menu-item>
+          <el-menu-item index="/mirror">软件镜像</el-menu-item>
+          <el-menu-item index="/events">活动赛事</el-menu-item>
+          <el-menu-item index="/about">关于我们</el-menu-item>
 
           <el-sub-menu index="/intern">
-            <template #title>实习生</template>
-            <el-menu-item index="/task">实习生任务领取</el-menu-item>
-            <el-menu-item index="/intern/plan">实习生教学计划概述</el-menu-item>
-            <el-menu-item index="/join-process">如何成为东山社区实习生</el-menu-item>
+            <template #title>实习生计划</template>
+            <el-menu-item index="/task">任务领取</el-menu-item>
+            <el-menu-item index="/intern/plan">教学计划</el-menu-item>
+            <el-menu-item index="/join-process">如何加入</el-menu-item>
           </el-sub-menu>
 
           <el-menu-item v-if="isLoggedIn" index="/personInfo">个人信息</el-menu-item>
