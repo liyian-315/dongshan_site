@@ -16,12 +16,15 @@
     "cors": "^2.8.5",
     "dompurify": "^3.2.7",
     "element-plus": "^2.11.1",
+    "github-markdown-css": "^5.8.1",
+    "highlight.js": "^11.11.1",
     "express": "^5.1.0",
     "markdown-it": "^14.1.0",
     "marked": "^16.3.0",
     "vue": "^3.5.18",
     "vue-pdf": "^4.3.0",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "vue3-markdown-it": "^1.0.10"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.13",

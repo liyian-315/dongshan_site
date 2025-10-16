@@ -77,6 +77,13 @@ const routes = [
         meta: {title: "管理员用户管理"}
     },
     {
+        path: '/adminTaskEditors',
+        name: "adminTaskEditors",
+        component: () => import('@/views/Admin/AdminTaskEditors.vue'),
+        props: true,
+        meta: {title: "管理员任务管理"}
+    },
+    {
         path: '/project',
         name: 'Project',
         component: () => import('@/views/OpenSourceProjects/index.vue'),

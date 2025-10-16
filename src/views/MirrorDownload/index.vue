@@ -79,11 +79,7 @@
 
                   <el-button class="btn btn-solid btn-lg" @click="openMirrorInter(row)">
                     <el-icon class="btn-ic"><Link /></el-icon>
-                    <span class="btn-txt">校内下载</span>
-                  </el-button>
-                  <el-button class="btn btn-solid btn-lg" @click="openMirrorOut(row)">
-                    <el-icon class="btn-ic"><Link /></el-icon>
-                    <span class="btn-txt">校外下载</span>
+                    <span class="btn-txt">下载</span>
                   </el-button>
                 </div>
               </div>

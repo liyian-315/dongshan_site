@@ -5,7 +5,7 @@
       <div class="container mx-auto px-4 h-16 flex items-center">
         <!-- 品牌 -->
         <div class="brand flex items-center gap-2 text-text-light cursor-pointer" @click="homeSelect">
-          <img src="@/assets/img/dongshan.png" alt="东山图标" class="h-8 w-auto" />
+          <img src="@/assets/img/dongshan.jpg" alt="东山图标" class="h-8 w-auto" />
           <span class="text-xl font-semibold leading-none">社 区</span>
         </div>
 
