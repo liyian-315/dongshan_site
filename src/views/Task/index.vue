@@ -231,7 +231,7 @@
         </div>
 
         <!-- 我的任务分页器-->
-        <div class="pagination-container" v-if="myTasksTotal > 0">
+        <div class="pagination-container" v-if="currentMenu === 'my-tasks' && myTasksTotal > 0">
           <el-pagination
               @size-change="handleMyTaskPageSizeChange"
               @current-change="handleMyTaskCurrentPageChange"
