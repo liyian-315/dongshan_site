@@ -1,6 +1,6 @@
 <template>
   <div class="task-management-container">
-    <!-- 搜索区域（新增状态搜索下拉框） -->
+    <!-- 搜索区域 -->
     <div class="search-area">
       <el-form :inline="true" :model="searchForm" class="search-form">
         <el-form-item label="任务名称">
@@ -17,7 +17,6 @@
               clearable
           />
         </el-form-item>
-        <!-- 新增：状态搜索下拉框 -->
         <el-form-item label="任务状态">
           <el-select
               v-model="searchForm.taskStatus"
@@ -27,7 +26,7 @@
               style="width: 160px"
           >
             <el-option
-                v-for="option in statusOptions"
+                v-for="option in taskStatusOptions"
                 :key="option.value"
                 :label="option.label"
                 :value="option.value"
@@ -41,7 +40,7 @@
       </el-form>
     </div>
 
-    <!-- 任务列表区域（保持不变） -->
+    <!-- 任务列表区域 -->
     <div class="task-list-area">
       <el-table
           :data="tasks"
@@ -59,18 +58,19 @@
         <el-table-column prop="createTime" label="任务开始时间" width="180" />
         <el-table-column prop="deadlineTime" label="截止时间" width="180" />
         <el-table-column prop="collectionTime" label="领取时间" width="180" />
-        <!-- 状态列 - 带映射和切换功能 -->
-        <el-table-column label="状态" width="160">
+
+        <!-- 状态列 -->
+        <el-table-column label="状态" width="140">
           <template #default="{ row }">
             <el-select
                 v-model="row.taskStatus"
                 size="small"
-                @change="handleStatusChange(row)"
-                :disabled="!canEditStatus(row.taskStatus)"
-                style="width: 120px"
+                @change="handleTaskStatusChange(row)"
+                :disabled="!canEditTaskStatus(row.taskStatus)"
+                style="width: 90px"
             >
               <el-option
-                  v-for="option in statusOptions"
+                  v-for="option in taskStatusOptions"
                   :key="option.value"
                   :label="option.label"
                   :value="option.value"
@@ -78,6 +78,7 @@
             </el-select>
           </template>
         </el-table-column>
+
         <!-- 成果查看列 -->
         <el-table-column label="成果查看" width="140">
           <template #default="{ row }">
@@ -94,10 +95,30 @@
             <span v-else class="text-gray-400">未上传</span>
           </template>
         </el-table-column>
+
+        <!-- 成果认定列 -->
+        <el-table-column label="成果认定" width="140">
+          <template #default="{ row }">
+            <el-select
+                v-model="row.recogStatus"
+                size="small"
+                @change="handleRecogStatusChange(row)"
+                :disabled="!canEditRecogStatus(row.taskStatus)"
+                style="width: 90px"
+            >
+              <el-option
+                  v-for="option in recogStatusOptions"
+                  :key="option.value"
+                  :label="option.label"
+                  :value="option.value"
+              />
+            </el-select>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
 
-    <!-- 分页器（保持不变） -->
+    <!-- 分页器 -->
     <div class="pagination-container" v-if="total > 0">
       <el-pagination
           @size-change="handlePageSizeChange"
@@ -114,59 +135,83 @@
 
 <script setup>
 import { ref, reactive, onMounted, computed } from 'vue'
-import { ElMessage, ElSelect, ElOption, ElLink } from 'element-plus'
-import { ElTable, ElTableColumn, ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElPagination } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { selectTask, updateTaskStatus } from '@/api/task'
 
-// 搜索表单数据（新增taskStatus字段）
+// 搜索表单数据
 const searchForm = reactive({
   taskName: '',
   collectionUser: '',
-  taskStatus: undefined  // 新增：状态搜索参数，初始为undefined表示不筛选
+  taskStatus: undefined
 })
 
-// 任务列表数据（保持不变）
+// 任务列表数据
 const tasks = ref([])
 const total = ref(0)
 const currentPage = ref(1)
 const pageSize = ref(10)
 const loading = ref(false)
 
-// 状态映射配置（与下拉框共用，保持一致）
-const statusOptions = ref([
+// 任务状态映射配置
+const taskStatusOptions = ref([
   { value: 1, label: '审核中' },
   { value: 2, label: '进行中' },
   { value: 3, label: '结束' },
   { value: 4, label: '关闭' }
 ])
 
-// 根据状态值获取显示文本（保持不变）
-const getStatusLabel = computed(() => {
+// 成果认定状态映射配置
+const recogStatusOptions = ref([
+  { value: 1, label: '未开始' },
+  { value: 2, label: '进行中' },
+  { value: 3, label: '完成' }
+])
+
+// 根据状态值获取任务状态显示文本
+const getTaskStatusLabel = computed(() => {
   return (statusValue) => {
-    const option = statusOptions.value.find(item => item.value === statusValue)
+    const option = taskStatusOptions.value.find(item => item.value === statusValue)
     return option ? option.label : '未知状态'
   }
 })
 
-// 控制状态是否可编辑（保持不变）
-const canEditStatus = (status) => {
+// 根据状态值获取成果认定状态显示文本
+const getRecogStatusLabel = computed(() => {
+  return (statusValue) => {
+    const option = recogStatusOptions.value.find(item => item.value === statusValue)
+    return option ? option.label : '未开始'
+  }
+})
+
+// 控制任务状态是否可编辑
+const canEditTaskStatus = (status) => {
   return [1, 2].includes(status)
 }
 
-// 搜索任务（修改：添加状态参数）
+// 控制成果认定状态是否可编辑（只有任务状态为结束时可编辑）
+const canEditRecogStatus = (taskStatus) => {
+  return taskStatus === 3
+}
+
+// 搜索任务 - 增加数据预处理
 const searchTasks = async () => {
   try {
     loading.value = true
     const params = {
       taskName: searchForm.taskName || undefined,
       collectionUser: searchForm.collectionUser || undefined,
-      taskStatus: searchForm.taskStatus,  // 新增：传递状态搜索参数
+      taskStatus: searchForm.taskStatus,
       pageNum: currentPage.value,
       pageSize: pageSize.value
     }
 
     const response = await selectTask(params)
-    tasks.value = response.list || []
+    // 预处理数据：确保recogStatus始终为有效值（1/2/3）
+    const processedList = (response.list || []).map(row => ({
+      ...row,
+      recogStatus: [1, 2, 3].includes(row.recogStatus) ? row.recogStatus : 1
+    }))
+    tasks.value = processedList
     total.value = response.total || 0
   } catch (error) {
     ElMessage.error('查询任务失败：' + (error.message || '网络异常'))
@@ -175,60 +220,75 @@ const searchTasks = async () => {
   }
 }
 
-// 重置搜索条件（修改：重置状态参数）
+// 重置搜索条件
 const resetSearch = () => {
   searchForm.taskName = ''
   searchForm.collectionUser = ''
-  searchForm.taskStatus = undefined  // 重置状态筛选
+  searchForm.taskStatus = undefined
   currentPage.value = 1
   searchTasks()
 }
 
-// 处理分页大小变化（保持不变）
+// 处理分页大小变化
 const handlePageSizeChange = (size) => {
   pageSize.value = size
   currentPage.value = 1
   searchTasks()
 }
 
-// 处理页码变化（保持不变）
+// 处理页码变化
 const handleCurrentPageChange = (page) => {
   currentPage.value = page
   searchTasks()
 }
 
-// 处理状态变更（保持不变）
-const handleStatusChange = async (row) => {
+// 处理任务状态变更
+const handleTaskStatusChange = async (row) => {
   try {
     row.loading = true
-
     await updateTaskStatus({
       taskUserId: row.taskUserId,
       taskStatus: row.taskStatus
     })
-
-    ElMessage.success(`状态已更新为${getStatusLabel.value(row.taskStatus)}`)
+    ElMessage.success(`任务状态已更新为${getTaskStatusLabel.value(row.taskStatus)}`)
   } catch (error) {
-    ElMessage.error('状态更新失败：' + (error.message || '操作失败'))
-    await searchTasks()
+    ElMessage.error('任务状态更新失败：' + (error.message || '操作失败'))
+    await searchTasks() // 失败时重新加载数据保持一致性
   } finally {
     row.loading = false
   }
 }
 
-// 查看PDF处理（保持不变）
+// 处理成果认定状态变更
+const handleRecogStatusChange = async (row) => {
+  try {
+    row.loading = true
+    // 直接传递recogStatus，不做额外判断
+    await updateTaskStatus({
+      taskUserId: row.taskUserId,
+      recogStatus: row.recogStatus
+    })
+    ElMessage.success(`成果认定状态已更新为${getRecogStatusLabel.value(row.recogStatus)}`)
+  } catch (error) {
+    ElMessage.error('成果认定状态更新失败：' + (error.message || '操作失败'))
+    await searchTasks() // 失败时重新加载数据保持一致性
+  } finally {
+    row.loading = false
+  }
+}
+
+// 查看PDF处理
 const handleViewPdf = (url) => {
   console.log('查看PDF:', url)
 }
 
-// 页面加载时查询任务列表（保持不变）
+// 页面加载时查询任务列表
 onMounted(() => {
   searchTasks()
 })
 </script>
 
 <style scoped>
-/* 原有样式保持不变，补充状态下拉框的布局优化 */
 .task-management-container {
   padding: 20px;
   background-color: #fff;
@@ -246,10 +306,9 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 15px;
-  flex-wrap: wrap;  /* 新增：防止搜索项过多时溢出 */
+  flex-wrap: wrap;
 }
 
-/* 其他样式保持不变... */
 .task-list-area {
   width: 100%;
   margin-bottom: 20px;
