@@ -349,9 +349,9 @@
 
         <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
           <div>
-            <h3 class="text-xl font-bold">示例项目AI</h3>
+            <h3 class="text-xl font-bold">AI Benchmark</h3>
             <p class="text-subtext-light text-sm mt-2">2025年10月20日</p>
-            <p class="mt-3 text-sm">AI项目描述。</p>
+            <p class="mt-3 text-sm">AI Benchmark使用AI各领域经典深度学习模型集合对不同的硬件平台进行性能测试，硬件平台包括Nvidia、AMD的GPU、Sophgo的TPU（单卡）等。</p>
           </div>
           <div class="mt-4 flex justify-end">
             <a href="/project/8" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
