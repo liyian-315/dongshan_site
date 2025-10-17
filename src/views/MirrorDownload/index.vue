@@ -171,7 +171,7 @@ async function fetchMirrors(menuIndex) {
 
 async function copyUrl(row) {
   try {
-    await navigator.clipboard.writeText(row.url)
+    await navigator.clipboard.writeText(row.urlInter)
     ElMessage.success('链接已复制')
   } catch (e) {
     ElMessage.error('复制失败：' + e.message)
