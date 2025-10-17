@@ -111,10 +111,16 @@ const aboutText3 = ref(`同时，为进一步优化上述开源资源和 RISC-V 
   position: relative;
   z-index: 2;
   margin-top: 20px;
+  text-indent: 2em;
+  text-align: justify;
 }
 
 .about-text p {
   margin-bottom: 20px;
+}
+/* 去掉第一段缩进 */
+.about-text p:first-child {
+  text-indent: 0;
 }
 
 .image-gallery {

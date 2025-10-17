@@ -44,6 +44,14 @@
             <el-menu-item index="/join-process">如何加入</el-menu-item>
           </el-sub-menu>
 
+          <el-sub-menu v-if="isAdmin" index="/admin">
+            <template #title>管理员操作</template>
+            <el-menu-item index="/adminEventEditors">活动管理</el-menu-item>
+            <el-menu-item index="/AdminUserEditors">实习生管理</el-menu-item>
+            <el-menu-item index="/AdminTaskEditors">任务管理</el-menu-item>
+          </el-sub-menu>
+
+
           <el-menu-item v-if="isLoggedIn" index="/personInfo">个人信息</el-menu-item>
 
           <!-- 登录/退出，做成渐变主色按钮视觉 -->
@@ -91,10 +99,8 @@ const router = useRouter()
 const route = useRoute()
 const activeMenu = ref(route.path === '/' ? '' : route.path)
 const isLoggedIn = ref(false)
+const isAdmin = ref(false)
 
-function checkLoginStatus() {
-  isLoggedIn.value = !!localStorage.getItem('token')
-}
 onMounted(() => {
   checkLoginStatus()
   window.addEventListener('storage', checkLoginStatus)
@@ -110,6 +116,42 @@ watch(
     }
 )
 
+function checkLoginStatus() {
+  isLoggedIn.value = !!localStorage.getItem('token')
+  // 仅当已登录且角色为 admin 时才展示管理员菜单
+  isAdmin.value = isLoggedIn.value && localStorage.getItem('role') === 'ROLE_ADMIN'  // NEW
+}
+
+onMounted(() => {
+  checkLoginStatus()
+  window.addEventListener('storage', checkLoginStatus)
+})
+onUnmounted(() => {
+  window.removeEventListener('storage', checkLoginStatus)
+})
+
+watch(
+    () => route.path,
+    (newPath) => {
+      activeMenu.value = newPath === '/' ? '' : newPath
+      checkLoginStatus()
+    }
+)
+
+function handleLoginLogout() {
+  if (isLoggedIn.value) {
+    localStorage.removeItem('token')
+    localStorage.removeItem('username')
+    localStorage.removeItem('role')
+    ElMessage.success('已成功退出登录')
+    isLoggedIn.value = false
+    isAdmin.value = false // NEW: 退出同时清空管理员标记
+    router.push('/')
+  } else {
+    router.push('/login')
+  }
+}
+
 function handleMenuSelect(index) {
   if (index === 'logout') return
   if (index && typeof index === 'string' && index.startsWith('/')) {
@@ -119,18 +161,6 @@ function handleMenuSelect(index) {
 function homeSelect() {
   router.push('/')
   activeMenu.value = ''
-}
-function handleLoginLogout() {
-  if (isLoggedIn.value) {
-    localStorage.removeItem('token')
-    localStorage.removeItem('username')
-    localStorage.removeItem('role')
-    ElMessage.success('已成功退出登录')
-    isLoggedIn.value = false
-    router.push('/')
-  } else {
-    router.push('/login')
-  }
 }
 window.updateLoginStatus = checkLoginStatus
 </script>

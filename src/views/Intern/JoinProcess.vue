@@ -166,7 +166,7 @@
                   <span class="dl-name">{{ att.name }}</span>
                 </div>
                 <div class="dl-actions">
-                  <a :href="att.read_url" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">在线查看</a>
+<!--                  <a :href="att.read_url" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">在线查看</a>-->
                   <a :href="att.download_url" :download="att.name" class="btn btn-solid">附件下载</a>
                 </div>
               </li>
@@ -214,7 +214,7 @@ const attachments: Attachment[] = [
   { label: '附件一',
     name: '实习协议.PDF',
     read_url: "https://dongshan-file.oss-cn-beijing.aliyuncs.com/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf",
-    download_url:"http://47.108.14.68/api/v4/file/content/JpaIR/0/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf?download=true&sign=Vh4GijNL4GVvh4Ok_ZGLphJ0Tqvku0KZ0ESJ7NsIws4%3D%3A1760084208"
+    download_url:"http://222.194.65.108:9001/api/v1/buckets/dongshan-file/objects/download?prefix=%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf"
   },
   // { label: '附件二', name: '开源入门.pdf', url: '/docs/开源入门.pdf' },
 ]
