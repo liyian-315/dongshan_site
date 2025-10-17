@@ -225,7 +225,7 @@
                 展示社区成员在各项目中的 PR、Issue、文档、翻译等多维度贡献热度与影响力，鼓励更多开发者参与共建。
               </p>
 
-<!--              &lt;!&ndash; （可选）小预览：前三名占位 &ndash;&gt;-->
+<!--              &lt;!&ndash; 小预览：前三名占位 &ndash;&gt;-->
 <!--              <div class="mt-4 flex items-center gap-4">-->
 <!--                <div class="flex -space-x-2">-->
 <!--                  <img class="w-8 h-8 rounded-full border border-white/30" src="https://api.dicebear.com/7.x/identicon/svg?seed=alice" alt="avatar1">-->
@@ -310,9 +310,22 @@
       <div class="container mx-auto px-4 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
           <div>
-            <h3 class="text-xl font-bold">示例项目1</h3>
+            <h3 class="text-xl font-bold">FASE，FPGA-Assisted Syscall Emulation</h3>
             <p class="text-subtext-light text-sm mt-2">2025年10月1日</p>
-            <p class="mt-3 text-sm">覆盖从基础到高级全年级的教学计划</p>
+            <p class="mt-3 text-sm">基于FPGA加速目标硬件运行用户模式模拟</p>
+          </div>
+          <div class="mt-4 flex justify-end">
+            <a href="/project/3" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+              查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-bold">RISC-V生态标准化-BSA</h3>
+            <p class="text-subtext-light text-sm mt-2">2025年10月1日</p>
+            <p class="mt-3 text-sm">针对RISC-V生态中的硬件架构进行测试，构建RISC-V BSA测试体系，其针对RISC-V SOC ISA与外设标准进行测试，明确每一个硬件可以执行的环境。</p>
           </div>
           <div class="mt-4 flex justify-end">
             <a href="/project/7" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
@@ -323,12 +336,12 @@
 
         <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
           <div>
-            <h3 class="text-xl font-bold">示例项目2</h3>
+            <h3 class="text-xl font-bold">舜华OS</h3>
             <p class="text-subtext-light text-sm mt-2">2025年10月1日</p>
-            <p class="mt-3 text-sm">覆盖从基础到高级全年级的教学计划</p>
+            <p class="mt-3 text-sm">分“舜华OS”是山东大学自主研发的面向AI大模型优化的操作系统，专注于对主流架构（x86、ARM、RISC-V）的AI能力支持。</p>
           </div>
           <div class="mt-4 flex justify-end">
-            <a href="/activity/dongshanjihua" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+            <a href="/project/1" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
               查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
             </a>
           </div>
@@ -336,26 +349,13 @@
 
         <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
           <div>
-            <h3 class="text-xl font-bold">示例项目3</h3>
-            <p class="text-subtext-light text-sm mt-2">2025年10月</p>
-            <p class="mt-3 text-sm">分享东山派的产品介绍与使用</p>
+            <h3 class="text-xl font-bold">示例项目AI</h3>
+            <p class="text-subtext-light text-sm mt-2">2025年10月20日</p>
+            <p class="mt-3 text-sm">AI项目描述。</p>
           </div>
           <div class="mt-4 flex justify-end">
-            <a href="/dspDocs" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
-              加入学习 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
-          <div>
-            <h3 class="text-xl font-bold">示例项目4</h3>
-            <p class="text-subtext-light text-sm mt-2">2024年10月20日 | 线下·北京</p>
-            <p class="mt-3 text-sm">与内核专家深入交流，探讨操作系统核心技术的最新进展。</p>
-          </div>
-          <div class="mt-4 flex justify-end">
-            <a href="#event-4" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
-              查看议程 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+            <a href="/project/8" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+              查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
             </a>
           </div>
         </div>

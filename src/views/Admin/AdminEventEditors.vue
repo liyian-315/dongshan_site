@@ -41,22 +41,22 @@
     <!-- 表单：核心字段 -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <label class="flex flex-col">
-        <span class="lbl">slug</span>
+        <span class="lbl">slug(活动唯一访问ID)</span>
         <input v-model.trim="form.slug" class="input" />
       </label>
 
       <label class="flex flex-col">
-        <span class="lbl">title</span>
+        <span class="lbl">title(活动标题)</span>
         <input v-model.trim="form.title" class="input" />
       </label>
 
       <label class="flex flex-col md:col-span-2">
-        <span class="lbl">summary</span>
+        <span class="lbl">summary(活动简介)</span>
         <input v-model.trim="form.summary" class="input" />
       </label>
 
       <label class="flex flex-col md:col-span-2">
-        <span class="lbl">coverUrl</span>
+        <span class="lbl">coverUrl(活动封面图)</span>
         <input v-model.trim="form.coverUrl" class="input" />
       </label>
 
@@ -83,7 +83,7 @@
 
       <!-- startTime -->
       <label class="flex flex-col">
-        <span class="lbl">startTime</span>
+        <span class="lbl">startTime(活动开始时间)</span>
         <input
             type="datetime-local"
             v-model="startTimeInput"
@@ -94,7 +94,7 @@
 
       <!-- endTime -->
       <label class="flex flex-col">
-        <span class="lbl">endTime</span>
+        <span class="lbl">endTime(活动结束时间)</span>
         <input
             type="datetime-local"
             v-model="endTimeInput"
