@@ -166,12 +166,14 @@ async function submitForm() {
       const redirect = route.query.redirect || '/'
       await router.push(redirect)
     } else {
-      ElMessage.error('登录失败：未获取到有效 Token')
       console.error('登录失败：未获取到有效 Token')
+      ElMessage.info('登录失败')
+      // console.error('登录失败：未获取到有效 Token')
     }
   } catch (e) {
     if (e?.name !== 'Error') return
-    ElMessage.error('登录失败: ' + (e?.message || '用户名或密码错误'))
+    // ElMessage.error('登录失败: ' + (e?.message || '用户名或密码错误'))
+    ElMessage.info('登录失败: 用户名或密码错误')
   }
 }
 

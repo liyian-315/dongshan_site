@@ -142,7 +142,8 @@ onMounted(async () => {
       }
     })
   } catch (e) {
-    ElMessage.error('获取镜像列表失败：' + e.message)
+    console.error('获取镜像列表失败：' + e.message)
+    // ElMessage.error('获取镜像列表失败：' + e.message)
   } finally {
     loading.value = false
   }
@@ -154,7 +155,8 @@ async function handleMenuSelect(index, indexPath) {
     currentPath.value = indexPath.map(path => menuMap.value[path])
     await fetchMirrors(index)
   } catch (e) {
-    ElMessage.error('获取镜像列表失败：' + e.message)
+    console.error('获取镜像列表失败：' + e.message)
+    // ElMessage.error('获取镜像列表失败：' + e.message)
   } finally {
     loading.value = false
   }

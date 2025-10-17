@@ -158,7 +158,8 @@ onMounted(async () => {
       }
     })
   } catch (e) {
-    ElMessage.error('获取文档列表失败：' + e.message)
+    console.error('获取文档列表失败：' + e.message)
+    // ElMessage.error('获取文档列表失败：' + e.message)
   } finally {
     loading.value = false
   }

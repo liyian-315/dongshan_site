@@ -20,7 +20,7 @@ function handleAuthError() {
         isHandlingUnauth = true // 加锁：标记开始处理未授权逻辑
 
         // 提示+跳转（跳转用nextTick确保提示先显示）
-        ElMessage.error('登录已过期或 Token 无效，请重新登录')
+        ElMessage.info('登录已过期，请重新登录')
         router.push('/login').finally(() => {
             // 跳转完成后解锁（防止后续正常请求被拦截）
             setTimeout(() => { isHandlingUnauth = false }, 500)
@@ -82,17 +82,20 @@ apiClient.interceptors.response.use(
         if (status >= 400 && status < 500) {
             const msg = handleClientError(status, res)
             if (status !== 401) {
-                ElMessage.error(msg)
+                console.error(msg)
+                // ElMessage.error(msg)
             }
             return Promise.reject(new Error(msg))
         }
         if (status >= 500 && status < 600) {
             const msg = handleServerError(status, res)
-            ElMessage.error(msg)
+            console.error(msg)
+            // ElMessage.error(msg)
             return Promise.reject(new Error(msg))
         }
         const msg = `未知错误（${status}）：${res?.message || '操作失败'}`
-        ElMessage.error(msg)
+        // ElMessage.error(msg)
+        console.error(msg)
         return Promise.reject(new Error(msg))
     },
     error => {
@@ -105,17 +108,21 @@ apiClient.interceptors.response.use(
                 msg = '登录已过期或 Token 无效，请重新登录'
             } else if (status >= 400 && status < 500) {
                 msg = handleClientError(status, res)
-                ElMessage.error(msg)
+                // ElMessage.error(msg)
+                console.error(msg)
             } else if (status >= 500) {
                 msg = handleServerError(status, res)
-                ElMessage.error(msg)
+                console.error(msg)
+                // ElMessage.error(msg)
             }
         } else if (error.request) {
             msg = '请求无响应，请检查后端服务或网络是否正常'
-            ElMessage.error(msg)
+            // ElMessage.error(msg)
+            console.error(msg)
         } else {
             msg = error.message || '请求发送失败，请检查请求配置'
-            ElMessage.error(msg)
+            console.error(msg)
+            // ElMessage.error(msg)
         }
 
         return Promise.reject(new Error(msg))
