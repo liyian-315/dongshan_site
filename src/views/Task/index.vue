@@ -440,7 +440,7 @@
           <p class="step-desc">将填写好的模板发送至以下邮箱进行审核：</p>
           <div class="email-info">
             <i class="el-icon-envelope"></i>
-            <span class="email-address">xxxx@163.com</span>
+            <span class="email-address">dssq_sdu@163.com</span>
             <el-button
                 type="text"
                 size="small"

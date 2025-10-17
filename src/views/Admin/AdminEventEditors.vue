@@ -4,18 +4,17 @@
 
     <!-- 基本设置 -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-<!--      <label class="flex flex-col">-->
-<!--        <span class="text-sm text-gray-500">Server Base</span>-->
-<!--        <input v-model.trim="serverBase" placeholder="http://localhost:8080" class="input" />-->
-<!--      </label>-->
       <label class="flex flex-col">
         <span class="text-sm text-gray-500">API 前缀（与后端一致）</span>
         <input v-model.trim="apiPrefix" placeholder="/api" class="input" />
       </label>
       <label class="flex flex-col">
-        <span class="text-sm text-gray-500">Bearer Token（可留空）</span>
+        <span class="text-sm text-gray-500">Bearer Token（自动补充，可覆盖）</span>
         <input v-model.trim="token" placeholder="Bearer xxx 或 xxx" class="input" />
       </label>
+      <div class="flex items-end">
+        <button class="btn-subtle" @click="resolveAutoToken">重新检测本地 Token</button>
+      </div>
     </div>
 
     <!-- 模式切换 -->
@@ -29,10 +28,19 @@
         <span>更新（PUT {{ updateUrlHint }}）</span>
       </label>
 
-      <label v-if="mode==='update'" class="flex items-center gap-2">
-        <span class="text-sm text-gray-500">更新 ID：</span>
-        <input v-model.trim="updateId" placeholder="例如：11" class="input w-32" />
-      </label>
+      <!-- 更新模式：选择 slug -->
+      <template v-if="mode==='update'">
+        <label class="flex items-center gap-2">
+          <span class="text-sm text-gray-500">选择活动（按 slug 或标题检索）</span>
+          <select v-model="slugToEdit" class="input w-80" @change="handlePickEvent">
+            <option disabled value="">请选择要更新的活动</option>
+            <option v-for="ev in eventsOptions" :key="ev.slug" :value="ev.slug">
+              {{ ev.slug }} —— {{ ev.title || '(无标题)' }}（ID: {{ ev.id }}）
+            </option>
+          </select>
+        </label>
+        <span v-if="updateId" class="text-sm text-gray-500">（当前 ID：{{ updateId }}）</span>
+      </template>
 
       <button class="btn" @click="fillDemo">填充示例数据</button>
       <span v-if="metaLoading" class="text-sm text-gray-500">（正在加载类型/标签...）</span>
@@ -40,27 +48,39 @@
 
     <!-- 表单：核心字段 -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- 新增：文本输入；更新：由上面的下拉决定 slug，这里显示为只读 -->
       <label class="flex flex-col">
-        <span class="lbl">slug(活动唯一访问ID)</span>
-        <input v-model.trim="form.slug" class="input" />
+        <span class="lbl">slug（活动唯一访问ID）</span>
+        <input
+            v-if="mode==='create'"
+            v-model.trim="form.slug"
+            class="input"
+            placeholder="建议小写-连字符"
+        />
+        <input
+            v-else
+            :value="form.slug"
+            class="input bg-gray-50"
+            readonly
+        />
       </label>
 
       <label class="flex flex-col">
-        <span class="lbl">title(活动标题)</span>
+        <span class="lbl">title（活动标题）</span>
         <input v-model.trim="form.title" class="input" />
       </label>
 
       <label class="flex flex-col md:col-span-2">
-        <span class="lbl">summary(活动简介)</span>
+        <span class="lbl">summary（活动简介）</span>
         <input v-model.trim="form.summary" class="input" />
       </label>
 
       <label class="flex flex-col md:col-span-2">
-        <span class="lbl">coverUrl(活动封面图)</span>
+        <span class="lbl">coverUrl（活动封面图）</span>
         <input v-model.trim="form.coverUrl" class="input" />
       </label>
 
-      <!-- type：从后端下拉 -->
+      <!-- type：从后端 meta 下拉 -->
       <label class="flex flex-col">
         <span class="lbl">type（活动类型）</span>
         <select v-model="form.type" class="input">
@@ -83,7 +103,7 @@
 
       <!-- startTime -->
       <label class="flex flex-col">
-        <span class="lbl">startTime(活动开始时间)</span>
+        <span class="lbl">startTime（活动开始时间）</span>
         <input
             type="datetime-local"
             v-model="startTimeInput"
@@ -94,7 +114,7 @@
 
       <!-- endTime -->
       <label class="flex flex-col">
-        <span class="lbl">endTime(活动结束时间)</span>
+        <span class="lbl">endTime（活动结束时间）</span>
         <input
             type="datetime-local"
             v-model="endTimeInput"
@@ -103,7 +123,6 @@
             :min="startTimeInput || undefined"
         />
       </label>
-
 
       <label class="flex flex-col">
         <span class="lbl">city</span>
@@ -119,7 +138,7 @@
         <span>online</span>
       </label>
 
-      <!-- tags：多选下拉（从后端 hotTags） -->
+      <!-- tags：多选下拉（从后端 hotTags），并保证选中活动的标签一定在列表里 -->
       <label class="flex flex-col md:col-span-1">
         <span class="lbl">tags（按 Ctrl/Cmd 多选）</span>
         <select v-model="selectedTags" multiple class="input h-32">
@@ -135,7 +154,7 @@
       </label>
     </div>
 
-    <!-- blocks 可视化编辑器（省略说明同前） -->
+    <!-- blocks 可视化编辑器 -->
     <section class="space-y-6">
       <h2 class="text-xl font-semibold">Blocks 模块（可视化编辑，自动组装 JSON）</h2>
 
@@ -327,60 +346,98 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed, onMounted } from 'vue'
+import { reactive, ref, computed, onMounted, watch } from 'vue'
 
 /** ---------------- 基本配置 ---------------- */
-// const serverBase = ref('http://localhost:8080')
 const apiPrefix  = ref('/api')
 const token      = ref('')
+const autoToken  = ref('')  // 自动探测到的 Token（优先用于请求）
+const mode       = ref('create') // 'create' | 'update'
 
-const mode = ref('create')  // 'create' | 'update'
-const updateId = ref('')
+/** ---------------- 列表与选择（更新模式） ---------------- */
+const allEvents     = ref([])   // 原始列表
+const eventsOptions = computed(() =>
+    allEvents.value.map(ev => ({ id: ev.id, slug: ev.slug, title: ev.title }))
+)
+const slugToEdit    = ref('')
+const updateId      = ref('')
 
-/** ---------------- 后端元数据（tystartTimepe & tags） ---------------- */
+/** ---------------- 后端元数据（types & tags） ---------------- */
 const typeOptions = ref([])  // [{code,label}]
 const tagOptions  = ref([])  // ['开源','AI',...]
 const metaLoading = ref(false)
 
+function ensureBearer(tk) {
+  if (!tk) return ''
+  return tk.toLowerCase().startsWith('bearer ') ? tk : `Bearer ${tk}`
+}
+function authHeader() {
+  const tk = token.value || autoToken.value
+  const hdr = ensureBearer(tk)
+  return hdr ? { Authorization: hdr } : {}
+}
+
+/** 自动检测本地 Token：LocalStorage / Cookie / URL ?token= */
+function resolveAutoToken() {
+  const lsKeys = [
+    'token','auth','authorization','jwt','access_token','bearer','bearerToken','Authorization'
+  ]
+  let tk = ''
+  for (const k of lsKeys) {
+    const v = localStorage.getItem(k)
+    if (v && v.trim()) { tk = v.trim(); break }
+  }
+  if (!tk && document.cookie) {
+    const m = document.cookie.match(/(?:^|;\s*)(?:token|jwt|access_token)=([^;]+)/i)
+    if (m) tk = decodeURIComponent(m[1])
+  }
+  if (!tk && location.search) {
+    const u = new URL(location.href)
+    tk = u.searchParams.get('token') || u.searchParams.get('access_token') || ''
+  }
+  autoToken.value = tk
+  // 如果手动输入框为空，则自动补进去（可覆盖）
+  if (!token.value && tk) token.value = ensureBearer(tk)
+}
+
+/** 从后端 /api/events/meta 拉取 types/hotTags */
 async function loadMeta() {
   metaLoading.value = true
   try {
     const url = `${apiPrefix.value}/events/meta`
-    const res = await fetch(url, {
-      headers: {
-        ...(token.value ? { Authorization: ensureBearer(token.value) } : {})
-      }
-    })
-    const json = await res.json().catch(() => null)
-    const payload = json?.data || json || {}
+    const res = await fetch(url, { headers: { ...authHeader() } })
+    const js  = await res.json().catch(() => null)
+    const data = js?.data || js || {}
 
-    typeOptions.value = Array.isArray(payload?.types) ? payload.types : []
-    tagOptions.value  = Array.isArray(payload?.hotTags) ? payload.hotTags : []
+    const types = Array.isArray(data.types) ? data.types : []
+    typeOptions.value = types.map(t => ({ code: t.code, label: t.label || t.code }))
 
-    // 如果当前 form.type 不在可选项里，清空
-    if (form.type && !typeOptions.value.some(t => t.code === form.type)) {
-      form.type = ''
-    }
-
-    // 如果 form.tags 有值，回填 selectedTags（兼容老数据）
-    if (!selectedTags.value.length && form.tags.trim()) {
-      selectedTags.value = form.tags.split(',').map(s => s.trim()).filter(Boolean)
-    }
-  } catch (e) {
-    console.warn('加载 /events/meta 失败：', e)
+    const hot = Array.isArray(data.hotTags) ? data.hotTags : []
+    tagOptions.value = hot.slice()
   } finally {
     metaLoading.value = false
   }
 }
 
-/** ---------------- 基础表单 ---------------- */
+/** 把给定标签并入 tagOptions（避免活动里已有但 meta 未返回的标签下拉里看不到） */
+function ensureTagOptionsInclude(arr) {
+  const s = new Set(tagOptions.value)
+  ;(arr || []).forEach(x => {
+    const v = String(x || '').trim()
+    if (v) s.add(v)
+  })
+  tagOptions.value = Array.from(s)
+}
+
+/** ---------------- 表单 ---------------- */
 const form = reactive({
+  id: undefined,     // 仅更新时使用
   slug: '',
   title: '',
   summary: '',
   coverUrl: '',
   type: '',
-  status: 2,                 // 0草稿 / 1下线 / 2上线（下拉选择）
+  status: 2,
 
   startTime: '',
   endTime: '',
@@ -389,16 +446,14 @@ const form = reactive({
   location: '',
   online: false,
 
-  // 由 selectedTags 生成，仍保留字段兼容
+  // 与 selectedTags 双向
   tags: '',
 
-  // 默认值（新增你要求的默认）
   templateId: 'tmpl_conference_v1',
 
-  // blocks 由 uiBlocks 自动组装，不在这里手输
+  // 由 UI 自动组装，不强制手填
   contentMd: '',
 
-  // 这三个后端要求不为 null（按字符串存）
   speakers: '[]',
   agenda:   '[]',
   gallery:  '[]',
@@ -409,13 +464,16 @@ const form = reactive({
   viewCount: 0,
 
   detailUrl: '',
-  detailIsExternal: false
+  detailIsExternal: false,
+
+  // blocks: JSON 字符串（提交时写入），加载时解析到 uiBlocks
+  blocks: ''
 })
 
 /** tags 多选（来自后端） */
-const selectedTags = ref([]) // ['开源','AI'...]
+const selectedTags = ref([])
 
-/** ---------------- blocks 可视化编辑器 ---------------- */
+/** blocks 可视化编辑器的 UI 状态 */
 const uiBlocks = reactive({
   enable: { infoCards: true, agenda: true, speakers: true, gallery: true, faq: true },
   infoCards: [{ title: '', desc: '' }],
@@ -424,23 +482,20 @@ const uiBlocks = reactive({
   gallery: [''],
   faq: [{ q: '', a: '' }]
 })
-
 function addInfoCard() { uiBlocks.infoCards.push({ title: '', desc: '' }) }
 function addAgenda()   { uiBlocks.agenda.push({ time: '', topic: '', speaker: '' }) }
 function addSpeaker()  { uiBlocks.speakers.push({ name: '', title: '', avatar: '', bio: '', links: [{ label:'', url:'' }] }) }
 function addGallery()  { uiBlocks.gallery.push('') }
 function addFaq()      { uiBlocks.faq.push({ q: '', a: '' }) }
-// —— 日期时间格式互转 ——
-// 'YYYY-MM-DD HH:mm:ss'  ->  'YYYY-MM-DDTHH:mm:ss'（给 <input type="datetime-local"> 用）
+
+/** 时间字段：input[type=datetime-local] 与 'YYYY-MM-DD HH:mm:ss' 互转 */
 function toInputDateTime(v) {
   if (!v) return ''
   const s = String(v).trim().replace(' ', 'T')
-  // 补齐秒
   const m = s.match(/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})(:\d{2})?$/)
   if (m) return `${m[1]}T${m[2]}${m[3] || ':00'}`
   return s
 }
-// 'YYYY-MM-DDTHH:mm[:ss]' -> 'YYYY-MM-DD HH:mm:ss'（存回表单/发给后端）
 function fromInputDateTime(v) {
   if (!v) return ''
   const s = String(v).trim().replace('T', ' ')
@@ -448,8 +503,6 @@ function fromInputDateTime(v) {
   if (m) return `${m[1]} ${m[2]}${m[3] || ':00'}`
   return s
 }
-
-// —— 把原有 form.startTime / form.endTime 包成可直接给控件用的 computed ——
 const startTimeInput = computed({
   get: () => toInputDateTime(form.startTime),
   set: (val) => { form.startTime = fromInputDateTime(val) }
@@ -459,29 +512,8 @@ const endTimeInput = computed({
   set: (val) => { form.endTime = fromInputDateTime(val) }
 })
 
-
-
-/** ---------------- 提交拼装 ---------------- */
-const createUrlHint = computed(() => `${apiPrefix.value || ''}/admin/events`)
-const updateUrlHint = computed(() => `${apiPrefix.value || ''}/admin/events/{id}`)
-
-const submitting = ref(false)
-const respText = ref('')
-const showCurl = ref(false)
-
-function ensureBearer(tk) {
-  if (!tk) return ''
-  return tk.toLowerCase().startsWith('bearer ') ? tk : `Bearer ${tk}`
-}
-
-function normalizeJsonString(val, fallback) {
-  const s = (val ?? '').toString().trim()
-  if (!s) return fallback
-  try { return JSON.stringify(JSON.parse(s)) } catch { return s }
-}
-
+/** 组装 blocks 对象（用于提交） */
 function nonEmpty(s) { return (s ?? '').toString().trim().length > 0 }
-
 function buildBlocksObject() {
   const out = {}
   if (uiBlocks.enable.infoCards) {
@@ -527,9 +559,153 @@ function buildBlocksObject() {
   return out
 }
 
+/** 解析后端 blocks（字符串或对象）到 uiBlocks */
+function parseBlocksToUI(blocks) {
+  let obj = {}
+  if (!blocks) obj = {}
+  else if (typeof blocks === 'string') {
+    try { obj = JSON.parse(blocks) || {} } catch { obj = {} }
+  } else if (typeof blocks === 'object') {
+    obj = blocks || {}
+  }
+
+  const info = obj['info-cards']?.items || []
+  const agenda = obj['agenda']?.items || []
+  const speakers = obj['speakers']?.items || []
+  const gallery = obj['gallery']?.items || []
+  const faq = obj['faq']?.items || []
+
+  uiBlocks.enable.infoCards = info.length > 0
+  uiBlocks.enable.agenda    = agenda.length > 0
+  uiBlocks.enable.speakers  = speakers.length > 0
+  uiBlocks.enable.gallery   = gallery.length > 0
+  uiBlocks.enable.faq       = faq.length > 0
+
+  uiBlocks.infoCards = info.length ? info.map(x => ({ title: x.title || '', desc: x.desc || '' })) : [{ title:'', desc:'' }]
+  uiBlocks.agenda    = agenda.length ? agenda.map(x => ({ time: x.time || '', topic: x.topic || '', speaker: x.speaker || '' })) : [{ time:'', topic:'', speaker:'' }]
+  uiBlocks.speakers  = speakers.length ? speakers.map(sp => ({
+    name: sp.name || '', title: sp.title || '', avatar: sp.avatar || '', bio: sp.bio || '',
+    links: Array.isArray(sp.links) ? sp.links.map(lk => ({ label: lk.label || '', url: lk.url || '' })) : []
+  })) : [{ name:'', title:'', avatar:'', bio:'', links:[{label:'',url:''}] }]
+  uiBlocks.gallery   = gallery.length ? gallery.map(u => u || '') : ['']
+  uiBlocks.faq       = faq.length ? faq.map(qa => ({ q: qa.q || '', a: qa.a || '' })) : [{ q:'', a:'' }]
+}
+
+/** JSON 字符串规范化（提交用） */
+function normalizeJsonString(val, fallback) {
+  const s = (val ?? '').toString().trim()
+  if (!s) return fallback
+  try { return JSON.stringify(JSON.parse(s)) } catch { return s }
+}
+
+/** selectedTags 与 form.tags 双向同步 */
+watch(selectedTags, (arr) => {
+  form.tags = (arr || []).join(',')
+})
+
+/** ---------------- 数据加载（列表/详情） ---------------- */
+async function loadAllEvents() {
+  // 拉列表（取足够大的 pageSize；也兼容你后端的 data 结构）
+  const url = `${apiPrefix.value}/events?page=1&pageSize=2000`
+  const res = await fetch(url, { headers: { ...authHeader() } })
+  const js  = await res.json().catch(() => null)
+  const data = js?.data || js || {}
+  const list = data.list || data.rows || data.records || data.tasks || []
+  // 只保留必要字段
+  allEvents.value = list.map(it => ({
+    id: it.id,
+    slug: it.slug,
+    title: it.title,
+    // 备份详情字段（如果列表就已返回完整字段时，点击下拉即可秒回填，无需再请求详情）
+    _raw: it
+  }))
+}
+
+/** 选择某个活动后，优先用 _raw 回填，否则调用详情接口 */
+async function handlePickEvent() {
+  const slug = slugToEdit.value
+  if (!slug) return
+  const hit = allEvents.value.find(e => e.slug === slug)
+  if (hit && hit._raw && Object.keys(hit._raw).length > 0) {
+    setFormFromEvent(hit._raw)
+    updateId.value = hit._raw.id
+    return
+  }
+  // 请求详情
+  try {
+    const url = `${apiPrefix.value}/events/${encodeURIComponent(slug)}`
+    const res = await fetch(url, { headers: { ...authHeader() } })
+    const js  = await res.json().catch(() => null)
+    const data = js?.data || js || {}
+    const ev = data.event || data.detail || data
+    setFormFromEvent(ev)
+    updateId.value = ev?.id
+  } catch (e) {
+    console.warn('加载详情失败：', e)
+  }
+}
+
+/** 把后端 Event 实体回填到 form & uiBlocks */
+function setFormFromEvent(ev = {}) {
+  form.id         = ev.id
+  form.slug       = ev.slug || ''
+  form.title      = ev.title || ''
+  form.summary    = ev.summary || ''
+  form.coverUrl   = ev.coverUrl || ''
+  form.type       = ev.type || ''
+  form.status     = Number(ev.status ?? 2)
+
+  form.startTime  = ev.startTime || ''
+  form.endTime    = ev.endTime || ''
+
+  form.city       = ev.city || ''
+  form.location   = ev.location || ''
+  form.online     = !!ev.online
+
+  // tags 兼容数组或逗号串
+  if (Array.isArray(ev.tags)) {
+    selectedTags.value = ev.tags
+    form.tags = ev.tags.join(',')
+  } else if (typeof ev.tags === 'string') {
+    selectedTags.value = ev.tags.split(',').map(s => s.trim()).filter(Boolean)
+    form.tags = ev.tags
+  } else {
+    selectedTags.value = []
+    form.tags = ''
+  }
+  // 已选标签显示下拉
+  ensureTagOptionsInclude(selectedTags.value)
+
+  form.templateId = ev.templateId || 'tmpl_conference_v1'
+  form.contentMd  = ev.contentMd || ''
+  form.speakers   = typeof ev.speakers === 'string' ? ev.speakers : JSON.stringify(ev.speakers ?? [])
+  form.agenda     = typeof ev.agenda   === 'string' ? ev.agenda   : JSON.stringify(ev.agenda   ?? [])
+  form.gallery    = typeof ev.gallery  === 'string' ? ev.gallery  : JSON.stringify(ev.gallery  ?? [])
+
+  form.ctaText    = ev.ctaText || ''
+  form.ctaUrl     = ev.ctaUrl || ''
+  form.seo        = typeof ev.seo === 'string' ? ev.seo : JSON.stringify(ev.seo ?? {})
+  form.viewCount  = Number(ev.viewCount || 0)
+
+  form.detailUrl        = ev.detailUrl || ''
+  form.detailIsExternal = !!ev.detailIsExternal
+
+  // blocks
+  form.blocks = typeof ev.blocks === 'string' ? ev.blocks : JSON.stringify(ev.blocks ?? {})
+  parseBlocksToUI(ev.blocks || form.blocks)
+}
+
+/** ---------------- 提交 ---------------- */
+const createUrlHint = computed(() => `${apiPrefix.value || ''}/admin/events`)
+const updateUrlHint = computed(() => `${apiPrefix.value || ''}/admin/events/{id}`)
+
+const submitting = ref(false)
+const respText   = ref('')
+const showCurl   = ref(false)
+
 function buildPayload() {
   const blocksObj = buildBlocksObject()
-  const tagsFromSelect = selectedTags.value.join(',') // 下拉多选 → 逗号分隔
+  const tagsFromSelect = selectedTags.value.join(',')
   return {
     slug: form.slug,
     title: form.title,
@@ -545,7 +721,6 @@ function buildPayload() {
     location: form.location,
     online: !!form.online,
 
-    // 优先使用多选下拉的选择；若没选则回退到文本（兼容老数据）
     tags: tagsFromSelect || form.tags,
 
     templateId: form.templateId || 'tmpl_conference_v1',
@@ -573,14 +748,15 @@ const curlPreview = computed(() => {
       ? `${apiPrefix.value}/admin/events`
       : `${apiPrefix.value}/admin/events/${updateId.value || '{id}'}`
   const method = mode.value === 'create' ? 'POST' : 'PUT'
-  const headerAuth = token.value ? ` \\\n  -H "Authorization: ${ensureBearer(token.value)}"` : ''
+  const tk = token.value || autoToken.value
+  const headerAuth = tk ? ` \\\n  -H "Authorization: ${ensureBearer(tk)}"` : ''
   return `curl -X ${method} "${url}" \\\n  -H "Content-Type: application/json"${headerAuth} \\\n  -d '${JSON.stringify(buildPayload())}'`
 })
 
 async function submit() {
   respText.value = ''
   if (mode.value === 'update' && !updateId.value) {
-    respText.value = '请先填写更新目标 ID'
+    respText.value = '请先选择要更新的活动（slug 下拉）'
     return
   }
   const payload = buildPayload()
@@ -595,7 +771,7 @@ async function submit() {
       method,
       headers: {
         'Content-Type': 'application/json',
-        ...(token.value ? { Authorization: ensureBearer(token.value) } : {})
+        ...authHeader()
       },
       body: JSON.stringify(payload)
     })
@@ -608,37 +784,52 @@ async function submit() {
   }
 }
 
-/** 示例数据 */
+/** 示例数据（便于快速演示） */
 function fillDemo() {
   mode.value = 'create'
-  form.slug = 'conf-2025'
-  form.title = '开源大会 2025（更新版）'
-  form.summary = '一场面向开发者的技术盛会（更新说明）'
-  form.coverUrl = 'https://picsum.photos/seed/conf2025/1200/630'
-  form.type = ''            // 让你从下拉选
-  form.status = 2
-  form.startTime = '2025-12-10 09:00:00'
-  form.endTime   = '2025-12-12 18:00:00'
-  form.city = '上海'
-  form.location = '上海世博中心'
-  form.online = false
-  form.tags = ''            // 使用 selectedTags
+  slugToEdit.value = ''
+  updateId.value = ''
+  Object.assign(form, {
+    id: undefined,
+    slug: 'conf-2025',
+    title: '开源大会 2025（更新版）',
+    summary: '一场面向开发者的技术盛会（更新说明）',
+    coverUrl: 'https://picsum.photos/seed/conf2025/1200/630',
+    type: '',
+    status: 2,
+    startTime: '2025-12-10 09:00:00',
+    endTime:   '2025-12-12 18:00:00',
+    city: '上海',
+    location: '上海世博中心',
+    online: false,
+    tags: '',
+    templateId: 'tmpl_conference_v1',
+    contentMd: "# 活动简介\n大会围绕 **AI、前端、云原生、数据** 等方向展开，欢迎参会交流。",
+    speakers: '[]',
+    agenda:   '[]',
+    gallery:  '[]',
+    ctaText: '立即报名',
+    ctaUrl:  'https://example.com/register/conf-2025',
+    seo: '{"title":"开源大会 2025","desc":"面向开发者的技术盛会","keywords":"开源,大会,AI,前端"}',
+    viewCount: 0,
+    detailUrl: '',
+    detailIsExternal: false,
+    blocks: ''
+  })
   selectedTags.value = ['开源','前端','AI']
-  form.templateId = 'tmpl_conference_v1'
-
-  uiBlocks.enable.infoCards = uiBlocks.enable.agenda = uiBlocks.enable.speakers = uiBlocks.enable.gallery = uiBlocks.enable.faq = true
+  uiBlocks.enable = { infoCards: true, agenda: true, speakers: true, gallery: true, faq: true }
   uiBlocks.infoCards = [
     { title: '100+ 讲者', desc: '来自头部企业与开源社区' },
     { title: '3000+ 参会者', desc: '跨领域开发者面对面交流' },
-    { title: '25+ 专题', desc: 'AI、前端、云原生、数据等' }
+    { title: '25+ 专题',  desc: 'AI、前端、云原生、数据等' }
   ]
   uiBlocks.agenda = [
-    { time: 'Day 1', topic: '主题演讲', speaker: '大会主席' },
+    { time: 'Day 1', topic: '主题演讲',        speaker: '大会主席' },
     { time: 'Day 2', topic: '分论坛与 Workshop', speaker: '各 Track' }
   ]
   uiBlocks.speakers = [
-    { name: '张三', title: '某公司 CTO', avatar: 'https://i.pravatar.cc/160?img=12', bio: '关注 AI 与架构', links: [{ label: 'GitHub', url: 'https://github.com/' }] },
-    { name: '李四', title: '开源社区 Maintainer', avatar: 'https://i.pravatar.cc/160?img=34', bio: '构建工具与性能优化', links: [] }
+    { name: '张三', title: '某公司 CTO',            avatar: 'https://i.pravatar.cc/160?img=12', bio: '关注 AI 与架构',         links: [{ label:'GitHub', url:'https://github.com/' }] },
+    { name: '李四', title: '开源社区 Maintainer',   avatar: 'https://i.pravatar.cc/160?img=34', bio: '构建工具与性能优化',     links: [] }
   ]
   uiBlocks.gallery = [
     'https://picsum.photos/seed/confgal1/600/400',
@@ -649,21 +840,30 @@ function fillDemo() {
     { q: '需要报名吗？', a: '需要，请先在报名页登记信息' },
     { q: '是否有回放？', a: '大会结束 48 小时内提供回放链接' }
   ]
-
-  form.contentMd = "# 活动简介\\n大会围绕 **AI、前端、云原生、数据** 等方向展开，欢迎参会交流。"
-  form.speakers  = '[]'
-  form.agenda    = '[]'
-  form.gallery   = '[]'
-  form.ctaText = '立即报名'
-  form.ctaUrl  = 'https://example.com/register/conf-2025'
-  form.seo     = '{"title":"开源大会 2025","desc":"面向开发者的技术盛会","keywords":"开源,大会,AI,前端"}'
-  form.viewCount = 0
-  form.detailUrl = ''
-  form.detailIsExternal = false
+  // 确保演示标签也在下拉里
+  ensureTagOptionsInclude(selectedTags.value)
 }
 
-onMounted(() => {
-  loadMeta()
+/** 生命周期 */
+onMounted(async () => {
+  resolveAutoToken()
+  await loadMeta()
+  await loadAllEvents()
+})
+
+/** 模式切换到更新时，如无列表则补拉；切回新增清空选择 */
+watch(mode, async (m) => {
+  if (m === 'update') {
+    if (!allEvents.value.length) await loadAllEvents()
+  } else {
+    slugToEdit.value = ''
+    updateId.value = ''
+  }
+})
+
+/** 当 apiPrefix 或 token 变化时，轻量刷新 meta（避免频繁） */
+watch([apiPrefix, token], async () => {
+  await loadMeta()
 })
 </script>
 
