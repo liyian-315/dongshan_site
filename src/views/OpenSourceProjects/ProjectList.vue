@@ -136,7 +136,7 @@ const fetchProjects = async () => {
   } catch (err) {
     error.value = err.message || '获取项目列表失败，请重试'
     console.error('项目加载异常：', err)
-    ElMessage.error(error.value)
+    // ElMessage.error(error.value)
   } finally {
     loading.value = false
   }

@@ -140,7 +140,8 @@ const searchUsers = async () => {
     users.value = response.list || []
     total.value = response.total || 0
   } catch (error) {
-    ElMessage.error('查询用户失败：' + error.message)
+    console.error('查询用户失败：' + error.message)
+    // ElMessage.error('查询用户失败：' + error.message)
   }
 }
 

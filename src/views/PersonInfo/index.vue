@@ -223,7 +223,8 @@ onMounted(async () => {
         hasSignedPdf: toBool(userData.has_signed_pdf ?? userData.hasSignedPdf ?? 0),}
       originalUserInfo.value = {...userInfo.value} // 保存原始数据用于重置
     } else {
-      ElMessage.error('获取个人信息失败：接口返回空数据')
+      console.error('获取个人信息失败：接口返回空数据')
+      // ElMessage.error('获取个人信息失败：接口返回空数据')
     }
     // 处理PDF文案数据
     if (pdfCWResponse) {
@@ -254,7 +255,7 @@ onMounted(async () => {
     } else {
       errorMsg += error.message || '未知网络错误'
     }
-    ElMessage.error(errorMsg)
+    // ElMessage.error(errorMsg)
     console.error(errorMsg, error)
   } finally {
     loading.value = false
