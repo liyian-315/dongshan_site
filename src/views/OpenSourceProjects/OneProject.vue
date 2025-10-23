@@ -74,7 +74,7 @@
         </div>
       </div>
 
-      <div class="learning-materials" v-if="moduleDisplay.learningMaterials && learningMaterials.length">
+      <div class="learning-materials" v-if="moduleDisplay.learningMaterial && learningMaterials.length">
         <h2>学习资料</h2>
         <div class="materials-list">
           <div v-for="(material, index) in learningMaterials" :key="index" class="material-item">
@@ -134,7 +134,7 @@ const moduleDisplay = ref({
   gitRepo: true,
   projectIntro: true,
   projectDisplay: true,
-  learningMaterials: true
+  learningMaterial: true
 })
 const loading = ref(true)
 const error = ref('')
@@ -181,6 +181,7 @@ const handleImageError = (item) => {}
 // 组件挂载时加载数据
 onMounted(() => {
   fetchProject()
+  console.info(moduleDisplay)
 })
 </script>
 
