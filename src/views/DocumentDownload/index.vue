@@ -186,17 +186,33 @@ async function fetchDocuments(menuIndex) {
   docs.value = await fetchDocList(params)
 }
 
-function download(row) {
-  window.open(row.url, '_blank')
+async function download(row) {
+  try {
+    const response = await axios.get(row.url, {
+      responseType: 'blob',
+      headers: {
+        'Accept': 'application/pdf'
+      }
+    });
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${row.title}.pdf`;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+  } catch (e) {
+    console.error('下载失败：', e);
+  }
 }
 
 async function preview(row) {
   try {
-    const res = await axios.get(row.url, { responseType: 'blob' })
-    blobUrl.value = URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }))
-    dialogVisible.value = true
+    window.open(row.url, '_blank');
   } catch (e) {
-    ElMessage.error('加载PDF失败：' + e.message)
+    console.error('加载PDF失败：' + e.message);
   }
 }
 
