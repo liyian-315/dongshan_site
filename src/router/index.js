@@ -13,7 +13,7 @@ import InternPlan from '@/views/Intern/Plan.vue'
 import JoinProcess from "@/views/Intern/JoinProcess.vue";
 import DocViewer from "@/views/DocView/DocViewer.vue";
 import DocDsViewer from "@/views/DocView/DocDsViewer.vue";
-
+import Contact from '@/views/Contact/index.vue'
 
 const routes = [
     { path: '/intern/plan', component: InternPlan },
@@ -31,6 +31,7 @@ const routes = [
     { path: '/join-process', name: 'JoinInternship', component: JoinProcess },
     { path: '/openDocs', name: 'DocsViewer', component: DocViewer },
     { path: '/dspDocs', name: 'DocsDsViewer', component: DocDsViewer },
+    { path: '/contact', name: 'Contact', component: Contact },
     {
         path: '/events',
         name: 'Events',
