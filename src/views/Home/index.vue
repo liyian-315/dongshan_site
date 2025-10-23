@@ -88,12 +88,12 @@
                   <p class="text-lg md:text-xl text-white/80 mt-6">
                     东山计划旨在构建从基础教育到高等教育的全阶段RISC-V人才培养体系。
                   </p>
-                  <a
-                      href="/activity/dongshanjihua"
+                  <router-link
+                      to="/activity/dongshanjihua"
                       class="mt-8 inline-block bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-8 rounded-full hover:scale-105 transform transition-all duration-300 shadow-lg shadow-primary/40"
                   >
                     查看详情
-                  </a>
+                  </router-link>
                 </div>
               </div>
             </div>
@@ -112,12 +112,12 @@
                   <p class="text-lg md:text-xl text-white/80 mt-6">
                     发现和贡献最新的开源项目，从人工智能到区块链，应有尽有。
                   </p>
-                  <a
-                      href="/project"
+                  <router-link
+                      to="/project"
                       class="mt-8 inline-block bg-gradient-to-r from-accent to-primary text-white font-bold py-3 px-8 rounded-full hover:scale-105 transform transition-all duration-300 shadow-lg shadow-accent/40"
                   >
                     浏览项目
-                  </a>
+                  </router-link>
                 </div>
               </div>
             </div>
@@ -136,12 +136,12 @@
                   <p class="text-lg md:text-xl text-white/80 mt-6">
                     助力RISC-V生态任务落地，推动代码、文档、工具等成果的标准化与复用。
                   </p>
-                  <a
-                      href="/join-process"
+                  <router-link
+                      to="/join-process"
                       class="mt-8 inline-block bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-8 rounded-full hover:scale-105 transform transition-all duration-300 shadow-lg shadow-primary/40"
                   >
                     成为实习生
-                  </a>
+                  </router-link>
                 </div>
               </div>
             </div>
@@ -160,12 +160,12 @@
                   <p class="text-lg md:text-xl text-white/80 mt-6">
                     加入技术分享会、研讨会和黑客马拉松，与全球开发者共同成长。
                   </p>
-                  <a
-                      href="/events"
+                  <router-link
+                      to="/events"
                       class="mt-8 inline-block bg-gradient-to-r from-secondary to-accent text-white font-bold py-3 px-8 rounded-full hover:scale-105 transform transition-all duration-300 shadow-lg shadow-secondary/40"
                   >
                     查看活动
-                  </a>
+                  </router-link>
                 </div>
               </div>
             </div>
@@ -207,9 +207,9 @@
               <p class="text-subtext-light mt-4 flex-grow">
                 东山社区是面向开发者的开放社区，致力于帮助开发者交流内容、构建完善的开源生态体系，为开发者提供一个充满活力、资源丰富的学习、交流与合作平台。
               </p>
-              <a href="/about" class="inline-flex items-center mt-6 text-primary font-bold hover:underline">
+              <router-link to="/about" class="inline-flex items-center mt-6 text-primary font-bold hover:underline">
                 了解更多 <span class="material-symbols-outlined ml-1">arrow_forward</span>
-              </a>
+              </router-link>
             </div>
           </div>
 
@@ -256,7 +256,7 @@
 
             <!-- 描述仍为列布局 -->
             <p class="text-subtext-light text-sm">及时发布社区活动、技术动态与行业资讯。</p>
-            <a href="https://sddx.huimaibuy.net/" class="text-primary font-bold hover:underline">前往查看</a>
+            <a href="https://qloc-cn.org/" class="text-primary font-bold hover:underline">前往查看</a>
           </div>
         </div>
 
@@ -273,7 +273,7 @@
 
             <!-- 描述仍为列布局 -->
             <p class="text-subtext-light text-sm">提供完善的开发指南、API 参考与教程。</p>
-            <a href="/docs" class="text-primary font-bold hover:underline">查看文档</a>
+            <router-link to="/docs" class="text-primary font-bold hover:underline">查看文档</router-link>
           </div>
         </div>
 
@@ -291,7 +291,7 @@
 
             <!-- 描述仍为列布局 -->
             <p class="text-subtext-light text-sm">提供开源软件、开发工具、系统镜像等资源的国内高速下载，优化开发者资源获取体验，加速开发进程。</p>
-            <a href="/mirror" class="text-primary font-bold hover:underline">查看镜像</a>
+            <router-link to="/mirror" class="text-primary font-bold hover:underline">查看镜像</router-link>
           </div>
         </div>
       </div>
@@ -315,22 +315,22 @@
             <p class="mt-3 text-sm">基于FPGA加速目标硬件运行用户模式模拟</p>
           </div>
           <div class="mt-4 flex justify-end">
-            <a href="/project/3" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+            <router-link to="/project/3" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
               查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </a>
+            </router-link>
           </div>
         </div>
 
         <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
           <div>
-            <h3 class="text-xl font-bold">RISC-V生态标准化-BSA</h3>
+            <h3 class="text-xl font-bold">SDU-BRS启动和运行时服务规范</h3>
             <p class="text-subtext-light text-sm mt-2">2025年10月1日</p>
-            <p class="mt-3 text-sm">针对RISC-V生态中的硬件架构进行测试，构建RISC-V BSA测试体系，其针对RISC-V SOC ISA与外设标准进行测试，明确每一个硬件可以执行的环境。</p>
+            <p class="mt-3 text-sm">构建RISC-V生态标准化规范，避免RISC-V生态碎片化问题，构建面向RISC-V服务器的标准化测试工具。</p>
           </div>
           <div class="mt-4 flex justify-end">
-            <a href="/project/7" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+            <router-link to="/project/7" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
               查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </a>
+            </router-link>
           </div>
         </div>
 
@@ -341,9 +341,9 @@
             <p class="mt-3 text-sm">分“舜华OS”是山东大学自主研发的面向AI大模型优化的操作系统，专注于对主流架构（x86、ARM、RISC-V）的AI能力支持。</p>
           </div>
           <div class="mt-4 flex justify-end">
-            <a href="/project/1" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+            <router-link to="/project/1" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
               查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </a>
+            </router-link>
           </div>
         </div>
 
@@ -354,9 +354,9 @@
             <p class="mt-3 text-sm">AI Benchmark使用AI各领域经典深度学习模型集合对不同的硬件平台进行性能测试，硬件平台包括Nvidia、AMD的GPU、Sophgo的TPU（单卡）等。</p>
           </div>
           <div class="mt-4 flex justify-end">
-            <a href="/project/8" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+            <router-link to="/project/8" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
               查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </a>
+            </router-link>
           </div>
         </div>
       </div>
@@ -380,9 +380,9 @@
           </div>
           <div class="mt-4 flex justify-between items-center">
             <span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-full">技术分享</span>
-            <a href="/openDocs" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+            <router-link to="/openDocs" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
               查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </a>
+            </router-link>
           </div>
         </div>
 
@@ -393,9 +393,9 @@
             <p class="mt-3 text-sm">覆盖从基础到高级全年级的教学计划</p>
           </div>
           <div class="mt-4 flex justify-end">
-            <a href="/activity/dongshanjihua" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+            <router-link to="/activity/dongshanjihua" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
               查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </a>
+            </router-link>
           </div>
         </div>
 
@@ -406,34 +406,34 @@
             <p class="mt-3 text-sm">分享东山派的产品介绍与使用</p>
           </div>
           <div class="mt-4 flex justify-end">
-            <a href="/dspDocs" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+            <router-link to="/dspDocs" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
               加入学习 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </a>
+            </router-link>
           </div>
         </div>
 
         <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
           <div>
-            <h3 class="text-xl font-bold">赛事活动</h3>
-            <p class="text-subtext-light text-sm mt-2">2025年10月21日 | 线下·济南</p>
-            <p class="mt-3 text-sm">聚焦RISC-V与开源数据库的全新议题</p>
+            <h3 class="text-xl font-bold">最新赛事活动</h3>
+            <p class="text-subtext-light text-sm mt-2">2025年10月20日 | 线下·济南</p>
+            <p class="mt-3 text-sm">济南高新区第三届新一代信息技术开放周暨山东大学软件学院认识实习活动</p>
           </div>
           <div class="mt-4 flex justify-end">
-            <a href="/events/riscv_sql_1" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+            <router-link to="/events/riscv_sql_1" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
               查看活动 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </a>
+            </router-link>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 悬浮咨询按钮 -->
-    <button
-        class="fixed bottom-8 right-8 bg-gradient-to-tr from-purple-500 to-cyan-400 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform duration-300"
-        aria-label="咨询"
-    >
-      <span class="material-symbols-outlined text-3xl">forum</span>
-    </button>
+<!--    &lt;!&ndash; 悬浮咨询按钮 &ndash;&gt;-->
+<!--    <button-->
+<!--        class="fixed bottom-8 right-8 bg-gradient-to-tr from-purple-500 to-cyan-400 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform duration-300"-->
+<!--        aria-label="咨询"-->
+<!--    >-->
+<!--      <span class="material-symbols-outlined text-3xl">forum</span>-->
+<!--    </button>-->
   </div>
 </template>
 
