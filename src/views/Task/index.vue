@@ -929,21 +929,19 @@ const handlePublishRequest = (task) => {
   isPublishDialogOpen.value = true
 }
 
-const handleDownloadTemplate = async () => {
+const handleDownloadTemplate = () => {
   try {
     isDownloadingTemplate.value = true
-    const response = await getPublishTemplateUrl()
-    templateUrl.value = response.url
+    const filePath = 'doc/成果发布申请.docx'
     const link = document.createElement('a')
-    link.href = templateUrl.value
-    link.download = '成果发布申请表模板.docx'
+    link.href = filePath
+    link.download = '成果发布申请.docx'
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
     ElMessage.success('模板下载成功，请查收')
   } catch (error) {
     console.error('模板下载失败', error)
-    ElMessage.error(`模板下载失败：${error.message || '网络错误'}`)
   } finally {
     isDownloadingTemplate.value = false
   }
