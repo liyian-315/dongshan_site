@@ -106,6 +106,25 @@ const routes = [
             }
         ]
     },
+    {
+        path: '/forgot-password',
+        name: 'ForgotPassword',
+        component: () => import('@/views/Forget/ResetPasswordStep1.vue'),
+        meta: { title: '找回密码 - 验证邮箱' }
+    },
+    {
+        path: '/forgot-password/sent',
+        name: 'ForgotPasswordSent',
+        component: () => import('@/views/Forget/ResetPasswordStep2.vue'),
+        meta: { title: '找回密码 - 邮件已发送' }
+    },
+    {
+        path: '/reset-password',
+        name: 'ResetPassword',
+        component: () => import('@/views/Forget/ResetPasswordStep3.vue'),
+        props: (route) => ({ token: route.query.token }),
+        meta: { title: '找回密码 - 设置新密码' }
+    }
 ]
 
 export default createRouter({

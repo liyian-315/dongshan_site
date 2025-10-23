@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200" fill="none">
+    <!-- 信封主体 -->
+    <path
+            d="M250 50H50C33.4315 50 20 63.4315 20 80V150C20 166.569 33.4315 180 50 180H250C266.569 180 280 166.569 280 150V80C280 63.4315 266.569 50 250 50Z"
+            stroke="#1E90FF"
+            stroke-width="2"
+            fill="#F0F8FF"
+    />
+    <path
+            d="M50 80L150 130L250 80"
+            stroke="#1E90FF"
+            stroke-width="2"
+            stroke-linecap="round"
+    />
+    <path
+            d="M50 110H250"
+            stroke="#1E90FF"
+            stroke-width="1.5"
+            stroke-dasharray="4 4"
+    />
+    <path
+            d="M120 140C120 145.523 124.477 150 130 150H170C175.523 150 180 145.523 180 140V120C180 114.477 175.523 110 170 110H130C124.477 110 120 114.477 120 120V140Z"
+            fill="#1E90FF"
+            opacity="0.7"
+    />
+    <path
+            d="M170 125L190 125M190 125L183 118M190 125L183 132"
+            stroke="#1E90FF"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+    />
+</svg>
