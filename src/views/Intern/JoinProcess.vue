@@ -337,21 +337,21 @@ interface Attachment {
 const attachments: Attachment[] = [
   {
     label: '附件一',
-    name: '实习协议.PDF',
-    read_url: "https://dongshan-file.oss-cn-beijing.aliyuncs.com/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf",
-    download_url: "http://222.194.65.108:9001/api/v1/buckets/dongshan-file/objects/download?prefix=%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf"
+    name: '实习协议.docx',
+    read_url: "https://www.riscv-cn.org/sduproxy/dongshan-file/dongshanjieyongxieyi.docx",
+    download_url: "https://www.riscv-cn.org/sduproxy/dongshan-file/dongshanjieyongxieyi.docx"
   },
   {
     label: '附件二',
     name: '东山派借用协议.docx',
-    read_url: 'doc/东山派借用协议.docx',
-    download_url: 'doc/东山派借用协议.docx'
+    read_url: 'https://www.riscv-cn.org/sduproxy/dongshan-file/dongshanjieyongxieyi.docx',
+    download_url: 'https://www.riscv-cn.org/sduproxy/dongshan-file/dongshanjieyongxieyi.docx'
   },
   {
     label: '附件三',
     name: '成果发布申请.docx',
-    read_url: 'doc/成果发布申请.docx',
-    download_url: 'doc/成果发布申请.docx'
+    read_url: 'https://www.riscv-cn.org/sduproxy/dongshan-file/chengguofabuqingqiu.docx',
+    download_url: 'https://www.riscv-cn.org/sduproxy/dongshan-file/chengguofabuqingqiu.docx'
   }
 ]
 

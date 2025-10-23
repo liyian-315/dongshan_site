@@ -932,7 +932,7 @@ const handlePublishRequest = (task) => {
 const handleDownloadTemplate = () => {
   try {
     isDownloadingTemplate.value = true
-    const filePath = 'doc/成果发布申请.docx'
+    const filePath = 'https://www.riscv-cn.org/sduproxy/dongshan-file/chengguofabuqingqiu.docx'
     const link = document.createElement('a')
     link.href = filePath
     link.download = '成果发布申请.docx'
