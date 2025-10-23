@@ -1,0 +1,25 @@
+<svg width="520" height="320" viewBox="0 0 520 320" xmlns="http://www.w3.org/2000/svg">
+    <!-- 背景装饰 - 淡蓝色圆形，呼应页面渐变 -->
+    <circle cx="120" cy="80" r="100" fill="rgba(30, 144, 255, 0.05)" />
+    <circle cx="400" cy="240" r="80" fill="rgba(72, 199, 116, 0.05)" />
+
+    <!-- 信封主体 -->
+    <path d="M80,120 L440,120 L400,220 L120,220 Z" fill="white" stroke="rgba(30, 144, 255, 0.2)" stroke-width="2" />
+    <!-- 信封封口 -->
+    <path d="M80,120 L260,60 L440,120" fill="rgba(30, 144, 255, 0.1)" stroke="rgba(30, 144, 255, 0.2)" stroke-width="2" />
+    <!-- 信封底部阴影 -->
+    <path d="M120,220 L400,220 L390,240 L130,240 Z" fill="rgba(0,0,0,0.03)" />
+
+    <!-- 信件内容 - 线条 -->
+    <line x1="150" y1="150" x2="370" y2="150" stroke="rgba(30, 144, 255, 0.3)" stroke-width="1.5" />
+    <line x1="150" y1="170" x2="340" y2="170" stroke="rgba(30, 144, 255, 0.3)" stroke-width="1.5" />
+    <line x1="150" y1="190" x2="390" y2="190" stroke="rgba(30, 144, 255, 0.3)" stroke-width="1.5" />
+
+    <!-- 成功图标 - 对勾 -->
+    <path d="M200,260 L250,290 L320,230" stroke="#48c774" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+
+    <!-- 装饰元素 - 小气泡 -->
+    <circle cx="220" cy="90" r="8" fill="rgba(30, 144, 255, 0.2)" />
+    <circle cx="350" cy="110" r="6" fill="rgba(30, 144, 255, 0.2)" />
+    <circle cx="180" cy="200" r="5" fill="rgba(72, 199, 116, 0.2)" />
+</svg>
