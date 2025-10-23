@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           rewrite: p => p.replace(/^\/api/, '/api'),
         },
-        '/docs': {
+        '/documents': {
           target: docsTarget,
           changeOrigin: true,
         },
