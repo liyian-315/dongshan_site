@@ -1,5 +1,5 @@
 <template>
-  <MarkdownReader base="/docs/dongshanpai">
+  <MarkdownReader base="/documents/dongshanpai">
     <template #empty>
       <div class="space-y-3">
         <h2 class="text-2xl font-bold">常见问题 · FAQ</h2>
