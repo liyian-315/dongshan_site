@@ -171,6 +171,65 @@
             </div>
           </el-carousel-item>
 
+          <!-- 5-钉钉群邀请 -->
+          <el-carousel-item>
+            <div class="relative w-full h-[600px] bg-gradient-to-br from-blue-600/90 to-cyan-700/90">
+              <div class="absolute -inset-4 bg-gradient-to-br from-blue-400 via-cyan-500 to-teal-400 opacity-20 blur-3xl"></div>
+
+              <div class="relative h-full flex flex-col md:flex-row items-center justify-center p-8">
+                <!-- 左侧：邀请文案 -->
+                <div class="w-full md:w-1/2 text-center md:text-left mb-8 md:mb-0 md:pr-8">
+                  <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 md:p-8 border border-white/20 shadow-2xl">
+                    <h1 class="text-3xl md:text-5xl font-extrabold text-white mb-6">
+                      加入东山社区
+                    </h1>
+                    <p class="text-white/90 text-lg mb-6 leading-relaxed">
+                      点击链接加入我的企业“东山社区”，一起开启全新办公体验吧。
+                    </p>
+                    <a
+                        href="https://qr.dingtalk.com/action/joingroup?code=v1,k1,FKRlh5sWNyXGQ0PV16EUiVmb6s2mSnIxrhPcjSDRBJY=&_dt_no_comment=1&origin=11"
+                        class="inline-flex items-center justify-center bg-white text-blue-600 font-bold py-3 px-6 rounded-full hover:bg-opacity-90 transform transition-all duration-300 shadow-lg"
+                        target="_blank"
+                    >
+                      立即加入
+                      <span class="material-symbols-outlined ml-2">arrow_forward</span>
+                    </a>
+                    <p class="text-white/70 text-sm mt-4">
+                      或点击链接复制到浏览器打开：<br>
+                      <div class="relative mt-1 group">
+                        <div class="relative pl-2 pr-24">
+                    <span
+                        class="font-mono truncate block cursor-pointer hover:text-white transition-colors duration-200"
+                        @click="copyToClipboard(joinLink)"
+                    >
+                      {{ joinLink }}
+                    </span>
+                          <span
+                              v-if="copySuccess"
+                              class="absolute right-[-20px] top-1/2 -translate-y-1/2 text-xs text-green-300 animate-fadeOut whitespace-nowrap"
+                          >
+                      <span class="material-symbols-outlined">check_circle</span> 已复制
+                    </span>
+                        </div>
+                      </div>
+                    </p>
+                  </div>
+                </div>
+
+                <!-- 右侧：钉钉二维码 -->
+                <div class="w-full md:w-1/2 flex justify-center">
+                  <div class="bg-white p-4 rounded-xl shadow-2xl transform transition-all duration-300 hover:shadow-blue-500/20">
+                    <img
+                        src="@/assets/img/dingding_invite.jpg"
+                        alt="钉钉邀请二维码"
+                        class="w-64 h-64 object-contain"
+                    >
+                    <p class="text-center text-blue-600 font-medium mt-3">扫码加入东山社区钉钉群</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </el-carousel-item>
           <!-- 动态新闻扩展屏 -->
           <el-carousel-item v-for="(item, idx) in newsList" :key="`news-${idx}`">
             <div
@@ -446,7 +505,8 @@ import videoFile from '@/assets/img/dongshan-2min.mp4'
 import { getPdfCopyWriting } from '@/api/user.js'
 
 const newsList = ref([])
-
+const joinLink = ref('https://qr.dingtalk.com/action/joingroup?code=v1,k1,FKRlh5sWNyXGQ0PV16EUiVmb6s2mSnIxrhPcjSDRBJY=&_dt_no_comment=1&origin=11')
+const copySuccess = ref(false)
 // 视频文案/链接
 const pdfCW = ref({
   area: 'home-video-mp4',
@@ -485,6 +545,35 @@ onMounted(async () => {
     console.error('获取轮播文本失败:', err);
   }
 });
+// 实现复制到剪贴板功能
+const copyToClipboard = async (text) => {
+  try {
+    // 使用Clipboard API复制文本
+    await navigator.clipboard.writeText(text)
+    // 显示成功提示
+    copySuccess.value = true
+    // 1.5秒后隐藏提示
+    setTimeout(() => {
+      copySuccess.value = false
+    }, 1500)
+  } catch (err) {
+    console.error('复制失败:', err)
+    // 降级处理：使用传统方法复制
+    const textarea = document.createElement('textarea')
+    textarea.value = text
+    textarea.style.position = 'fixed'
+    document.body.appendChild(textarea)
+    textarea.select()
+    document.execCommand('copy')
+    document.body.removeChild(textarea)
+
+    // 显示成功提示（即使是降级处理）
+    copySuccess.value = true
+    setTimeout(() => {
+      copySuccess.value = false
+    }, 1500)
+  }
+}
 </script>
 
 
@@ -492,5 +581,12 @@ onMounted(async () => {
 /* 调整 Element Plus 轮播圆角 */
 :deep(.el-carousel){ border-radius: 1rem; }
 :deep(.el-carousel__container){ border-radius: 1rem; }
-
+.animate-fadeOut {
+  animation: fadeOut 1.5s ease-out forwards;
+}
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
 </style>
