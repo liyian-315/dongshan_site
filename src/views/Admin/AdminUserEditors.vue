@@ -156,6 +156,7 @@ const handleInternStatusChange = async (row) => {
     // 调用更新接口，只传递必要的字段
     await updateUser({
       id: row.id,
+      username: row.username,
       hasSignedPdf: row.hasSignedPdf
     })
     ElMessage.success('状态更新成功')
