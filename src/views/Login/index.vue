@@ -150,10 +150,11 @@ async function submitForm() {
     await formRef.value.validate()
     const response = await login(form.value)
     if (response && response.token) {
-      const { token, username, role } = response
+      const { token, username, role, id } = response
       localStorage.setItem('token', (token || '').trim())
       localStorage.setItem('username', (username || '').trim())
       localStorage.setItem('role', (role || '').trim())
+      localStorage.setItem('userId',(id || ''))
 
       if (remember.value) {
         localStorage.setItem('remember_username', form.value.username)

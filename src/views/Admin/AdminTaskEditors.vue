@@ -36,6 +36,8 @@
         <el-form-item>
           <el-button type="primary" @click="searchTasks">搜索</el-button>
           <el-button @click="resetSearch">重置</el-button>
+          <el-button @click="createNewTask">新建任务</el-button>
+
         </el-form-item>
       </el-form>
     </div>
@@ -130,6 +132,12 @@
           :total="total"
       />
     </div>
+
+    <!-- 新建任务弹窗 -->
+    <CreateTaskDialog
+      v-model:visible="showCreateDialog"
+      @success="handleCreateSuccess"
+    />
   </div>
 </template>
 
@@ -137,6 +145,7 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { selectTask, updateTaskStatus } from '@/api/task'
+import CreateTaskDialog from '@/components/CreateTaskDialog.vue'
 
 // 搜索表单数据
 const searchForm = reactive({
@@ -151,6 +160,9 @@ const total = ref(0)
 const currentPage = ref(1)
 const pageSize = ref(10)
 const loading = ref(false)
+
+// 控制新建任务弹窗显示
+const showCreateDialog = ref(false)
 
 // 任务状态映射配置
 const taskStatusOptions = ref([
@@ -280,6 +292,17 @@ const handleRecogStatusChange = async (row) => {
 // 查看PDF处理
 const handleViewPdf = (url) => {
   console.log('查看PDF:', url)
+}
+
+// 打开新建任务弹窗
+const createNewTask = () => {
+  showCreateDialog.value = true
+}
+
+// 创建任务成功回调
+const handleCreateSuccess = () => {
+  // 刷新任务列表
+  searchTasks()
 }
 
 // 页面加载时查询任务列表

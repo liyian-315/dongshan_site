@@ -41,3 +41,19 @@ export function fetchTasksByCategory(params) {
 export function fetchTaskCategories(params) {
     return get('/api/task/fetchTaskCategories', params)
 }
+
+export function createTask(data) {
+    return post('/api/admin/create_task', data)
+}
+
+export function getProtocols(params) {
+    return get('/api/protocols', params)
+}
+
+export function createTaskClass(data) {
+    return post('/api/admin/task_class', data)
+}
+
+export function createProtocol(data) {
+    return post('/api/admin/protocol', data)
+}
