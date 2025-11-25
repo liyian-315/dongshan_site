@@ -284,16 +284,6 @@
                 展示社区成员在各项目中的 PR、Issue、文档、翻译等多维度贡献热度与影响力，鼓励更多开发者参与共建。
               </p>
 
-<!--              &lt;!&ndash; 小预览：前三名占位 &ndash;&gt;-->
-<!--              <div class="mt-4 flex items-center gap-4">-->
-<!--                <div class="flex -space-x-2">-->
-<!--                  <img class="w-8 h-8 rounded-full border border-white/30" src="https://api.dicebear.com/7.x/identicon/svg?seed=alice" alt="avatar1">-->
-<!--                  <img class="w-8 h-8 rounded-full border border-white/30" src="https://api.dicebear.com/7.x/identicon/svg?seed=bob" alt="avatar2">-->
-<!--                  <img class="w-8 h-8 rounded-full border border-white/30" src="https://api.dicebear.com/7.x/identicon/svg?seed=carol" alt="avatar3">-->
-<!--                </div>-->
-<!--                <span class="text-xs text-subtext-light">实时统计 · 每日更新</span>-->
-<!--              </div>-->
-
               <a href="https://gitee.com/dongshan-community/dongshan-contribution-list" class="inline-flex items-center mt-6 text-primary font-bold hover:underline">
                 查看榜单 <span class="material-symbols-outlined ml-1">arrow_forward</span>
               </a>
@@ -366,56 +356,37 @@
         <p class="text-lg text-subtext-light max-w-2xl mx-auto">聚合高热度仓库，助你快速上手并提交PR。</p>
       </div>
 
-      <div class="container mx-auto px-4 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
-          <div>
-            <h3 class="text-xl font-bold">FASE，FPGA-Assisted Syscall Emulation</h3>
-            <p class="text-subtext-light text-sm mt-2">2025年10月1日</p>
-            <p class="mt-3 text-sm">基于FPGA加速目标硬件运行用户模式模拟</p>
-          </div>
-          <div class="mt-4 flex justify-end">
-            <router-link to="/project/3" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
-              查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </router-link>
-          </div>
-        </div>
-
-        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
-          <div>
-            <h3 class="text-xl font-bold">SDU-BRS启动和运行时服务规范</h3>
-            <p class="text-subtext-light text-sm mt-2">2025年10月1日</p>
-            <p class="mt-3 text-sm">构建RISC-V生态标准化规范，避免RISC-V生态碎片化问题，构建面向RISC-V服务器的标准化测试工具。</p>
-          </div>
-          <div class="mt-4 flex justify-end">
-            <router-link to="/project/7" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
-              查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </router-link>
+      <div class="container mx-auto px-4">
+        <div v-if="projectList && projectList.length > 0" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div
+            v-for="project in projectList"
+            :key="project.id"
+            class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+          >
+            <div>
+              <h3 class="text-xl font-bold">{{ project.title }}</h3>
+              <p class="text-subtext-light text-sm mt-2">{{ project.note }}</p>
+              <p class="mt-3 text-sm">{{ project.copyWritingText }}</p>
+            </div>
+            <div class="mt-4 flex justify-end">
+              <router-link :to="`/project/${project.link}`" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+                查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+              </router-link>
+            </div>
           </div>
         </div>
 
-        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
-          <div>
-            <h3 class="text-xl font-bold">舜华OS</h3>
-            <p class="text-subtext-light text-sm mt-2">2025年10月1日</p>
-            <p class="mt-3 text-sm">分“舜华OS”是山东大学自主研发的面向AI大模型优化的操作系统，专注于对主流架构（x86、ARM、RISC-V）的AI能力支持。</p>
-          </div>
-          <div class="mt-4 flex justify-end">
-            <router-link to="/project/1" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
-              查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </router-link>
-          </div>
-        </div>
-
-        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
-          <div>
-            <h3 class="text-xl font-bold">AI Benchmark</h3>
-            <p class="text-subtext-light text-sm mt-2">2025年10月20日</p>
-            <p class="mt-3 text-sm">AI Benchmark使用AI各领域经典深度学习模型集合对不同的硬件平台进行性能测试，硬件平台包括Nvidia、AMD的GPU、Sophgo的TPU（单卡）等。</p>
-          </div>
-          <div class="mt-4 flex justify-end">
-            <router-link to="/project/8" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
-              查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </router-link>
+        <div v-else class="flex items-center justify-center py-16">
+          <div class="relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-12 rounded-2xl border border-white/20 shadow-lg text-center max-w-md">
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-br from-primary/30 to-accent/30 rounded-full blur-2xl"></div>
+            <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-24 h-24 bg-gradient-to-br from-secondary/30 to-primary/30 rounded-full blur-2xl"></div>
+            <div class="relative">
+              <div class="bg-gradient-to-r from-primary to-accent inline-block p-6 rounded-full mb-6">
+                <span class="material-symbols-outlined text-white text-5xl">schedule</span>
+              </div>
+              <h3 class="text-2xl font-bold mb-3">敬请期待</h3>
+              <p class="text-subtext-light">更多精彩项目即将上线</p>
+            </div>
           </div>
         </div>
       </div>
@@ -430,57 +401,37 @@
         <p class="text-lg text-subtext-light max-w-2xl mx-auto">参与我们丰富多彩的线上线下活动，与技术大牛面对面交流。</p>
       </div>
 
-      <div class="container mx-auto px-4 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
-          <div>
-            <h3 class="text-xl font-bold">开源入门教学</h3>
-            <p class="text-subtext-light text-sm mt-2">2025年10月1日 | 线上</p>
-            <p class="mt-3 text-sm">从零开始了解“开源”。</p>
-          </div>
-          <div class="mt-4 flex justify-between items-center">
-            <span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-full">技术分享</span>
-            <router-link to="/openDocs" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
-              查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </router-link>
-          </div>
-        </div>
-
-        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
-          <div>
-            <h3 class="text-xl font-bold">东山教学计划</h3>
-            <p class="text-subtext-light text-sm mt-2">2025年10月1日</p>
-            <p class="mt-3 text-sm">覆盖从基础到高级全年级的教学计划</p>
-          </div>
-          <div class="mt-4 flex justify-end">
-            <router-link to="/activity/dongshanjihua" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
-              查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </router-link>
+      <div class="container mx-auto px-4">
+        <div v-if="eventList && eventList.length > 0" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div
+            v-for="event in eventList"
+            :key="event.id"
+            class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+          >
+            <div>
+              <h3 class="text-xl font-bold">{{ event.title }}</h3>
+              <p class="text-subtext-light text-sm mt-2">{{ event.note }}</p>
+              <p class="mt-3 text-sm">{{ event.copyWritingText }}</p>
+            </div>
+            <div class="mt-4 flex justify-end">
+              <router-link :to="event.link" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
+                查看详情 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+              </router-link>
+            </div>
           </div>
         </div>
 
-        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
-          <div>
-            <h3 class="text-xl font-bold">东山派教程</h3>
-            <p class="text-subtext-light text-sm mt-2">2025年10月</p>
-            <p class="mt-3 text-sm">分享东山派的产品介绍与使用</p>
-          </div>
-          <div class="mt-4 flex justify-end">
-            <router-link to="/dspDocs" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
-              加入学习 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </router-link>
-          </div>
-        </div>
-
-        <div class="bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
-          <div>
-            <h3 class="text-xl font-bold">最新赛事活动</h3>
-            <p class="text-subtext-light text-sm mt-2">2025年10月20日 | 线下·济南</p>
-            <p class="mt-3 text-sm">济南高新区第三届新一代信息技术开放周暨山东大学软件学院认识实习活动</p>
-          </div>
-          <div class="mt-4 flex justify-end">
-            <router-link to="/events/riscv_sql_1" class="inline-flex items-center text-primary text-sm font-bold hover:underline">
-              查看活动 <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
-            </router-link>
+        <div v-else class="flex items-center justify-center py-16">
+          <div class="relative bg-white/70 dark:bg-background-light/70 backdrop-blur-lg p-12 rounded-2xl border border-white/20 shadow-lg text-center max-w-md">
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-br from-primary/30 to-accent/30 rounded-full blur-2xl"></div>
+            <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-24 h-24 bg-gradient-to-br from-secondary/30 to-primary/30 rounded-full blur-2xl"></div>
+            <div class="relative">
+              <div class="bg-gradient-to-r from-primary to-accent inline-block p-6 rounded-full mb-6">
+                <span class="material-symbols-outlined text-white text-5xl">schedule</span>
+              </div>
+              <h3 class="text-2xl font-bold mb-3">敬请期待</h3>
+              <p class="text-subtext-light">更多精彩活动即将上线</p>
+            </div>
           </div>
         </div>
       </div>
@@ -503,8 +454,11 @@ import videoFile from '@/assets/img/dongshan-2min.mp4'
 // import posterFile from '@/assets/img/video-cover.png' // 可选本地封面
 // 视频配置
 import { getPdfCopyWriting } from '@/api/user.js'
+import { fetchHomeProjects, fetchHomeCarousel, fetchHomeEvents } from '@/api/home.js'
 
 const newsList = ref([])
+const projectList = ref([])
+const eventList = ref([])
 const joinLink = ref('https://qr.dingtalk.com/action/joingroup?code=v1,k1,FKRlh5sWNyXGQ0PV16EUiVmb6s2mSnIxrhPcjSDRBJY=&_dt_no_comment=1&origin=11')
 const copySuccess = ref(false)
 // 视频文案/链接
@@ -540,6 +494,16 @@ onMounted(async () => {
     } else {
       // 兜底：保留初始 link，避免视频无法播放
       pdfCW.value.link = 'https://mpvideo.qpic.cn/0b2epudbsaagjqagypfk6bufm7oddf6qmgia.f10002.mp4?dis_k=d3366686da843bda625c511b9e7bbc18&dis_t=1757651990&play_scene=10120&auth_info=C/2XvawvG1dlo+OslwBTc0d7dTAEZkIQOghgOGscUjAyGHAxNAQAGhIjRQktb15TU3E=&auth_key=aec1185c26c4754b30960e937cfa5fab&vid=wxv_4136261317352931331&format_id=10002&support_redirect=0&mmversion=false';
+    }
+
+    const projectRes = await fetchHomeProjects()
+    if (projectRes && projectRes.length > 0) {
+      projectList.value = projectRes
+    }
+
+    const eventRes = await fetchHomeEvents()
+    if (eventRes && eventRes.length > 0) {
+      eventList.value = eventRes
     }
   } catch (err) {
     console.error('获取轮播文本失败:', err);

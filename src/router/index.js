@@ -85,6 +85,13 @@ const routes = [
         meta: {title: "管理员任务管理"}
     },
     {
+        path: '/adminHomeDisplayEditors',
+        name: "adminHomeDisplayEditors",
+        component: () => import('@/views/Admin/AdminHomeDisplayEditors.vue'),
+        props: true,
+        meta: {title: "首页板块管理"}
+    },
+    {
         path: '/project',
         name: 'Project',
         component: () => import('@/views/OpenSourceProjects/index.vue'),
