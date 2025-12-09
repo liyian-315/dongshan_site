@@ -35,6 +35,51 @@
               :label="item.name"
               :value="String(item.id)"
           />
+          <template #footer>
+            <el-button
+                v-if="!isAddingClass"
+                text
+                bg
+                size="small"
+                @click="onAddClassOption"
+                :loading="classLoading"
+            >
+              添加分类
+            </el-button>
+            <template v-else>
+              <el-space direction="vertical" size="8px">
+                <el-input
+                    v-model="classOptionName"
+                    class="option-input"
+                    placeholder="输入分类名称"
+                    size="small"
+                />
+                <el-input
+                    v-model="classOptionDescribe"
+                    class="option-input"
+                    placeholder="输入分类描述"
+                    size="small"
+                />
+                <el-space direction="horizontal" size="8px">
+                <el-button
+                    type="primary"
+                    size="small"
+                    @click="onConfirmClass"
+                    :loading="classLoading"
+                >
+                  确认
+                </el-button>
+                <el-button
+                    size="small"
+                    @click="clearClassInput"
+                    :disabled="classLoading"
+                >
+                  取消
+                </el-button>
+                </el-space>
+              </el-space>
+            </template>
+          </template>
         </el-select>
       </el-form-item>
 
@@ -42,7 +87,6 @@
         <el-select
             v-model="formData.taskProtocolId"
             placeholder="请选择或输入协议"
-            allow-create
             clearable
             style="width: 100%"
             @change="handleProtocolChange"
@@ -54,6 +98,51 @@
               :label="item.title"
               :value="String(item.id)"
           />
+          <template #footer>
+            <el-button
+                v-if="!isAddingProtocol"
+                text
+                bg
+                size="small"
+                @click="onAddProtocolOption"
+                :loading="protocolLoading"
+            >
+              添加协议
+            </el-button>
+            <template v-else>
+              <el-space direction="vertical" size="8px">
+                <el-input
+                    v-model="protocolOptionName"
+                    class="option-input"
+                    placeholder="输入协议名称"
+                    size="small"
+                />
+                <el-input
+                    v-model="protocolOptionLink"
+                    class="option-input"
+                    placeholder="输入协议链接"
+                    size="small"
+                />
+                <el-space direction="horizontal" size="8px">
+                  <el-button
+                      type="primary"
+                      size="small"
+                      @click="onConfirmProtocol"
+                      :loading="protocolLoading"
+                  >
+                    确认
+                  </el-button>
+                  <el-button
+                      size="small"
+                      @click="clearProtocolInput"
+                      :disabled="protocolLoading"
+                  >
+                    取消
+                  </el-button>
+                </el-space>
+              </el-space>
+            </template>
+          </template>
         </el-select>
       </el-form-item>
 
@@ -102,7 +191,6 @@ import { ref, reactive, watch, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { createTask, fetchTaskCategories, getProtocols, createTaskClass, createProtocol } from '@/api/task'
 
-// 定义 props 和 emits
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -119,12 +207,17 @@ const classLoading = ref(false)
 const protocolLoading = ref(false)
 const formRef = ref(null)
 
-// 任务分类选项（后端返回的原始数据）
+// 任务分类相关
 const taskClassOptions = ref([])
-// 协议选项
-const protocolOptions = ref([])
+const isAddingClass = ref(false)
+const classOptionName = ref('')
+const classOptionDescribe = ref('')
 
-// 表单数据
+const protocolOptions = ref([])
+const isAddingProtocol = ref(false)
+const protocolOptionName = ref('')
+const protocolOptionLink = ref('')
+
 const formData = reactive({
   taskName: '',
   taskClass: null,  // 存储任务分类ID（数字）
@@ -132,15 +225,6 @@ const formData = reactive({
   taskDescription: '',
   deadlineTime: '',
   giteeLink: ''
-})
-
-// 监听表单数据变化（调试用）
-watch(() => formData.taskClass, (newVal) => {
-  console.log('任务分类ID变化为:', newVal)
-})
-
-watch(() => formData.taskProtocolId, (newVal) => {
-  console.log('协议ID变化为:', newVal)
 })
 
 // 表单验证规则
@@ -159,7 +243,6 @@ const rules = {
   ]
 }
 
-// 监听父组件 visible 变化，同步弹窗状态并加载数据
 watch(() => props.visible, (newVal) => {
   dialogVisible.value = newVal
   if (newVal) {
@@ -168,12 +251,10 @@ watch(() => props.visible, (newVal) => {
   }
 })
 
-// 监听弹窗状态变化，同步给父组件
 watch(dialogVisible, (newVal) => {
   emit('update:visible', newVal)
 })
 
-// 加载任务分类列表（后端返回 Long 类型 ID）
 const loadTaskClasses = async () => {
   try {
     classLoading.value = true
@@ -203,12 +284,75 @@ const loadProtocols = async () => {
   }
 }
 
-// 处理任务分类变化（可选，仅调试用）
+const onAddClassOption = () => {
+  isAddingClass.value = true
+}
+
+const onConfirmClass = async () => {
+  if (!classOptionName.value.trim()) {
+    ElMessage.warning('请输入分类名称')
+    return
+  }
+
+  try {
+    classLoading.value = true
+    const newClass = await createTaskClass({
+      name: classOptionName.value.trim(),
+      description: classOptionDescribe.value.trim(),
+    })
+    taskClassOptions.value.push(newClass)
+    formData.taskClass = String(newClass.id)
+    ElMessage.success('任务分类创建成功')
+    clearClassInput()
+  } catch (error) {
+    console.error('创建任务分类失败:', error)
+    ElMessage.error('创建任务分类失败：' + (error.message || '操作失败'))
+  } finally {
+    classLoading.value = false
+  }
+}
+
+const clearClassInput = () => {
+  classOptionName.value = ''
+  isAddingClass.value = false
+}
+
+const onAddProtocolOption = () => {
+  isAddingProtocol.value = true
+}
+
+const onConfirmProtocol = async () => {
+  if (!protocolOptionName.value.trim()) {
+    ElMessage.warning('请输入协议名称')
+    return
+  }
+
+  try {
+    protocolLoading.value = true
+    const newProtocol = await createProtocol({
+      title: protocolOptionName.value.trim(),
+      link: protocolOptionLink.value.trim() })
+    protocolOptions.value.push(newProtocol)
+    formData.taskProtocolId = String(newProtocol.id)
+    ElMessage.success('协议创建成功')
+    clearProtocolInput()
+  } catch (error) {
+    console.error('创建协议失败:', error)
+    ElMessage.error('创建协议失败：' + (error.message || '操作失败'))
+  } finally {
+    protocolLoading.value = false
+  }
+}
+
+const clearProtocolInput = () => {
+  protocolOptionName.value = ''
+  isAddingProtocol.value = false
+}
+
 const handleClassChange = (value) => {
   console.log('选中的分类ID:', value)
 }
 
-// 处理协议变化（保持原有逻辑）
 const handleProtocolChange = async (value) => {
   console.log('协议选择值:', value)
   const existingProtocol = protocolOptions.value.find(item => String(item.id) === value)
@@ -230,7 +374,6 @@ const handleProtocolChange = async (value) => {
   }
 }
 
-// 重置表单（恢复初始状态）
 const resetForm = () => {
   formData.taskName = ''
   formData.taskClass = null
@@ -238,36 +381,32 @@ const resetForm = () => {
   formData.taskDescription = ''
   formData.deadlineTime = ''
   formData.giteeLink = ''
+  clearClassInput()
+  clearProtocolInput()
   formRef.value?.resetFields() // 重置表单验证状态
 }
 
-// 取消操作
 const handleCancel = () => {
   resetForm()
   dialogVisible.value = false
 }
 
-// 确认提交
 const handleConfirm = async () => {
   try {
-    // 表单验证
     await formRef.value?.validate()
 
     submitLoading.value = true
 
-    // 准备提交数据
     const submitData = {
       taskName: formData.taskName,
-      taskClass: formData.taskClass,  // 直接传递分类ID（数字）
-      taskProtocolId: formData.taskProtocolId,  // 直接传递协议ID（字符串/数字）
+      taskClass: formData.taskClass,
+      taskProtocolId: formData.taskProtocolId,
       taskDescription: formData.taskDescription,
       deadlineTime: formData.deadlineTime,
       giteeLink: formData.giteeLink
     }
 
     console.log('最终提交给后端的数据:', submitData)
-
-    // 调用创建任务API
     await createTask(submitData)
 
     ElMessage.success('任务创建成功')
@@ -275,7 +414,6 @@ const handleConfirm = async () => {
     dialogVisible.value = false
     emit('success') // 通知父组件刷新列表
   } catch (error) {
-    // 表单验证失败时 error 为 false，不提示错误
     if (error !== false) {
       ElMessage.error('创建任务失败：' + (error.message || '操作失败'))
     }
@@ -298,5 +436,17 @@ const handleConfirm = async () => {
 
 :deep(.el-textarea__inner) {
   font-family: inherit;
+}
+
+:deep(.option-input) {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+:deep(.el-select-dropdown__footer) {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 </style>
