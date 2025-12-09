@@ -92,6 +92,13 @@ const routes = [
         meta: {title: "首页板块管理"}
     },
     {
+        path: '/adminProjectEditors',
+        name: "adminProjectEditors",
+        component: () => import('@/views/Admin/AdminProjectEditors.vue'),
+        props: true,
+        meta: {title: "管理员项目管理"}
+    },
+    {
         path: '/project',
         name: 'Project',
         component: () => import('@/views/OpenSourceProjects/index.vue'),

@@ -57,3 +57,11 @@ export function createTaskClass(data) {
 export function createProtocol(data) {
     return post('/api/admin/protocol', data)
 }
+
+export function getTasksForEdit(params) {
+    return get('/api/admin/tasks_edit', params)
+}
+
+export function updateTaskInfo(taskId, data) {
+    return put(`/api/admin/task/${taskId}`, data)
+}

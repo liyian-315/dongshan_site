@@ -50,6 +50,7 @@
             <el-menu-item index="/AdminUserEditors">实习生管理</el-menu-item>
             <el-menu-item index="/AdminTaskEditors">任务管理</el-menu-item>
             <el-menu-item index="/adminHomeDisplayEditors">首页板块管理</el-menu-item>
+            <el-menu-item index="/adminProjectEditors">项目管理</el-menu-item>
           </el-sub-menu>
 
 
