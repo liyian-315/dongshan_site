@@ -1,174 +1,240 @@
 <template>
-  <div class="container">
-    <!-- 左侧菜单 -->
-    <aside class="sidebar">
-      <el-menu
-          class="side-menu"
-          active-text-color="#000"
-          background-color="#fff"
-          text-color="#000"
-          :unique-opened="true"
-          @select="handleMenuSelect"
-      >
-        <template v-for="level1Index in getLevel1Indexes" :key="level1Index">
-          <el-sub-menu :index="level1Index">
-            <template #title>
-              <span class="menu-title">{{ menuMap[level1Index] }}</span>
-            </template>
+  <div class="page-container">
+    <!-- 上部分：镜像区域 -->
+    <section class="mirror-section">
+      <div class="section-header">
+        <h2 class="section-title">镜像</h2>
+      </div>
 
-            <template v-for="level2Index in getChildIndexes(level1Index)" :key="level2Index">
-              <el-sub-menu :index="level2Index">
-                <template #title>
-                  <span class="menu-title">{{ menuMap[level2Index] }}</span>
-                </template>
-
-                <el-menu-item
-                    v-for="level3Index in getChildIndexes(level2Index)"
-                    :key="level3Index"
-                    :index="level3Index"
-                    class="menu-leaf"
-                >
-                  {{ menuMap[level3Index] }}
-                </el-menu-item>
-              </el-sub-menu>
-            </template>
-          </el-sub-menu>
-        </template>
-      </el-menu>
-    </aside>
-
-    <!-- 右侧内容 -->
-    <main class="content">
-      <div class="panel" v-loading="loading">
-        <div class="header">
-          <h2 class="title">镜像下载</h2>
-          <el-breadcrumb separator="/" v-if="currentPath.length" class="crumb">
-            <el-breadcrumb-item
-                v-for="(item, index) in currentPath"
-                :key="index"
-            >
-              {{ item }}
-            </el-breadcrumb-item>
-          </el-breadcrumb>
-        </div>
-
-        <el-table
-            :data="mirrors"
-            class="doc-table"
-            :class="{ 'is-empty': !mirrors || mirrors.length === 0 }"
-            table-layout="auto"
+      <!-- 架构选择标签 -->
+      <div class="arch-tabs" v-loading="loading">
+        <div
+          v-for="arch in archList"
+          :key="arch.id"
+          class="arch-tab"
+          :class="{ active: selectedArch && selectedArch.id === arch.id }"
+          @click="selectArch(arch)"
         >
-          <el-table-column label="资源" :resizable="false">
-            <template #default="{ row }">
-              <div class="doc-row">
-                <!-- 左侧：名称 + 元信息 -->
-                <div class="mirror-info">
-                  <div class="doc-title" :title="row.name">{{ row.name }}</div>
-                  <div class="mirror-meta">
-                    <span class="meta-item" v-if="row.size">大小：{{ row.size }}</span>
-                    <span class="meta-item" v-if="row.time">时间：{{ row.time }}</span>
+          {{ arch.title }}
+        </div>
+      </div>
+
+      <!-- 单个镜像区域 -->
+      <div class="mirror-area" v-if="selectedArch">
+        <!-- 区域内可滚动的内容 -->
+        <div class="area-content" v-if="deviceList.length > 0">
+          <div class="area-menu">
+            <!-- 三级菜单项（设备） -->
+            <div
+              v-for="device in deviceList"
+              :key="device.id"
+              class="menu-group"
+            >
+              <div
+                class="menu-item"
+                :class="{ active: selectedMenus[device.id] }"
+                @click="handleMenuSelect(device)"
+              >
+                <span class="menu-text">{{ device.title }}</span>
+                <el-icon class="menu-icon loading-icon" v-if="loadingMenus[device.id]">
+                  <Loading />
+                </el-icon>
+                <el-icon class="menu-icon expanded" v-else-if="selectedMenus[device.id]">
+                  <ArrowDown />
+                </el-icon>
+                <el-icon class="menu-icon" v-else>
+                  <ArrowRight />
+                </el-icon>
+              </div>
+
+              <!-- 该菜单项下的镜像列表 -->
+              <transition name="slide-fade">
+                <div v-if="selectedMenus[device.id] && menuMirrors[device.id]" class="mirror-list">
+                  <div
+                    v-for="(mirror, idx) in menuMirrors[device.id]"
+                    :key="idx"
+                    class="mirror-item"
+                  >
+                    <div class="mirror-main" @click="openMirrorInter(mirror)">
+                      <span class="mirror-name" :title="mirror.name">{{ mirror.name }}</span>
+                      <div class="mirror-meta">
+                        <span class="meta-tag">大小: {{ mirror.size || '-' }}</span>
+                        <span class="meta-tag">更新时间: {{ mirror.time || '-' }}</span>
+                      </div>
+                    </div>
+                    <div class="mirror-action">
+                      <el-button
+                        class="btn-copy"
+                        size="small"
+                        @click.stop="copyUrl(mirror)"
+                        title="复制地址"
+                      >
+                        <el-icon><DocumentCopy /></el-icon>
+                      </el-button>
+                    </div>
+                  </div>
+
+                  <!-- 空状态 -->
+                  <div v-if="menuMirrors[device.id].length === 0" class="mirror-empty">
+                    暂无镜像资源
                   </div>
                 </div>
-
-                <!-- 右侧：操作 -->
-                <div class="doc-actions">
-                  <el-button class="btn btn-outline btn-lg" @click="copyUrl(row)">
-                    <el-icon class="btn-ic"><DocumentCopy /></el-icon>
-                    <span class="btn-txt">复制地址</span>
-                  </el-button>
-
-                  <el-button class="btn btn-solid btn-lg" @click="openMirrorInter(row)">
-                    <el-icon class="btn-ic"><Link /></el-icon>
-                    <span class="btn-txt">下载</span>
-                  </el-button>
-                </div>
-              </div>
-            </template>
-          </el-table-column>
-
-          <!-- 自定义空状态 -->
-          <template #empty>
-            <div class="empty">
-              <div class="empty-icon">
-                <el-icon :size="56"><Search /></el-icon>
-              </div>
-              <div class="empty-title">No Data</div>
-              <div class="empty-desc">当前没有可用的镜像资源</div>
+              </transition>
             </div>
-          </template>
-        </el-table>
+          </div>
+        </div>
+
+        <!-- 架构下无目录的空状态 -->
+        <div class="arch-empty" v-else>
+          <el-icon :size="56" class="empty-icon"><FolderOpened /></el-icon>
+          <div class="empty-title">暂无资源</div>
+          <div class="empty-desc">当前架构下没有可用的镜像目录</div>
+        </div>
       </div>
-    </main>
+    </section>
+
+    <!-- 下部分：软件区域 -->
+    <section class="software-section">
+      <div class="section-header">
+        <h2 class="section-title">软件</h2>
+      </div>
+      <div class="maintenance-notice">
+        <el-icon :size="48" class="maintenance-icon"><Tools /></el-icon>
+        <p class="maintenance-text">维护中</p>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, reactive, watch } from 'vue'
 import {
-  ElTable, ElTableColumn, ElButton, ElMessage,
-  ElMenu, ElSubMenu, ElMenuItem, ElBreadcrumb, ElBreadcrumbItem,
-  ElLink, ElIcon
+  ElButton, ElMessage, ElIcon
 } from 'element-plus'
-import { Search, Link, DocumentCopy } from '@element-plus/icons-vue'
+import { DocumentCopy, Tools, ArrowRight, ArrowDown, Loading, FolderOpened } from '@element-plus/icons-vue'
 import { fetchMirrorList, fetchMenuList } from '@/api/mirror.js'
 
-// 菜单映射表
-const menuMap = ref({})
+// 所有菜单数据
+const allMenus = ref([])
 
-const getChildIndexes = (parentIndex) => {
-  const allIndexes = Object.keys(menuMap.value)
-  return allIndexes.filter(index => {
-    const parentLevel = parentIndex.split('-').length
-    const currentLevel = index.split('-').length
-    return index.startsWith(`${parentIndex}-`) && currentLevel === parentLevel + 1
-  })
-}
+// 架构列表（一级菜单，level=0）
+const archList = ref([])
 
-const getLevel1Indexes = computed(() => {
-  const allIndexes = Object.keys(menuMap.value)
-  return allIndexes.filter(index => index.split('-').length === 1)
-})
+// 当前选中的架构
+const selectedArch = ref(null)
 
-const mirrors = ref([])
+// 当前架构下的设备列表（三级菜单）
+const deviceList = ref([])
+
+// 选中的菜单（支持多选，用于展开/收起）
+const selectedMenus = reactive({})
+
+// 每个菜单的加载状态
+const loadingMenus = reactive({})
+
+// 每个菜单对应的镜像列表
+const menuMirrors = reactive({})
+
+// 全局加载状态
 const loading = ref(true)
-const currentPath = ref([])
+
+// 监听架构切换，更新设备列表
+watch(selectedArch, (newArch) => {
+  if (newArch) {
+    loadDevicesForArch(newArch)
+  } else {
+    deviceList.value = []
+  }
+})
 
 onMounted(async () => {
   try {
     const menuList = await fetchMenuList()
-    menuList.forEach(menuItem => {
-      if (menuItem.level && menuItem.title) {
-        menuMap.value[menuItem.level] = menuItem.title
-      }
-    })
+    allMenus.value = menuList
+
+    // 筛选出一级菜单（架构）
+    archList.value = menuList.filter(menu => menu.level === 0)
+
+    // 默认选中第一个架构
+    if (archList.value.length > 0) {
+      selectedArch.value = archList.value[0]
+    }
   } catch (e) {
-    console.error('获取镜像列表失败：' + e.message)
-    // ElMessage.error('获取镜像列表失败：' + e.message)
+    console.error('获取菜单列表失败：' + e.message)
+    ElMessage.error('获取菜单列表失败')
   } finally {
     loading.value = false
   }
 })
 
-async function handleMenuSelect(index, indexPath) {
+// 加载指定架构下的所有设备
+function loadDevicesForArch(arch) {
+  // 先找到该架构下的所有二级菜单
+  const level2Menus = allMenus.value.filter(menu => menu.level === arch.id)
+
+  // 再找到所有二级菜单下的三级菜单（设备）
+  const level2Ids = level2Menus.map(m => m.id)
+  deviceList.value = allMenus.value.filter(menu => level2Ids.includes(menu.level))
+}
+
+// 切换架构
+function selectArch(arch) {
+  selectedArch.value = arch
+  // 清空之前的选中状态
+  Object.keys(selectedMenus).forEach(key => {
+    selectedMenus[key] = false
+  })
+}
+
+async function handleMenuSelect(device) {
+  // 切换展开/收起状态
+  if (selectedMenus[device.id]) {
+    selectedMenus[device.id] = false
+    return
+  }
+
+  // 收起同一架构下的其他已展开的菜单项
+  deviceList.value.forEach(d => {
+    if (d.id !== device.id && selectedMenus[d.id]) {
+      selectedMenus[d.id] = false
+    }
+  })
+
+  // 展开当前菜单
+  selectedMenus[device.id] = true
+
+  // 如果已经加载过，不重复加载
+  if (menuMirrors[device.id]) {
+    return
+  }
+
+  // 加载该菜单的镜像列表
+  loadingMenus[device.id] = true
+
   try {
-    loading.value = true
-    currentPath.value = indexPath.map(path => menuMap.value[path])
-    await fetchMirrors(index)
+    await fetchMirrorsForDevice(device)
   } catch (e) {
     console.error('获取镜像列表失败：' + e.message)
-    // ElMessage.error('获取镜像列表失败：' + e.message)
+    ElMessage.error('获取镜像列表失败')
   } finally {
-    loading.value = false
+    loadingMenus[device.id] = false
   }
 }
 
-async function fetchMirrors(menuIndex) {
-  const parts = menuIndex.split('-')
-  const arch = menuMap.value[parts[0]] || ''
-  const manufacturer = menuMap.value[parts.slice(0, 2).join('-')] || ''
-  const series = menuMap.value[parts.slice(0, 3).join('-')] || ''
-  const params = { arch, manufacturer, series }
-  mirrors.value = await fetchMirrorList(params)
+async function fetchMirrorsForDevice(device) {
+  const arch = selectedArch.value ? selectedArch.value.title : ''
+  const series = device.title
+
+  // 只传arch和series，不传manufacturer（舍弃二级分类）
+  const params = { arch, manufacturer: '', series }
+
+  try {
+    const mirrorList = await fetchMirrorList(params)
+    menuMirrors[device.id] = mirrorList || []
+  } catch (e) {
+    console.error(`获取${series}镜像失败：` + e.message)
+    menuMirrors[device.id] = []
+  }
 }
 
 async function copyUrl(row) {
@@ -180,187 +246,354 @@ async function copyUrl(row) {
   }
 }
 
-function openMirrorOut(row) {
-  console.info(row)
-  window.open(row.urlOut, '_blank')
-}
 function openMirrorInter(row) {
   window.open(row.urlInter, '_blank')
 }
 </script>
 
 <style scoped>
-/* ===== 布局，与“文档下载”保持一致 ===== */
-.container {
-  margin-inline: auto;
-  display: flex;
-  min-height: 100vh;
-  background: #fff;
-}
-
-.sidebar {
-  width: 240px;
-  border-right: 1px solid #eef0f3;
-  background: #fff;
-  position: sticky;
-  top: 0;
-  align-self: flex-start;
-  height: 100vh;
-  overflow: auto;
-}
-
-.side-menu {
-  border-right: none;
-  padding: 8px 4px;
-}
-
-.menu-title {
-  font-size: 16px;
-  color: #1f2329;
-}
-.menu-leaf {
-  font-size: 14px;
-  color: #1f2329;
-}
-
-.content {
-  flex: 1;
-  padding: 24px 28px 40px;
+/* ===== 页面容器 ===== */
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px;
   background: linear-gradient(135deg, #ffffff 0%, #fbfcfe 100%);
+  min-height: 100vh;
 }
 
-.panel {
-  background: transparent;
+/* ===== 通用区域样式 ===== */
+.section-header {
+  margin-bottom: 24px;
 }
 
-/* ===== 头部 ===== */
-.header { margin-bottom: 16px; }
-.title {
-  margin: 0 0 10px 0;
-  font-size: 28px;
+.section-title {
+  margin: 0;
+  font-size: 32px;
   font-weight: 700;
   color: #1f2329;
-}
-.crumb {
-  margin-top: -4px;
-  font-size: 14px;
-  color: #6b7280;
+  padding-bottom: 12px;
+  border-bottom: 3px solid #5b5cf6;
+  display: inline-block;
 }
 
-.doc-table :deep(.el-table__header-wrapper th) {
-  color: #1f2329;
+/* ===== 镜像区域 ===== */
+.mirror-section {
+  margin-bottom: 48px;
+}
+
+/* ===== 架构选择标签 ===== */
+.arch-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.arch-tab {
+  padding: 12px 32px;
+  font-size: 16px;
   font-weight: 600;
+  color: #6b7280;
   background: #fff;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 2px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
-.doc-table :deep(.el-table__inner-wrapper) {
-  border-radius: 8px;
-}
-.doc-table { background: #fff; }
 
-/* 自定义空状态 */
-.empty {
+.arch-tab:hover {
+  color: #5b5cf6;
+  border-color: #d4d4f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(91, 92, 246, 0.15);
+}
+
+.arch-tab.active {
+  color: #fff;
+  background: linear-gradient(135deg, #5b5cf6 0%, #7c7df6 100%);
+  border-color: #5b5cf6;
+  box-shadow: 0 6px 16px rgba(91, 92, 246, 0.3);
+}
+
+/* ===== 单个镜像区域 ===== */
+.mirror-area {
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+}
+
+/* ===== 可滚动内容区域 ===== */
+.area-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px;
+}
+
+.area-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.area-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.area-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.area-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* ===== 菜单样式 ===== */
+.area-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-group {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.menu-item {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #1f2329;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+  background: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 500;
+}
+
+.menu-item:hover {
+  background: #f3f4f6;
+  color: #5b5cf6;
+  transform: translateX(2px);
+}
+
+.menu-item.active {
+  background: #eef0ff;
+  color: #5b5cf6;
+}
+
+.menu-text {
+  flex: 1;
+}
+
+.menu-icon {
+  font-size: 16px;
+  transition: transform 0.3s;
+  color: #9ca3af;
+}
+
+.menu-icon.expanded {
+  color: #5b5cf6;
+}
+
+.menu-icon.loading-icon {
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== 镜像列表样式 ===== */
+.mirror-list {
+  margin-top: 8px;
+  padding-left: 12px;
+  border-left: 2px solid #e5e7eb;
+}
+
+.mirror-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s;
+  gap: 12px;
+}
+
+.mirror-item:hover {
+  border-color: #5b5cf6;
+  box-shadow: 0 2px 8px rgba(91, 92, 246, 0.15);
+}
+
+.mirror-main {
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.mirror-name {
+  display: block;
+  font-size: 13px;
+  color: #1f2329;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 4px;
+}
+
+.mirror-name:hover {
+  color: #5b5cf6;
+  text-decoration: underline;
+}
+
+.mirror-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.meta-tag {
+  font-size: 11px;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.mirror-action {
+  flex-shrink: 0;
+}
+
+.btn-copy {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-copy:hover {
+  border-color: #5b5cf6;
+  color: #5b5cf6;
+  background: #f9fafb;
+}
+
+.mirror-empty {
+  padding: 16px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+/* ===== 架构空状态 ===== */
+.arch-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 48px 0 64px;
-  color: #1f2329;
+  justify-content: center;
+  padding: 80px 0;
+  color: #6b7280;
 }
-.empty-icon {
-  display: inline-flex;
+
+.arch-empty .empty-icon {
+  color: #d1d5db;
+  margin-bottom: 16px;
+}
+
+.arch-empty .empty-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2329;
+  margin-bottom: 8px;
+}
+
+.arch-empty .empty-desc {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+/* ===== 动画效果 ===== */
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.2s ease-in;
+}
+
+.slide-fade-enter-from {
+  transform: translateY(-10px);
+  opacity: 0;
+}
+
+.slide-fade-leave-to {
+  transform: translateY(-5px);
+  opacity: 0;
+}
+
+/* ===== 软件区域 ===== */
+.software-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.maintenance-notice {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 88px;
-  height: 88px;
-  border-radius: 50%;
-  background: #f3f4f6;
-  margin-bottom: 12px;
-}
-.empty-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
-.empty-desc { font-size: 14px; color: #6b7280; }
-
-/* 单行布局：左信息右操作 */
-.doc-row{
-  display:flex; align-items:center; justify-content:space-between; gap:16px;
-}
-.doc-title{
-  flex:1; min-width:0;
-  font-weight:500; color:#1f2329;
-  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-  font-size: var(--btn-font-size);
+  padding: 64px 0;
+  color: #6b7280;
 }
 
-.mirror-info{ flex:1; min-width:0; }
-.mirror-meta{
-  margin-top:4px; display:flex; flex-wrap:wrap; gap:10px; font-size:13px; color:#6b7280;
-}
-.meta-item{ display:inline-flex; align-items:center; gap:6px; }
-.meta-ic{ font-size:14px; }
-.meta-url{
-  max-width:600px; display:inline-block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+.maintenance-icon {
+  color: #9ca3af;
+  margin-bottom: 16px;
 }
 
-/* 空状态视觉优化（与文档页一致） */
-.doc-table.is-empty :deep(.el-table__inner-wrapper::before){ height:0; background:transparent; }
-.doc-table.is-empty :deep(.el-table__inner-wrapper::after){ width:0; background:transparent; }
-.doc-table :deep(.el-table__empty-block){ padding:24px 0 24px; }
-
-.panel{
-  max-width:1200px;
-  margin-right: auto;
-  margin-left: auto;
-  width: 100%;
-  --btn-font-size: 15px;  /* 按钮&标题字号 */
-  --btn-height: 38px;     /* 按钮高度 */
-  --btn-radius: 12px;     /* 圆角 */
-  --btn-pad-x: 16px;      /* 左右内边距 */
-}
-.doc-actions{ flex:0 0 auto; display:flex; align-items:center; gap:8px; }
-
-/* Element Plus 按钮重置与风格 */
-:deep(.el-button.btn){
-  display:inline-flex; align-items:center; justify-content:center;
-  gap:10px;
-  box-shadow:none;
-  border-width:1px;
-  height: var(--btn-height);
-  padding: 0 var(--btn-pad-x);
-  font-size: var(--btn-font-size);
-  border-radius: var(--btn-radius);
-}
-:deep(.el-button.btn .btn-ic){
-  font-size: 18px;
-  display:inline-flex;
+.maintenance-text {
+  font-size: 20px;
+  font-weight: 500;
+  color: #6b7280;
+  margin: 0;
 }
 
-/* 白底描边按钮 */
-:deep(.el-button.btn.btn-outline){
-  background:#fff;
-  color:#111827;
-  border-color:#E5E7EB;
-  box-shadow:0 2px 8px rgba(17,24,39,.06);
-}
-:deep(.el-button.btn.btn-outline:hover){
-  border-color:#D1D5DB;
-  box-shadow:0 4px 14px rgba(17,24,39,.08);
-}
+/* ===== 响应式布局 ===== */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 16px;
+  }
 
-/* 实心紫按钮 */
-:deep(.el-button.btn.btn-solid){
-  background:#5b5cf6;
-  color:#ffffff;
-  border-color:transparent;
-  box-shadow:0 10px 24px rgba(91,92,246,.24);
-}
-:deep(.el-button.btn.btn-solid:hover){
-  background:#514ff0;
-  box-shadow:0 12px 28px rgba(91,92,246,.32);
-}
+  .section-title {
+    font-size: 24px;
+  }
 
-/* 焦点态 */
-:deep(.el-button.btn:focus-visible){
-  outline:none;
-  box-shadow:0 0 0 3px rgba(91,92,246,.25);
-}
+  .arch-tabs {
+    gap: 8px;
+  }
 
-:deep(.el-breadcrumb) { margin-bottom: 12px; }
+  .arch-tab {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
 </style>

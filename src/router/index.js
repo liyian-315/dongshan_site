@@ -99,6 +99,12 @@ const routes = [
         meta: {title: "管理员项目管理"}
     },
     {
+        path: '/adminMirrorManage',
+        name: "adminMirrorManage",
+        component: () => import('@/views/Admin/AdminMirrorManage.vue'),
+        meta: {title: "软件镜像管理"}
+    },
+    {
         path: '/project',
         name: 'Project',
         component: () => import('@/views/OpenSourceProjects/index.vue'),

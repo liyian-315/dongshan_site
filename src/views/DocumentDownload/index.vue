@@ -10,25 +10,25 @@
           :unique-opened="true"
           @select="handleMenuSelect"
       >
-        <template v-for="level1Index in getLevel1Indexes" :key="level1Index">
-          <el-sub-menu :index="level1Index">
+        <template v-for="level1 in level1Menus" :key="level1.id">
+          <el-sub-menu :index="String(level1.id)">
             <template #title>
-              <span class="menu-title">{{ menuMap[level1Index] }}</span>
+              <span class="menu-title">{{ level1.title }}</span>
             </template>
 
-            <template v-for="level2Index in getChildIndexes(level1Index)" :key="level2Index">
-              <el-sub-menu :index="level2Index">
+            <template v-for="level2 in getLevel2Menus(level1.id)" :key="level2.id">
+              <el-sub-menu :index="String(level2.id)">
                 <template #title>
-                  <span class="menu-title">{{ menuMap[level2Index] }}</span>
+                  <span class="menu-title">{{ level2.title }}</span>
                 </template>
 
                 <el-menu-item
-                    v-for="level3Index in getChildIndexes(level2Index)"
-                    :key="level3Index"
-                    :index="level3Index"
+                    v-for="level3 in getLevel3Menus(level2.id)"
+                    :key="level3.id"
+                    :index="String(level3.id)"
                     class="menu-leaf"
                 >
-                  {{ menuMap[level3Index] }}
+                  {{ level3.title }}
                 </el-menu-item>
               </el-sub-menu>
             </template>
@@ -125,23 +125,44 @@ import {
 import { fetchDocList, fetchMenuList } from '@/api/doc.js'
 import { Search, Download, View } from '@element-plus/icons-vue'
 
+// 所有菜单数据
+const allMenus = ref([])
 
-// 菜单映射表
-const menuMap = ref({})
+// 一级菜单（level=0）
+const level1Menus = computed(() => {
+  return allMenus.value.filter(menu => menu.level === 0)
+})
 
-const getChildIndexes = (parentIndex) => {
-  const allIndexes = Object.keys(menuMap.value)
-  return allIndexes.filter(index => {
-    const parentLevel = parentIndex.split('-').length
-    const currentLevel = index.split('-').length
-    return index.startsWith(`${parentIndex}-`) && currentLevel === parentLevel + 1
-  })
+// 根据父级ID获取二级菜单
+const getLevel2Menus = (parentId) => {
+  return allMenus.value.filter(menu => menu.level === parentId)
 }
 
-const getLevel1Indexes = computed(() => {
-  const allIndexes = Object.keys(menuMap.value)
-  return allIndexes.filter(index => index.split('-').length === 1)
-})
+// 根据父级ID获取三级菜单
+const getLevel3Menus = (parentId) => {
+  return allMenus.value.filter(menu => menu.level === parentId)
+}
+
+// 根据ID查找菜单对象
+const getMenuById = (id) => {
+  return allMenus.value.find(menu => menu.id === id)
+}
+
+// 构建面包屑路径
+const buildPath = (menuId) => {
+  const path = []
+  let currentMenu = getMenuById(menuId)
+
+  while (currentMenu) {
+    path.unshift(currentMenu.title)
+    if (currentMenu.level === 0) {
+      break
+    }
+    currentMenu = getMenuById(currentMenu.level)
+  }
+
+  return path
+}
 
 const docs = ref([])
 const loading = ref(true)
@@ -152,14 +173,9 @@ const blobUrl = ref('')
 onMounted(async () => {
   try {
     const menuList = await fetchMenuList()
-    menuList.forEach(menuItem => {
-      if (menuItem.level && menuItem.title) {
-        menuMap.value[menuItem.level] = menuItem.title
-      }
-    })
+    allMenus.value = menuList
   } catch (e) {
     console.error('获取文档列表失败：' + e.message)
-    // ElMessage.error('获取文档列表失败：' + e.message)
   } finally {
     loading.value = false
   }
@@ -168,8 +184,9 @@ onMounted(async () => {
 async function handleMenuSelect(index, indexPath) {
   try {
     loading.value = true
-    currentPath.value = indexPath.map(path => menuMap.value[path])
-    await fetchDocuments(index)
+    const menuId = parseInt(index)
+    currentPath.value = buildPath(menuId)
+    await fetchDocuments(menuId)
   } catch (e) {
     ElMessage.error('获取文档失败：' + e.message)
   } finally {
@@ -177,11 +194,26 @@ async function handleMenuSelect(index, indexPath) {
   }
 }
 
-async function fetchDocuments(menuIndex) {
-  const parts = menuIndex.split('-')
-  const arch = menuMap.value[parts[0]] || ''
-  const manufacturer = menuMap.value[parts.slice(0, 2).join('-')] || ''
-  const series = menuMap.value[parts.slice(0, 3).join('-')] || ''
+async function fetchDocuments(menuId) {
+  const menu = getMenuById(menuId)
+  if (!menu) return
+
+  // 构建查询参数：找到一级、二级、三级菜单的标题
+  let arch = '', manufacturer = '', series = ''
+
+  // 如果是三级菜单
+  if (menu.level !== 0) {
+    const level2Menu = getMenuById(menu.level)
+    if (level2Menu && level2Menu.level !== 0) {
+      const level1Menu = getMenuById(level2Menu.level)
+      if (level1Menu) {
+        arch = level1Menu.title
+        manufacturer = level2Menu.title
+        series = menu.title
+      }
+    }
+  }
+
   const params = { arch, manufacturer, series }
   docs.value = await fetchDocList(params)
 }
