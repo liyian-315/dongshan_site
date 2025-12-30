@@ -44,3 +44,51 @@ export async function deleteHomeEvent(id) {
 export async function updateHomeEvent(data) {
     return put('/api/public/admin/home_events', data)
 }
+
+// ==================== 镜像管理 ====================
+
+// 获取指定架构下的所有设备
+export async function getDevicesByArch(arch) {
+    return get(`/api/admin/devices/${arch}`)
+}
+
+// 添加设备
+export async function addDevice(data) {
+    return post('/api/admin/device', data)
+}
+
+// 更新设备
+export async function updateDevice(data) {
+    return put('/api/admin/device', data)
+}
+
+// 删除设备
+export async function deleteDevice(id, arch) {
+    return del(`/api/admin/device/${id}/${arch}`)
+}
+
+// 添加镜像
+export async function addMirror(data) {
+    return post('/api/admin/mirror', data)
+}
+
+// 更新镜像
+export async function updateMirror(data) {
+    return put('/api/admin/mirror', data)
+}
+
+// 删除镜像
+export async function deleteMirror(id) {
+    return del(`/api/admin/mirror/${id}`)
+}
+
+// 上传镜像文件
+export async function uploadMirrorFile(formData, onUploadProgress) {
+    return post('/api/admin/mirror/upload', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
+        timeout: 600000, // 10分钟超时，适应大文件上传
+        onUploadProgress: onUploadProgress
+    })
+}
