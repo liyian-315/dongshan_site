@@ -284,8 +284,7 @@
                   <span class="dl-name">{{ att.name }}</span>
                 </div>
                 <div class="dl-actions">
-                  <!--                  <a :href="att.read_url" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">在线查看</a>-->
-                  <a :href="att.download_url" :download="att.name" class="btn btn-solid">附件下载</a>
+                  <a class="btn btn-solid" @click.prevent="downloadFile(att)">附件下载</a>
                 </div>
               </li>
             </ul>
@@ -391,6 +390,18 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKey)
 })
+  const downloadFile = (item: Attachment) => {
+  // 1. 创建一个隐藏的a标签
+  const link = document.createElement('a');
+  // 2. 赋值文件真实下载地址（和之前一样）
+  link.href = item.download_url;
+  // 3. 核心关键：强制指定下载文件名+后缀，优先级最高，浏览器必遵从
+  link.download = item.name;
+  // 4. 触发点击下载
+  link.click();
+  // 5. 清理临时标签，无内存泄漏
+  link.remove();
+};
 </script>
 
 <style scoped>
