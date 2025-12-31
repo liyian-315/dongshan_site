@@ -336,7 +336,7 @@ interface Attachment {
 const attachments: Attachment[] = [
   {
     label: '附件一',
-    name: '实习协议.docx',
+    name: '实习协议.pdf',
     read_url: "https://www.riscv-cn.org/sduproxy/dongshan-file/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf",
     download_url: "https://www.riscv-cn.org/sduproxy/dongshan-file/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf"
   },
