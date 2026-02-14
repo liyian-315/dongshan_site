@@ -284,6 +284,7 @@ const handleSubmit = async () => {
     }
     const response = await updatePersonInfo(updateParams)
     if (response) {
+      console.info(response)
       ElMessage.success('个人信息修改成功！')
       originalUserInfo.value = { ...userInfo.value }
     } else {

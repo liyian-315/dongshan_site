@@ -125,7 +125,7 @@ const remember = ref(false)
 
 const rules = {
   username: [
-    { required: true, message: '请输入用户名或邮箱', trigger: ['blur', 'change'] },
+    { required: true, message: '请输入用户名', trigger: ['blur', 'change'] },
     { min: 2, message: '至少 2 个字符', trigger: ['blur', 'change'] }
   ],
   password: [
