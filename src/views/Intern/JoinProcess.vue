@@ -330,7 +330,8 @@ interface Attachment {
   label: string;
   name: string;
   download_url: string;
-  read_url: string
+  read_url: string;
+  local_url: string;
 }
 
 const attachments: Attachment[] = [
@@ -338,19 +339,22 @@ const attachments: Attachment[] = [
     label: '附件一',
     name: '实习协议.pdf',
     read_url: "https://www.riscv-cn.org/sduproxy/dongshan-file/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf",
-    download_url: "https://www.riscv-cn.org/sduproxy/dongshan-file/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf"
+    download_url: "https://www.riscv-cn.org/sduproxy/dongshan-file/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf",
+    local_url: '/doc/远程实习生计划--实习协议.pdf'
   },
   {
     label: '附件二',
     name: '东山派借用协议.docx',
     read_url: 'https://www.riscv-cn.org/sduproxy/dongshan-file/dongshanjieyongxieyi.docx',
-    download_url: 'https://www.riscv-cn.org/sduproxy/dongshan-file/dongshanjieyongxieyi.docx'
+    download_url: 'https://www.riscv-cn.org/sduproxy/dongshan-file/dongshanjieyongxieyi.docx',
+    local_url: '/doc/东山派借用协议.docx'
   },
   {
     label: '附件三',
     name: '成果发布申请.docx',
     read_url: 'https://www.riscv-cn.org/sduproxy/dongshan-file/chengguofabuqingqiu.docx',
-    download_url: 'https://www.riscv-cn.org/sduproxy/dongshan-file/chengguofabuqingqiu.docx'
+    download_url: 'https://www.riscv-cn.org/sduproxy/dongshan-file/chengguofabuqingqiu.docx',
+    local_url: '/doc/成果发布申请.docx'
   }
 ]
 
@@ -390,17 +394,38 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKey)
 })
-const downloadFile = (item: Attachment) => {
-  // 1. 创建一个隐藏的a标签
-  const link = document.createElement('a');
-  // 2. 赋值文件真实下载地址（和之前一样）
-  link.href = item.download_url;
-  // 3. 核心关键：强制指定下载文件名+后缀，优先级最高，浏览器必遵从
-  link.download = item.name;
-  // 4. 触发点击下载
-  link.click();
-  // 5. 清理临时标签，无内存泄漏
-  link.remove();
+const downloadFile = async (item: Attachment) => {
+  // 第一步：尝试远程URL下载
+  // try {
+  //   const response = await fetch(item.download_url);
+  //   if (!response.ok) throw new Error('远程文件下载失败');
+  //
+  //   const blob = await response.blob();
+  //   const blobUrl = URL.createObjectURL(blob);
+  //   const link = document.createElement('a');
+  //   link.href = blobUrl;
+  //   link.download = item.name; // 强制指定下载文件名
+  //   document.body.appendChild(link);
+  //   link.click();
+  //
+  //   // 清理资源
+  //   document.body.removeChild(link);
+  //   URL.revokeObjectURL(blobUrl);
+  //   return; // 远程下载成功，直接返回
+  // } catch (remoteError) {
+  //   console.error('远程下载失败：', remoteError);
+  // }
+  // 第二步：远程失败，下载 public/doc 下的本地文件
+  try {
+    const link = document.createElement('a');
+    link.href = item.local_url;
+    link.download = item.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (localError) {
+    console.error('本地文件下载失败：', localError);
+  }
 };
 </script>
 
@@ -611,10 +636,29 @@ const downloadFile = (item: Attachment) => {
   background: #0f172a;
   color: #fff;
   border: 1px solid rgba(15, 23, 42, .8);
+  transition: all 0.15s ease; /* 新增过渡动画 */
+  position: relative; /* 用于点击按压效果 */
 }
 
 .btn-solid:hover {
   background: #111827;
+  transform: translateY(-1px); /* 轻微上浮 */
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+.btn-solid:active {
+  transform: translateY(1px); /* 按下下沉 */
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.1);
+  background: #1e293b; /* 点击时加深背景 */
+}
+.btn-solid:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4), 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+.btn-solid.opacity-70 {
+  background: #475569;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 @media (max-width: 640px) {

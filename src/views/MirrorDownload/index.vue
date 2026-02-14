@@ -443,28 +443,25 @@ function openMirrorInter(row) {
   flex: 1;
   min-width: 0;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .mirror-name {
-  display: block;
   font-size: 13px;
   color: #1f2329;
   font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-bottom: 4px;
+  flex: 1;
+  min-width: 0;
 }
 
 .mirror-name:hover {
   color: #5b5cf6;
   text-decoration: underline;
-}
-
-.mirror-meta {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
 }
 
 .meta-tag {
@@ -473,6 +470,8 @@ function openMirrorInter(row) {
   background: #f3f4f6;
   padding: 2px 8px;
   border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .mirror-action {

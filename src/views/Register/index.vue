@@ -197,7 +197,8 @@ const countDown = ref(0)
 const rules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+    { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' },
+    { pattern: /^[a-zA-Z0-9]+$/, message: '用户名仅支持英文和数字', trigger: ['blur','change'] }
   ],
   fullname: [
     { required: true, message: '请输入姓名', trigger: 'blur' }
