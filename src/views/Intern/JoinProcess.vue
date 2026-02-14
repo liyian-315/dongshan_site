@@ -2,21 +2,18 @@
   <div class="relative min-h-screen">
     <!-- Subtle background -->
     <div
-        class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-slate-50 via-white to-slate-100"></div>
+      class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-slate-50 via-white to-slate-100"
+    ></div>
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
       <!-- Hero -->
       <header class="hero text-center">
-        <h1
-            class="main-title"
-        >
-          如何加入东山 · 远程实习生计划
-        </h1>
+        <h1 class="main-title">如何加入东山 · 远程实习生计划</h1>
       </header>
 
       <!-- Card -->
       <div
-          class="mt-8 rounded-3xl border border-slate-200/70 bg-white/70 backdrop-blur-xl shadow-xl ring-1 ring-black/5"
+        class="mt-8 rounded-3xl border border-slate-200/70 bg-white/70 backdrop-blur-xl shadow-xl ring-1 ring-black/5"
       >
         <div class="p-6 sm:p-8 lg:p-10 space-y-10">
           <!-- STEP 1 -->
@@ -26,23 +23,48 @@
               <p>
                 同学们先登录东山社区网站
                 <a
-                    href="https://www.riscv-cn.org/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="link"
-                >https://www.riscv-cn.org/</a>
+                  href="https://www.riscv-cn.org/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="link"
+                  >https://www.riscv-cn.org/</a
+                >
                 ，并创建个人用户吧
               </p>
               <div class="img-grid mt-4">
-                <img src="@/assets/img/doc_image_6.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
-                <img src="@/assets/img/doc_image_5.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
-                <img src="@/assets/img/doc_image_4.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
+                <img
+                  src="@/assets/img/doc_image_6.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
+                <img
+                  src="@/assets/img/doc_image_5.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
+                <img
+                  src="@/assets/img/doc_image_4.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
               </div>
             </div>
           </section>
@@ -53,72 +75,149 @@
             <div class="step-body">
               <p>接下来，完善大家的“个人信息”，并选择立即加入“实习生”。</p>
               <div class="img-grid mt-4">
-                <img src="@/assets/img/doc_image_3.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
+                <img
+                  src="@/assets/img/doc_image_3.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
               </div>
               <p class="mt-4">
                 跳转并下载附件一：“实习协议.PDF”，请同学们完善“乙方信息”，并在最后手动签署个人姓名和时间。
               </p>
               <div class="img-grid mt-4">
-                <img src="@/assets/img/doc_image_1.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
-                <img src="@/assets/img/doc_image_2.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
+                <img
+                  src="@/assets/img/doc_image_1.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
+                <img
+                  src="@/assets/img/doc_image_2.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
               </div>
               <p class="mt-4">
                 填好后，请大家将「实习协议.PDF」发送至邮箱：
-                <a href="mailto:dssq_sdu@163.com" class="link">dssq_sdu@163.com</a>。
+                <a href="mailto:dssq_sdu@163.com" class="link"
+                  >dssq_sdu@163.com</a
+                >。
                 社区执行人签署完成后，我们会将“实习协议.PDF”通过电子邮件寄回，用于双方保存。
               </p>
-              <p class="mt-3">注意啦，为了确保贡献者和津贴发放对象一致，请附上以下文件：</p>
+              <p class="mt-3">
+                注意啦，为了确保贡献者和津贴发放对象一致，请附上以下文件：
+              </p>
               <ul class="mt-2 list-disc pl-5 text-slate-700">
                 <li>① 身份证正反面，标准「仅用于注册东山远程实习生计划」。</li>
                 <li>② 近三个月的照片一张。</li>
               </ul>
               <div class="img-grid mt-4">
-                <img src="@/assets/img/doc_image_14.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
-                <img src="@/assets/img/doc_image_15.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
+                <img
+                  src="@/assets/img/doc_image_14.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
+                <img
+                  src="@/assets/img/doc_image_15.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
               </div>
               <p class="mt-4 flex items-center flex-wrap">
                 此时，大家的个人身份状态就会更改为“实习生”啦，记得把gitee信息也更新上哦，这样后续可以给大家统计个人成果！
                 <span
-                    class="link cursor-pointer ml-1"
-                    @click="goToPersonInfo"
-                    tabindex="0"
-                    @keydown.enter.prevent="goToPersonInfo"
-                    @keydown.space.prevent="goToPersonInfo"
-                    aria-label="点击完善个人Gitee名称"
+                  class="link cursor-pointer ml-1"
+                  @click="goToPersonInfo"
+                  tabindex="0"
+                  @keydown.enter.prevent="goToPersonInfo"
+                  @keydown.space.prevent="goToPersonInfo"
+                  aria-label="点击完善个人Gitee名称"
                 >
                   点击此处完善个人Gitee名称
                 </span>
               </p>
               <div class="img-grid mt-4">
-                <img src="@/assets/img/doc_image_13.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
+                <img
+                  src="@/assets/img/doc_image_13.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
               </div>
               <p class="mt-3">
                 对了！如果大家想要参与社区的“东山派”任务，需要用到“东山派”硬件设备，请大家同步下载填写附件二：“东山派开发板借用协议”，并发送至邮箱：
-                <a href="mailto:dssq_sdu@163.com" class="link">dssq_sdu@163.com</a>。
-                我们会根据申请地址为你寄出开发套件。
+                <a href="mailto:dssq_sdu@163.com" class="link"
+                  >dssq_sdu@163.com</a
+                >。 我们会根据申请地址为你寄出开发套件。
               </p>
               <div class="img-grid mt-4">
-                <img src="@/assets/img/doc_image_16.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
-                <img src="@/assets/img/doc_image_17.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
-                <img src="@/assets/img/doc_image_18.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
+                <img
+                  src="@/assets/img/doc_image_16.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
+                <img
+                  src="@/assets/img/doc_image_17.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
+                <img
+                  src="@/assets/img/doc_image_18.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
               </div>
             </div>
           </section>
@@ -127,19 +226,37 @@
           <section class="step step-card scroll-mt-24" id="step-3">
             <h2 class="step-title">第三步 领取任务</h2>
             <div class="step-body">
-              <p>在领取任务之前，我们先一起看看“远程实习生教学计划概述”吧，这部分详细说明了同学们关心的
-                <span style="color: red;">津贴、荣誉奖励</span>
-                等内容，一定要多多关注哦。</p>
+              <p>
+                在领取任务之前，我们先一起看看“远程实习生教学计划概述”吧，这部分详细说明了同学们关心的
+                <span style="color: red">津贴、荣誉奖励</span>
+                等内容，一定要多多关注哦。
+              </p>
               <div class="img-grid mt-4">
-                <img src="@/assets/img/doc_image_11.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
+                <img
+                  src="@/assets/img/doc_image_11.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
               </div>
               <p class="mt-4">接下来，同学们就可以领取“实习生任务”啦。</p>
               <div class="img-grid mt-4">
-                <img src="@/assets/img/doc_image_10.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
+                <img
+                  src="@/assets/img/doc_image_10.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
               </div>
             </div>
           </section>
@@ -149,38 +266,67 @@
             <h2 class="step-title">第四步 加入社区</h2>
             <div class="step-body">
               <p>
-                同学们要注意啦，东山社区每项任务的Pull Requests提交都通过Gitee平台完成。
+                同学们要注意啦，东山社区每项任务的Pull
+                Requests提交都通过Gitee平台完成。
               </p>
               <p>
                 所以大家要提前学会使用Gitee，我们也为大家准备了超详细的攻略，快到东山社区网站首页的最下面的活动板块
-                <span style="color: red;">“开源入门教学”里学习吧！</span>
+                <span style="color: red">“开源入门教学”里学习吧！</span>
               </p>
               <div class="img-grid mt-4">
-                <img src="@/assets/img/doc_image_7.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
+                <img
+                  src="@/assets/img/doc_image_7.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
               </div>
-              <p class="mt-4">同学们需要关注
-                <span style="color: red;">Gitee东山社区</span>
-                ，申请加入组织，成为开发者。</p>
-              <p class="mt-4">为了帮助大家更熟练地使用Gitee，我们为大家设置了一个很简单的任务：
+              <p class="mt-4">
+                同学们需要关注
+                <span style="color: red">Gitee东山社区</span>
+                ，申请加入组织，成为开发者。
+              </p>
+              <p class="mt-4">
+                为了帮助大家更熟练地使用Gitee，我们为大家设置了一个很简单的任务：
                 按照链接中的任务要求，完成提交个人代码到东山社区，就正式加入东山社区啦！
               </p>
               <p class="mt-1">
                 <a
-                    href="https://gitee.com/dongshan-community/welcome-to-dongshan-community"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="link"
-                >https://gitee.com/dongshan-community/welcome-to-dongshan-community</a>
+                  href="https://gitee.com/dongshan-community/welcome-to-dongshan-community"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="link"
+                  >https://gitee.com/dongshan-community/welcome-to-dongshan-community</a
+                >
               </p>
               <div class="img-grid mt-4">
-                <img src="@/assets/img/doc_image_9.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
-                <img src="@/assets/img/doc_image_8.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                     @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)"
-                     tabindex="0" role="button" aria-label="点击放大预览"/>
+                <img
+                  src="@/assets/img/doc_image_9.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
+                <img
+                  src="@/assets/img/doc_image_8.png"
+                  alt="文档图片"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
               </div>
             </div>
           </section>
@@ -189,48 +335,82 @@
           <section class="step step-card scroll-mt-24" id="step-5">
             <h2 class="step-title">第五步 提交任务</h2>
             <div class="step-body">
-              <p>
-                大家掌握了Gitee的基本技能之后，就可以大展拳脚了！
-              </p>
-              <p>
-                现在我们进一步了解如何完成任务吧。
-              </p>
+              <p>大家掌握了Gitee的基本技能之后，就可以大展拳脚了！</p>
+              <p>现在我们进一步了解如何完成任务吧。</p>
               <p>
                 以“课程类任务——C语言程序设计”为例，大家在东山社区官网领取任务后，点击“查看详情”，就可以浏览任务描述，了解任务目标、截止时间等信息。
               </p>
             </div>
             <div class="img-grid mt-4">
-              <img src="@/assets/img/doc_image_19.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                   @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0"
-                   role="button" aria-label="点击放大预览"/>
-              <img src="@/assets/img/doc_image_20.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                   @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0"
-                   role="button" aria-label="点击放大预览"/>
-              <img src="@/assets/img/doc_image_21.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                   @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0"
-                   role="button" aria-label="点击放大预览"/>
+              <img
+                src="@/assets/img/doc_image_19.png"
+                alt="文档图片"
+                class="doc-img"
+                @click="onImgClick($event)"
+                @keydown.enter.prevent="onImgClick($event)"
+                @keydown.space.prevent="onImgClick($event)"
+                tabindex="0"
+                role="button"
+                aria-label="点击放大预览"
+              />
+              <img
+                src="@/assets/img/doc_image_20.png"
+                alt="文档图片"
+                class="doc-img"
+                @click="onImgClick($event)"
+                @keydown.enter.prevent="onImgClick($event)"
+                @keydown.space.prevent="onImgClick($event)"
+                tabindex="0"
+                role="button"
+                aria-label="点击放大预览"
+              />
+              <img
+                src="@/assets/img/doc_image_21.png"
+                alt="文档图片"
+                class="doc-img"
+                @click="onImgClick($event)"
+                @keydown.enter.prevent="onImgClick($event)"
+                @keydown.space.prevent="onImgClick($event)"
+                tabindex="0"
+                role="button"
+                aria-label="点击放大预览"
+              />
             </div>
             <p class="mt-4">
               实际上，此时我们已经完成了任务流程的前两个步骤，可以跳转到第三步了：Gitee东山社区上查看任务的详细题目
             </p>
             <div class="img-grid mt-4">
-              <img src="@/assets/img/doc_image_22.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                   @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0"
-                   role="button" aria-label="点击放大预览"/>
+              <img
+                src="@/assets/img/doc_image_22.png"
+                alt="文档图片"
+                class="doc-img"
+                @click="onImgClick($event)"
+                @keydown.enter.prevent="onImgClick($event)"
+                @keydown.space.prevent="onImgClick($event)"
+                tabindex="0"
+                role="button"
+                aria-label="点击放大预览"
+              />
             </div>
             <p class="mt-4">
               我们会邀请社区技术老师和同学们针对领取的任务进行交流，对实习生的任务参与资格进行预审。
             </p>
-            <p>
-              审核通过后，同学们就可以进一步完成项目啦。
-            </p>
+            <p>审核通过后，同学们就可以进一步完成项目啦。</p>
             <p>
               最终，同学们需要在Gitee上提交自己的最终成果PR，还要记得在东山社区官网提交一份PDF版本的报告书哦。
             </p>
             <div class="img-grid mt-4">
-              <img src="@/assets/img/doc_image_23.png" alt="文档图片" class="doc-img" @click="onImgClick($event)"
-                   @keydown.enter.prevent="onImgClick($event)" @keydown.space.prevent="onImgClick($event)" tabindex="0"
-                   role="button" aria-label="点击放大预览"/>
+              <img
+                src="@/assets/img/doc_image_23.png"
+                alt="文档图片"
+                class="doc-img"
+                @click="onImgClick($event)"
+                @keydown.enter.prevent="onImgClick($event)"
+                @keydown.space.prevent="onImgClick($event)"
+                tabindex="0"
+                role="button"
+                aria-label="点击放大预览"
+              />
             </div>
             <p class="mt-4">
               如果大家希望把自己的成果修改发布为论文、知乎等内容，为避免版权纠纷，请大家下载附件三：《成果发布请求模板》，提交到“成果发布请求”这里。
@@ -253,19 +433,38 @@
             <div class="step-body">
               <p>
                 在这里你的每次提交都将被认真对待，经过社区的技术委员会审核完成后，我们将对并入主线的贡献者发放津贴和荣誉奖励，以感谢大家的辛勤贡献！完成实习任务后，你可以随时申请实习证明，发送至邮箱<a
-                  href="mailto:dssq_sdu@163.com" class="link">dssq_sdu@163.com</a>。内容如下：
+                  href="mailto:dssq_sdu@163.com"
+                  class="link"
+                  >dssq_sdu@163.com</a
+                >。内容如下：
               </p>
               <p class="mt-3">
                 “申请实习证明：姓名、东山社区用户名称、Gitte用户名称。”为保证实习证明信息准确，请务必提供准确的Gitte用户名称哦。
               </p>
 
               <div class="img-grid mt-4">
-                <img src="@/assets/img/shixizhengming-1.jpg" alt="实习证明模板正面" class="doc-img"
-                     @click="onImgClick($event)" @keydown.enter.prevent="onImgClick($event)"
-                     @keydown.space.prevent="onImgClick($event)" tabindex="0" role="button" aria-label="点击放大预览"/>
-                <img src="@/assets/img/shixizhengming-2.jpg" alt="实习证明模板背面" class="doc-img"
-                     @click="onImgClick($event)" @keydown.enter.prevent="onImgClick($event)"
-                     @keydown.space.prevent="onImgClick($event)" tabindex="0" role="button" aria-label="点击放大预览"/>
+                <img
+                  src="@/assets/img/shixizhengming-1.jpg"
+                  alt="实习证明模板正面"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
+                <img
+                  src="@/assets/img/shixizhengming-2.jpg"
+                  alt="实习证明模板背面"
+                  class="doc-img"
+                  @click="onImgClick($event)"
+                  @keydown.enter.prevent="onImgClick($event)"
+                  @keydown.space.prevent="onImgClick($event)"
+                  tabindex="0"
+                  role="button"
+                  aria-label="点击放大预览"
+                />
               </div>
 
               <p class="mt-3 text-red-600 font-semibold">
@@ -275,16 +474,25 @@
           </section>
           <p>最后，再次诚挚地邀请同学们加入我们！</p>
           <!-- Downloads (inside main card) -->
-          <section class="step step-card scroll-mt-24" aria-labelledby="downloads">
+          <section
+            class="step step-card scroll-mt-24"
+            aria-labelledby="downloads"
+          >
             <h2 id="downloads" class="step-title">资料下载</h2>
             <ul class="dl-list">
-              <li v-for="att in attachments" :key="att.download_url" class="dl-item">
+              <li
+                v-for="att in attachments"
+                :key="att.download_url"
+                class="dl-item"
+              >
                 <div class="dl-meta">
                   <span class="dl-label">{{ att.label }}：</span>
                   <span class="dl-name">{{ att.name }}</span>
                 </div>
                 <div class="dl-actions">
-                  <a class="btn btn-solid" @click.prevent="downloadFile(att)">附件下载</a>
+                  <a class="btn btn-solid" @click.prevent="downloadFile(att)"
+                    >附件下载</a
+                  >
                 </div>
               </li>
             </ul>
@@ -296,21 +504,21 @@
     <!-- Lightbox overlay -->
     <transition name="fade">
       <div
-          v-if="lightboxOpen"
-          class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
-          @click.self="closeLightbox"
-          aria-modal="true"
-          role="dialog"
+        v-if="lightboxOpen"
+        class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+        @click.self="closeLightbox"
+        aria-modal="true"
+        role="dialog"
       >
         <img
-            :src="lightboxSrc"
-            alt="预览图片"
-            class="max-w-full max-h-[85vh] rounded-2xl shadow-2xl ring-1 ring-white/20"
+          :src="lightboxSrc"
+          alt="预览图片"
+          class="max-w-full max-h-[85vh] rounded-2xl shadow-2xl ring-1 ring-white/20"
         />
         <button
-            class="absolute top-5 right-5 inline-flex items-center justify-center h-10 w-10 rounded-full bg-white/90 hover:bg-white shadow-lg ring-1 ring-slate-200"
-            @click="closeLightbox"
-            aria-label="关闭预览"
+          class="absolute top-5 right-5 inline-flex items-center justify-center h-10 w-10 rounded-full bg-white/90 hover:bg-white shadow-lg ring-1 ring-slate-200"
+          @click="closeLightbox"
+          aria-label="关闭预览"
         >
           ✕
         </button>
@@ -320,10 +528,11 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, onBeforeUnmount} from 'vue'
-import {useRouter} from 'vue-router'
+import { ref, onMounted, onBeforeUnmount } from "vue";
+import { useRouter } from "vue-router";
 // 实习协议 PDF 地址（放在 public/docs/ 目录或换成你的线上地址）
-const AGREEMENT_URL = 'https://dongshan-file.oss-cn-beijing.aliyuncs.com/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf'
+const AGREEMENT_URL =
+  "https://dongshan-file.oss-cn-beijing.aliyuncs.com/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf";
 
 // 下载清单（可自行增删）
 interface Attachment {
@@ -336,64 +545,70 @@ interface Attachment {
 
 const attachments: Attachment[] = [
   {
-    label: '附件一',
-    name: '实习协议.pdf',
-    read_url: "https://www.riscv-cn.org/sduproxy/dongshan-file/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf",
-    download_url: "https://www.riscv-cn.org/sduproxy/dongshan-file/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf",
-    local_url: '/doc/远程实习生计划--实习协议.pdf'
+    label: "附件一",
+    name: "实习协议.pdf",
+    read_url:
+      "https://www.riscv-cn.org/sduproxy/dongshan-file/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf",
+    download_url:
+      "https://www.riscv-cn.org/sduproxy/dongshan-file/%E8%BF%9C%E7%A8%8B%E5%AE%9E%E4%B9%A0%E7%94%9F%E8%AE%A1%E5%88%92--%E5%AE%9E%E4%B9%A0%E5%8D%8F%E8%AE%AE.pdf",
+    local_url: "/doc/远程实习生计划--实习协议.pdf",
   },
   {
-    label: '附件二',
-    name: '东山派借用协议.docx',
-    read_url: 'https://www.riscv-cn.org/sduproxy/dongshan-file/dongshanjieyongxieyi.docx',
-    download_url: 'https://www.riscv-cn.org/sduproxy/dongshan-file/dongshanjieyongxieyi.docx',
-    local_url: '/doc/东山派借用协议.docx'
+    label: "附件二",
+    name: "东山派借用协议.docx",
+    read_url:
+      "https://www.riscv-cn.org/sduproxy/dongshan-file/dongshanjieyongxieyi.docx",
+    download_url:
+      "https://www.riscv-cn.org/sduproxy/dongshan-file/dongshanjieyongxieyi.docx",
+    local_url: "/doc/附件二东山派借用协议.docx",
   },
   {
-    label: '附件三',
-    name: '成果发布申请.docx',
-    read_url: 'https://www.riscv-cn.org/sduproxy/dongshan-file/chengguofabuqingqiu.docx',
-    download_url: 'https://www.riscv-cn.org/sduproxy/dongshan-file/chengguofabuqingqiu.docx',
-    local_url: '/doc/成果发布申请.docx'
-  }
-]
+    label: "附件三",
+    name: "成果发布申请.docx",
+    read_url:
+      "https://www.riscv-cn.org/sduproxy/dongshan-file/chengguofabuqingqiu.docx",
+    download_url:
+      "https://www.riscv-cn.org/sduproxy/dongshan-file/chengguofabuqingqiu.docx",
+    local_url: "/doc/附件三 成果发布申请.docx",
+  },
+];
 
 // 图片预览（灯箱）
-const lightboxOpen = ref(false)
-const lightboxSrc = ref<string>('')
+const lightboxOpen = ref(false);
+const lightboxSrc = ref<string>("");
 // 初始化 Router 实例
-const router = useRouter()
+const router = useRouter();
 const goToPersonInfo = () => {
-  router.push('/personInfo')
-}
+  router.push("/personInfo");
+};
 
 function openLightbox(src: string) {
-  if (!src) return
-  lightboxSrc.value = src
-  lightboxOpen.value = true
+  if (!src) return;
+  lightboxSrc.value = src;
+  lightboxOpen.value = true;
 }
 
 function closeLightbox() {
-  lightboxOpen.value = false
+  lightboxOpen.value = false;
 }
 
 function onImgClick(e?: Event) {
-  const el = (e?.currentTarget || e?.target) as HTMLImageElement | undefined
-  const src = el?.currentSrc || el?.src
-  if (src) openLightbox(src)
+  const el = (e?.currentTarget || e?.target) as HTMLImageElement | undefined;
+  const src = el?.currentSrc || el?.src;
+  if (src) openLightbox(src);
 }
 
 function onKey(e: KeyboardEvent) {
-  if (e.key === 'Escape') closeLightbox()
+  if (e.key === "Escape") closeLightbox();
 }
 
 onMounted(() => {
-  window.addEventListener('keydown', onKey)
-})
+  window.addEventListener("keydown", onKey);
+});
 
 onBeforeUnmount(() => {
-  window.removeEventListener('keydown', onKey)
-})
+  window.removeEventListener("keydown", onKey);
+});
 const downloadFile = async (item: Attachment) => {
   // 第一步：尝试远程URL下载
   // try {
@@ -417,14 +632,14 @@ const downloadFile = async (item: Attachment) => {
   // }
   // 第二步：远程失败，下载 public/doc 下的本地文件
   try {
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = item.local_url;
     link.download = item.name;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   } catch (localError) {
-    console.error('本地文件下载失败：', localError);
+    console.error("本地文件下载失败：", localError);
   }
 };
 </script>
@@ -535,7 +750,9 @@ const downloadFile = async (item: Attachment) => {
   border-radius: 0.75rem; /* rounded-xl */
   box-shadow: 0 10px 25px rgba(2, 6, 23, 0.1);
   border: 1px solid rgba(2, 6, 23, 0.06);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   background: #fff;
   cursor: zoom-in;
   user-select: none;
@@ -548,7 +765,9 @@ const downloadFile = async (item: Attachment) => {
 }
 
 .doc-img:focus-visible {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.6), 0 10px 25px rgba(2, 6, 23, 0.1);
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.6),
+    0 10px 25px rgba(2, 6, 23, 0.1);
 }
 
 /* 淡入淡出过渡 */
@@ -571,7 +790,7 @@ const downloadFile = async (item: Attachment) => {
 
 /* 资料下载列表 */
 .dl-list {
-  margin-top: .5rem;
+  margin-top: 0.5rem;
   display: grid;
   gap: 12px;
 }
@@ -583,9 +802,9 @@ const downloadFile = async (item: Attachment) => {
   gap: 12px;
   padding: 12px 14px;
   border-radius: 14px;
-  border: 1px solid rgba(2, 6, 23, .06);
+  border: 1px solid rgba(2, 6, 23, 0.06);
   background: #fff;
-  box-shadow: 0 6px 16px rgba(2, 6, 23, .06);
+  box-shadow: 0 6px 16px rgba(2, 6, 23, 0.06);
 }
 
 .dl-meta {
@@ -623,7 +842,7 @@ const downloadFile = async (item: Attachment) => {
 }
 
 .btn-ghost {
-  border: 1px solid rgba(2, 6, 23, .12);
+  border: 1px solid rgba(2, 6, 23, 0.12);
   background: #fff;
   color: #0f172a;
 }
@@ -635,7 +854,7 @@ const downloadFile = async (item: Attachment) => {
 .btn-solid {
   background: #0f172a;
   color: #fff;
-  border: 1px solid rgba(15, 23, 42, .8);
+  border: 1px solid rgba(15, 23, 42, 0.8);
   transition: all 0.15s ease; /* 新增过渡动画 */
   position: relative; /* 用于点击按压效果 */
 }
@@ -652,7 +871,9 @@ const downloadFile = async (item: Attachment) => {
 }
 .btn-solid:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4), 0 4px 12px rgba(15, 23, 42, 0.15);
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.4),
+    0 4px 12px rgba(15, 23, 42, 0.15);
 }
 .btn-solid.opacity-70 {
   background: #475569;
@@ -675,5 +896,4 @@ const downloadFile = async (item: Attachment) => {
     width: 100%;
   }
 }
-
 </style>
