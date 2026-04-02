@@ -8,11 +8,10 @@ RUN npm install
 #COPY frontend/dongshan_site/ ./
 # 执行构建
 RUN npm run build
-：
 # 运行阶段
 FROM nginx:alpine
 # 复制构建产物
-COPY --from=build /app/dist /usr/share/nginx/htm
+COPY --from=build /app/dist /usr/share/nginx/html
 # 复制 Nginx 配置（从项目根目录的 nginx 文件夹）
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 # 暴露端口
